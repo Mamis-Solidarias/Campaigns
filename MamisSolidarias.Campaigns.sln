@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8EBAAF5D-8085-4137-847A-E0BD5183F4CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{87839CC5-313C-4A34-8EA1-2CBB2D7BAC4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MamisSolidarias.WebAPI.Campaigns.Test", "test\MamisSolidarias.WebAPI.Campaigns.Test\MamisSolidarias.WebAPI.Campaigns.Test.csproj", "{C438A7D2-F3A0-4C5B-AF24-B4800FC1229F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MamisSolidarias.WebAPI.Campaigns", "src\MamisSolidarias.WebAPI.Campaigns\MamisSolidarias.WebAPI.Campaigns.csproj", "{56EDBC7D-A060-4108-8991-3F3A61FB4B16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MamisSolidarias.HttpClient.Campaigns", "src\MamisSolidarias.HttpClient.Campaigns\MamisSolidarias.HttpClient.Campaigns.csproj", "{C1DA8C65-C87E-46ED-8851-9DE7806EA125}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MamisSolidarias.Infrastructure.Campaigns", "src\MamisSolidarias.Infrastructure.Campaigns\MamisSolidarias.Infrastructure.Campaigns.csproj", "{C70DB500-1F58-496F-B8E3-EABE93243978}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C438A7D2-F3A0-4C5B-AF24-B4800FC1229F} = {87839CC5-313C-4A34-8EA1-2CBB2D7BAC4D}
+		{56EDBC7D-A060-4108-8991-3F3A61FB4B16} = {8EBAAF5D-8085-4137-847A-E0BD5183F4CC}
+		{C1DA8C65-C87E-46ED-8851-9DE7806EA125} = {8EBAAF5D-8085-4137-847A-E0BD5183F4CC}
+		{C70DB500-1F58-496F-B8E3-EABE93243978} = {8EBAAF5D-8085-4137-847A-E0BD5183F4CC}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C438A7D2-F3A0-4C5B-AF24-B4800FC1229F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C438A7D2-F3A0-4C5B-AF24-B4800FC1229F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C438A7D2-F3A0-4C5B-AF24-B4800FC1229F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C438A7D2-F3A0-4C5B-AF24-B4800FC1229F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56EDBC7D-A060-4108-8991-3F3A61FB4B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56EDBC7D-A060-4108-8991-3F3A61FB4B16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56EDBC7D-A060-4108-8991-3F3A61FB4B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56EDBC7D-A060-4108-8991-3F3A61FB4B16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1DA8C65-C87E-46ED-8851-9DE7806EA125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1DA8C65-C87E-46ED-8851-9DE7806EA125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1DA8C65-C87E-46ED-8851-9DE7806EA125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1DA8C65-C87E-46ED-8851-9DE7806EA125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70DB500-1F58-496F-B8E3-EABE93243978}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70DB500-1F58-496F-B8E3-EABE93243978}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70DB500-1F58-496F-B8E3-EABE93243978}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70DB500-1F58-496F-B8E3-EABE93243978}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
