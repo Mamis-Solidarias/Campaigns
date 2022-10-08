@@ -2,6 +2,7 @@ using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 using MamisSolidarias.Infrastructure.Campaigns;
+using MamisSolidarias.Utils.Security;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -42,11 +43,17 @@ internal static class ServiceRegistrator
                     t.RecordException = true;
                     t.SetHttpFlavor = true;
                 })
-                .AddAspNetCoreInstrumentation(t=> t.RecordException = true)
-                .AddEntityFrameworkCoreInstrumentation(t=> t.SetDbStatementForText = true);
+                .AddAspNetCoreInstrumentation(t => t.RecordException = true)
+                .AddEntityFrameworkCoreInstrumentation(t => t.SetDbStatementForText = true);
         });
         builder.Services.AddFastEndpoints();
-        builder.Services.AddAuthenticationJWTBearer(builder.Configuration["JWT:Key"]);
+        builder.Services.AddAuthenticationJWTBearer(
+            builder.Configuration["JWT:Key"],
+            builder.Configuration["JWT:Issuer"]
+        );
+
+        builder.Services.AddAuthorization(t=> t.ConfigurePolicies(Services.Campaigns));
+        
         builder.Services.AddDbContext<CampaignsDbContext>(
             t =>
                 t.UseNpgsql(connectionString, r => r.MigrationsAssembly("MamisSolidarias.WebAPI.Campaigns"))

@@ -1,3 +1,4 @@
+using System;
 using MamisSolidarias.HttpClient.Campaigns.Models;
 using MamisSolidarias.HttpClient.Campaigns.Services;
 using MamisSolidarias.HttpClient.Campaigns.CampaignsClient;

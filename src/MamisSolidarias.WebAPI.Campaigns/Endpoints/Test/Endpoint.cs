@@ -1,5 +1,9 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
+using Microsoft.Extensions.Logging;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Test;
 

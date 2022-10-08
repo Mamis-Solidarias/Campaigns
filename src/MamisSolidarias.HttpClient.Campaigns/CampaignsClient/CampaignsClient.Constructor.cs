@@ -1,3 +1,4 @@
+using System.Net.Http;
 using MamisSolidarias.HttpClient.Campaigns.Services;
 using MamisSolidarias.Utils.Http;
 using Microsoft.AspNetCore.Http;
