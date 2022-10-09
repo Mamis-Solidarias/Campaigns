@@ -24,4 +24,8 @@
         <ProjectReference Include="..\..\src\MamisSolidarias.WebAPI.Campaigns\MamisSolidarias.WebAPI.Campaigns.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Endpoints" />
+    </ItemGroup>
+
 </Project>
