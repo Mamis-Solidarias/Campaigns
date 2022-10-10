@@ -1,0 +1,7 @@
+query GetDonor($id: Int!){
+    donor(id: $id){
+        name
+    }
+}
+
+#public string DonorName { get; set; } = string.Empty;

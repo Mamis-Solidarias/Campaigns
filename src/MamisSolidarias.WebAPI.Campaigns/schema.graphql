@@ -1,0 +1,626 @@
+﻿schema {
+  query: Query
+}
+
+type Query {
+  beneficiaries("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: BeneficiaryFilterInput order: [BeneficiarySortInput!]): BeneficiariesConnection
+  beneficiary(id: Int!): Beneficiary
+  filteredBeneficiaries(filter: FilterParamsInput! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [BeneficiarySortInput!]): FilteredBeneficiariesConnection
+  communities("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CommunityFilterInput order: [CommunitySortInput!]): CommunitiesConnection
+  community(id: String!): Community
+  families("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: FamilyFilterInput order: [FamilySortInput!]): FamiliesConnection
+  family(id: String!): Family
+  filteredFamilies(filter: FamiliesFilterInput! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: FamilyFilterInput order: [FamilySortInput!]): FilteredFamiliesConnection
+  donors("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: DonorFilterInput order: [DonorSortInput!]): DonorsConnection
+  donor(id: Int!): Donor
+  user(id: Int!): User
+}
+
+"A connection to a list of items."
+type BeneficiariesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [BeneficiariesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Beneficiary!]
+}
+
+"An edge in a connection."
+type BeneficiariesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Beneficiary!
+}
+
+type Beneficiary {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  type: BeneficiaryType!
+  gender: BeneficiaryGender!
+  birthday: Date!
+  dni: String!
+  comments: String
+  likes: String
+  isActive: Boolean
+  familyId: String!
+  family: Family
+  clothes: Clothes
+  education: Education
+  health: Health
+  job: Job
+}
+
+type Clothes {
+  id: Int!
+  shoeSize: String
+  shirtSize: String
+  pantsSize: String
+}
+
+"A connection to a list of items."
+type CommunitiesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [CommunitiesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Community!]
+}
+
+"An edge in a connection."
+type CommunitiesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Community!
+}
+
+type Community {
+  name: String!
+  address: String!
+  description: String
+  id: String
+  families: [Family!]!
+}
+
+type Contact {
+  type: ContactType!
+  content: String!
+  title: String!
+  isPreferred: Boolean!
+}
+
+type Education {
+  id: Int!
+  year: SchoolYear
+  cycle: SchoolCycle
+  school: String
+  transportationMethod: TransportationMethod
+}
+
+"A connection to a list of items."
+type FamiliesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [FamiliesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Family!]
+}
+
+"An edge in a connection."
+type FamiliesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Family!
+}
+
+type Family {
+  id: String!
+  familyNumber: Int!
+  name: String!
+  address: String!
+  communityId: String!
+  community: Community!
+  details: String
+  contacts: [Contact!]!
+  beneficiaries: [Beneficiary!]!
+}
+
+"A connection to a list of items."
+type FilteredBeneficiariesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [FilteredBeneficiariesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Beneficiary!]
+}
+
+"An edge in a connection."
+type FilteredBeneficiariesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Beneficiary!
+}
+
+"A connection to a list of items."
+type FilteredFamiliesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [FilteredFamiliesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Family]
+}
+
+"An edge in a connection."
+type FilteredFamiliesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Family
+}
+
+type Health {
+  id: Int!
+  hasCovidVaccine: Boolean
+  hasMandatoryVaccines: Boolean
+  observations: String
+}
+
+type Job {
+  id: Int!
+  title: String!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+input BeneficiaryFilterInput {
+  and: [BeneficiaryFilterInput!]
+  or: [BeneficiaryFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  firstName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  type: BeneficiaryTypeOperationFilterInput
+  gender: BeneficiaryGenderOperationFilterInput
+  birthday: ComparableDateOnlyOperationFilterInput
+  dni: StringOperationFilterInput
+  comments: StringOperationFilterInput
+  likes: StringOperationFilterInput
+  isActive: BooleanOperationFilterInput
+  familyId: StringOperationFilterInput
+  family: FamilyFilterInput
+  clothes: ClothesFilterInput
+  education: EducationFilterInput
+  health: HealthFilterInput
+  job: JobFilterInput
+}
+
+input BeneficiaryGenderOperationFilterInput {
+  eq: BeneficiaryGender
+  neq: BeneficiaryGender
+  in: [BeneficiaryGender!]
+  nin: [BeneficiaryGender!]
+}
+
+input BeneficiarySortInput {
+  id: SortEnumType
+  firstName: SortEnumType
+  lastName: SortEnumType
+  type: SortEnumType
+  gender: SortEnumType
+  birthday: SortEnumType
+  dni: SortEnumType
+  comments: SortEnumType
+  likes: SortEnumType
+  isActive: SortEnumType
+  familyId: SortEnumType
+  family: FamilySortInput
+  clothes: ClothesSortInput
+  education: EducationSortInput
+  health: HealthSortInput
+  job: JobSortInput
+}
+
+input BeneficiaryTypeOperationFilterInput {
+  eq: BeneficiaryType
+  neq: BeneficiaryType
+  in: [BeneficiaryType!]
+  nin: [BeneficiaryType!]
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input ClothesFilterInput {
+  and: [ClothesFilterInput!]
+  or: [ClothesFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  shoeSize: StringOperationFilterInput
+  shirtSize: StringOperationFilterInput
+  pantsSize: StringOperationFilterInput
+}
+
+input ClothesSortInput {
+  id: SortEnumType
+  shoeSize: SortEnumType
+  shirtSize: SortEnumType
+  pantsSize: SortEnumType
+}
+
+input CommunityFilterInput {
+  and: [CommunityFilterInput!]
+  or: [CommunityFilterInput!]
+  name: StringOperationFilterInput
+  address: StringOperationFilterInput
+  description: StringOperationFilterInput
+  id: StringOperationFilterInput
+  families: ListFilterInputTypeOfFamilyFilterInput
+}
+
+input CommunitySortInput {
+  name: SortEnumType
+  address: SortEnumType
+  description: SortEnumType
+  id: SortEnumType
+}
+
+input ComparableDateOnlyOperationFilterInput {
+  eq: Date
+  neq: Date
+  in: [Date!]
+  nin: [Date!]
+  gt: Date
+  ngt: Date
+  gte: Date
+  ngte: Date
+  lt: Date
+  nlt: Date
+  lte: Date
+  nlte: Date
+}
+
+input ComparableInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ContactFilterInput {
+  and: [ContactFilterInput!]
+  or: [ContactFilterInput!]
+  type: ContactTypeOperationFilterInput
+  content: StringOperationFilterInput
+  title: StringOperationFilterInput
+  isPreferred: BooleanOperationFilterInput
+}
+
+input ContactTypeOperationFilterInput {
+  eq: ContactType
+  neq: ContactType
+  in: [ContactType!]
+  nin: [ContactType!]
+}
+
+input EducationFilterInput {
+  and: [EducationFilterInput!]
+  or: [EducationFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  year: NullableOfSchoolYearOperationFilterInput
+  cycle: NullableOfSchoolCycleOperationFilterInput
+  school: StringOperationFilterInput
+  transportationMethod: NullableOfTransportationMethodOperationFilterInput
+}
+
+input EducationSortInput {
+  id: SortEnumType
+  year: SortEnumType
+  cycle: SortEnumType
+  school: SortEnumType
+  transportationMethod: SortEnumType
+}
+
+input FamiliesFilterInput {
+  communityId: String
+  name: String
+}
+
+input FamilyFilterInput {
+  and: [FamilyFilterInput!]
+  or: [FamilyFilterInput!]
+  id: StringOperationFilterInput
+  familyNumber: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  address: StringOperationFilterInput
+  communityId: StringOperationFilterInput
+  community: CommunityFilterInput
+  details: StringOperationFilterInput
+  contacts: ListFilterInputTypeOfContactFilterInput
+  beneficiaries: ListFilterInputTypeOfBeneficiaryFilterInput
+}
+
+input FamilySortInput {
+  id: SortEnumType
+  familyNumber: SortEnumType
+  name: SortEnumType
+  address: SortEnumType
+  communityId: SortEnumType
+  community: CommunitySortInput
+  details: SortEnumType
+}
+
+input FilterParamsInput {
+  ageStart: Int
+  ageEnd: Int
+  firstName: String
+  lastName: String
+  type: String
+  dniStarts: String
+  familyId: String
+  communityId: String
+  school: String
+  gender: String
+  isActive: Boolean
+}
+
+input HealthFilterInput {
+  and: [HealthFilterInput!]
+  or: [HealthFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  hasCovidVaccine: BooleanOperationFilterInput
+  hasMandatoryVaccines: BooleanOperationFilterInput
+  observations: StringOperationFilterInput
+}
+
+input HealthSortInput {
+  id: SortEnumType
+  hasCovidVaccine: SortEnumType
+  hasMandatoryVaccines: SortEnumType
+  observations: SortEnumType
+}
+
+input JobFilterInput {
+  and: [JobFilterInput!]
+  or: [JobFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  title: StringOperationFilterInput
+}
+
+input JobSortInput {
+  id: SortEnumType
+  title: SortEnumType
+}
+
+input ListFilterInputTypeOfBeneficiaryFilterInput {
+  all: BeneficiaryFilterInput
+  none: BeneficiaryFilterInput
+  some: BeneficiaryFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfContactFilterInput {
+  all: ContactFilterInput
+  none: ContactFilterInput
+  some: ContactFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfFamilyFilterInput {
+  all: FamilyFilterInput
+  none: FamilyFilterInput
+  some: FamilyFilterInput
+  any: Boolean
+}
+
+input NullableOfSchoolCycleOperationFilterInput {
+  eq: SchoolCycle
+  neq: SchoolCycle
+  in: [SchoolCycle]
+  nin: [SchoolCycle]
+}
+
+input NullableOfSchoolYearOperationFilterInput {
+  eq: SchoolYear
+  neq: SchoolYear
+  in: [SchoolYear]
+  nin: [SchoolYear]
+}
+
+input NullableOfTransportationMethodOperationFilterInput {
+  eq: TransportationMethod
+  neq: TransportationMethod
+  in: [TransportationMethod]
+  nin: [TransportationMethod]
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+enum BeneficiaryGender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum BeneficiaryType {
+  CHILD
+  ADULT
+}
+
+enum ContactType {
+  PHONE
+  EMAIL
+  WHATSAPP
+  FACEBOOK
+  INSTAGRAM
+  OTHER
+}
+
+enum SchoolCycle {
+  PRE_SCHOOL
+  PRIMARY_SCHOOL
+  MIDDLE_SCHOOL
+  HIGH_SCHOOL
+}
+
+enum SchoolYear {
+  PRE_SCHOOL3
+  PRE_SCHOOL4
+  PRE_SCHOOL5
+  PRIMARY_SCHOOL1
+  PRIMARY_SCHOOL2
+  PRIMARY_SCHOOL3
+  MIDDLE_SCHOOL4
+  MIDDLE_SCHOOL5
+  MIDDLE_SCHOOL6
+  MIDDLE_SCHOOL7
+  HIGH_SCHOOL1
+  HIGH_SCHOOL2
+  HIGH_SCHOOL3
+  HIGH_SCHOOL4
+  HIGH_SCHOOL5
+  HIGH_SCHOOL6
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+enum TransportationMethod {
+  WALKING
+  CAR
+  PUBLIC_TRANSPORT
+  BIKE
+  HORSE
+  OTHER
+}
+
+type Donor {
+  id: Int!
+  name: String!
+  email: String
+  phone: String
+  isGodFather: Boolean!
+  createdBy: Int!
+}
+
+"A connection to a list of items."
+type DonorsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [DonorsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Donor!]
+}
+
+"An edge in a connection."
+type DonorsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Donor!
+}
+
+input DonorFilterInput {
+  and: [DonorFilterInput!]
+  or: [DonorFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  email: StringOperationFilterInput
+  phone: StringOperationFilterInput
+  isGodFather: BooleanOperationFilterInput
+  createdBy: ComparableInt32OperationFilterInput
+}
+
+input DonorSortInput {
+  id: SortEnumType
+  name: SortEnumType
+  email: SortEnumType
+  phone: SortEnumType
+  isGodFather: SortEnumType
+  createdBy: SortEnumType
+}
+
+type Role {
+  id: Int!
+  service: Services!
+  canRead: Boolean!
+  canWrite: Boolean!
+}
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  phone: String!
+  roles: [Role!]!
+  isActive: Boolean
+}
+
+enum Services {
+  USERS
+  BENEFICIARIES
+  DONORS
+}
+
+"The name scalar represents a valid GraphQL name as specified in the spec and can be used to refer to fields or types."
+scalar Name
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date
+
+"Delegates a resolver to a remote schema."
+directive @delegate("The path to the field on the remote schema." path: String "The name of the schema to which this field shall be delegated to." schema: Name!) on FIELD_DEFINITION
+
+directive @computed("Specifies the fields on which a computed field is dependent on." dependantOn: [Name!]) on FIELD_DEFINITION
+
+"Annotates the original name of a type."
+directive @source("The original name of the annotated type." name: Name! "The name of the schema to which this type belongs to." schema: Name!) repeatable on ENUM | OBJECT | INTERFACE | UNION | INPUT_OBJECT | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE
+
+directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the resolver shall be executed.By default the resolver is executed after the policy has determined that the current user is allowed to access the field." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on SCHEMA | OBJECT | FIELD_DEFINITION
