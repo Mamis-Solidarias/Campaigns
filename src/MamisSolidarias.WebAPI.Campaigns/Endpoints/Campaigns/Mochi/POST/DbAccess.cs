@@ -2,7 +2,7 @@ using MamisSolidarias.Infrastructure.Campaigns;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 
-internal sealed class DbAccess
+internal class DbAccess
 {
     private readonly CampaignsDbContext? _dbContext;
 
@@ -13,5 +13,12 @@ internal sealed class DbAccess
     public DbAccess(CampaignsDbContext? dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public virtual async Task AddMochiCampaign(Infrastructure.Campaigns.Models.Mochi campaign, CancellationToken ct)
+    {
+        ArgumentNullException.ThrowIfNull(_dbContext);
+        await _dbContext.MochiCampaigns.AddAsync(campaign, ct);
+        await _dbContext.SaveChangesAsync(ct);
     }
 }
