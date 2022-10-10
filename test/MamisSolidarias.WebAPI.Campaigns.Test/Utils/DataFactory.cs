@@ -7,17 +7,10 @@ namespace MamisSolidarias.WebAPI.Campaigns.Utils;
 
 internal static class DataFactory
 {
-    private static readonly Faker<User> UserGenerator = new Faker<User>()
-        .RuleFor(t => t.Id, f => f.Random.Int())
-        .RuleFor(t => t.Name, f => f.Name.FindName());
     
-    public static User GetUser()
-    {
-        return UserGenerator.Generate();
-    }
+    
+    public static MochiBuilder GetMochi() => new(db:null);
 
-    public static IEnumerable<User> GetUsers(int n)
-    {
-        return Enumerable.Range(0, n).Select(_ => GetUser());
-    }
+    public static MochiParticipantBuilder GetMochiParticipant() => new(db: null);
+
 }

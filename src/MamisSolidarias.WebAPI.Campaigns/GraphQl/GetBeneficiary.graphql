@@ -1,0 +1,16 @@
+query GetBeneficiary($id: Int!){
+    beneficiary(id: $id){
+        firstName
+        lastName
+        gender
+        education {
+            cycle
+        }
+    }
+}
+
+#public string BeneficiaryName { get; set; } = string.Empty;
+#public BeneficiaryGender BeneficiaryGender { get; set; }
+#public Schoolcycle? SchoolCycle { get; set; }
+#public MochiDonationType DonationType { get; set; }
+

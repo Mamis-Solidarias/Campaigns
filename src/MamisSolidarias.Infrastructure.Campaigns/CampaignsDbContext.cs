@@ -5,7 +5,7 @@ namespace MamisSolidarias.Infrastructure.Campaigns;
 
 public class CampaignsDbContext: DbContext
 {
-    public DbSet<User> Users { get; set; }
+    public DbSet<Mochi> MochiCampaigns { get; set; }
     public CampaignsDbContext(DbContextOptions<CampaignsDbContext> options) : base(options)
     {
     }
@@ -13,20 +13,8 @@ public class CampaignsDbContext: DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>(
-            model =>
-            {
-                model.HasKey(t => t.Id);
-                model.Property(t => t.Id).ValueGeneratedOnAdd();
-                model.Property(t => t.Name)
-                    .IsRequired()
-                    .HasMaxLength(500);
-
-            }
-        );
-
-
-
+        new MochiConfigurator().Configure(modelBuilder.Entity<Mochi>());
+        new MochiParticipantConfiguration().Configure(modelBuilder.Entity<MochiParticipant>());
     }
     
 }

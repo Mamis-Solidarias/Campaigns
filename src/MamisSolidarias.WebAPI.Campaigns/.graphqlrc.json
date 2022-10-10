@@ -1,0 +1,30 @@
+{
+  "schema": "schema.graphql",
+  "documents": "**/*.graphql",
+  "extensions": {
+    "strawberryShake": {
+      "name": "GraphQlClient",
+      "url": "http://localhost/query/",
+      "outputDirectoryName": "GraphQl/Generated",
+      "dependencyInjection": true,
+      "strictSchemaValidation": true,
+      "namespace": "MamisSolidarias.GraphQlClient",
+      "hashAlgorithm": "md5",
+      "useSingleFile": true,
+      "requestStrategy": "Default",
+      "noStore": true,
+      "emitGeneratedCode": false,
+      "razorComponents": false,
+      "records": {
+        "inputs": true,
+        "entities": true
+      },
+      "transportProfiles": [
+        {
+          "default": "Http",
+          "subscription": "WebSocket"
+        }
+      ]
+    }
+  }
+}
