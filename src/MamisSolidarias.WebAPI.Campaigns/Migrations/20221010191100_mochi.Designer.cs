@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 {
     [DbContext(typeof(CampaignsDbContext))]
-    [Migration("20221009212714_create_mochi")]
-    partial class create_mochi
+    [Migration("20221010191100_mochi")]
+    partial class mochi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,7 +47,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                     b.HasIndex("Edition", "CommunityId")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("MochiCampaigns");
                 });
 
             modelBuilder.Entity("MamisSolidarias.Infrastructure.Campaigns.Models.MochiParticipant", b =>
@@ -72,14 +72,13 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                     b.Property<int>("CampaignId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DonationType")
+                    b.Property<int?>("DonationType")
                         .HasColumnType("integer");
 
                     b.Property<int?>("DonorId")
                         .HasColumnType("integer");
 
                     b.Property<string>("DonorName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 

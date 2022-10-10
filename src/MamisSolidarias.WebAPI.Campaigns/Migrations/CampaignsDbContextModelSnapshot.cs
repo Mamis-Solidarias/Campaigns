@@ -45,7 +45,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                     b.HasIndex("Edition", "CommunityId")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("MochiCampaigns");
                 });
 
             modelBuilder.Entity("MamisSolidarias.Infrastructure.Campaigns.Models.MochiParticipant", b =>
@@ -70,14 +70,13 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                     b.Property<int>("CampaignId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("DonationType")
+                    b.Property<int?>("DonationType")
                         .HasColumnType("integer");
 
                     b.Property<int?>("DonorId")
                         .HasColumnType("integer");
 
                     b.Property<string>("DonorName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 

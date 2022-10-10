@@ -31,7 +31,6 @@ internal sealed class MochiConfigurator : IEntityTypeConfiguration<Mochi>
         builder.HasMany(t => t.Participants)
             .WithOne(t => t.Campaign)
             .HasPrincipalKey(t => t.Id)
-            .HasForeignKey(t => t.CampaignId)
-            .IsRequired();
+            .HasForeignKey(t => t.CampaignId);
     }
 }

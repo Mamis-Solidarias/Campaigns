@@ -5,12 +5,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 {
-    public partial class create_mochi : Migration
+    public partial class mochi : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "MochiCampaigns",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -20,7 +20,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_MochiCampaigns", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -33,21 +33,27 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                     BeneficiaryId = table.Column<int>(type: "integer", nullable: false),
                     DonorId = table.Column<int>(type: "integer", nullable: true),
                     BeneficiaryName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DonorName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DonorName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     BeneficiaryGender = table.Column<int>(type: "integer", nullable: false),
                     SchoolCycle = table.Column<int>(type: "integer", nullable: true),
-                    DonationType = table.Column<int>(type: "integer", nullable: false)
+                    DonationType = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MochiParticipant", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MochiParticipant_Users_CampaignId",
+                        name: "FK_MochiParticipant_MochiCampaigns_CampaignId",
                         column: x => x.CampaignId,
-                        principalTable: "Users",
+                        principalTable: "MochiCampaigns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MochiCampaigns_Edition_CommunityId",
+                table: "MochiCampaigns",
+                columns: new[] { "Edition", "CommunityId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MochiParticipant_BeneficiaryId_DonorId_CampaignId",
@@ -59,12 +65,6 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                 name: "IX_MochiParticipant_CampaignId",
                 table: "MochiParticipant",
                 column: "CampaignId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_Edition_CommunityId",
-                table: "Users",
-                columns: new[] { "Edition", "CommunityId" },
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -73,7 +73,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                 name: "MochiParticipant");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "MochiCampaigns");
         }
     }
 }
