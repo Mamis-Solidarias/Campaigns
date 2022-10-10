@@ -16,14 +16,14 @@ internal static class MiddlewareRegistrator
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseFastEndpoints();
-        
+
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<CampaignsDbContext>();
             db.Database.Migrate();
         }
 
-        if (app.Environment.IsDevelopment())
+        if (!app.Environment.IsProduction())
         {
             app.UseOpenApi();
             app.UseSwaggerUi3(t => t.ConfigureDefaults());
