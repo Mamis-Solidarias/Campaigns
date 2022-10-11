@@ -6,5 +6,7 @@
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithInvalidParameters_UserNotAuthenticated_Fails&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithInvalidParameters_CampaignNotFound_Fails&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithInvalidParameters_RepeatedCommunityAndEdition_Fails&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns_Mochi_Id_Delete_Test.CampaignExists_Success&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns_Mochi_Id_Delete_Test.CampaignDoesNotExists_Fails&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
