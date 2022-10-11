@@ -5,39 +5,44 @@ using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using StrawberryShake;
-using BeneficiaryGender = MamisSolidarias.Infrastructure.Campaigns.Models.BeneficiaryGender;
-using SchoolCycle = MamisSolidarias.Infrastructure.Campaigns.Models.SchoolCycle;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
+namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.POST;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly DbAccess _db;
-    private readonly IGraphQlClient _graphQlClient;
-    
-    public Endpoint(CampaignsDbContext dbContext, IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
+    private readonly IGraphQlClient _graphQl;
+
+    public Endpoint(CampaignsDbContext dbContext,IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
     {
         _db = dbAccess ?? new DbAccess(dbContext);
-        _graphQlClient = graphQlClient;
+        _graphQl = graphQlClient;
     }
 
     public override void Configure()
     {
-        Post("/campaigns/mochi");
-        Policies(Utils.Security.Policies.CanWrite);
+        Post("campaigns/mochi/{PreviousCampaignId}");
+        Policies(Utils.Security.Policies.All);
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var campaign = new Infrastructure.Campaigns.Models.Mochi
+        Infrastructure.Campaigns.Models.Mochi? previousEdition = await _db.GetCampaignAsync(req.PreviousCampaignId, ct);
+        if (previousEdition is null)
         {
-            CommunityId = req.CommunityId.Trim(),
-            Edition = req.Edition.Trim(),
+            await SendNotFoundAsync(ct);
+            return;
+        }
+
+        var newEdition = new Infrastructure.Campaigns.Models.Mochi
+        {
+            CommunityId = req.CommunityId,
+            Edition = req.Edition
         };
-        
-        foreach (var beneficiaryId in req.Beneficiaries)
+
+        foreach (var participant in previousEdition.Participants)
         {
-            var response = await _graphQlClient.GetBeneficiary.ExecuteAsync(beneficiaryId, ct);
+            var response = await _graphQl.GetBeneficiary.ExecuteAsync(participant.BeneficiaryId, ct);
             if (response.IsErrorResult())
             {
                 if (response.Errors.Any(t => t.Code is "AUTH_NOT_AUTHORIZED"))
@@ -62,28 +67,25 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             var entry = new MochiParticipant
             {
                 BeneficiaryGender = response.Data.Beneficiary.Gender.Map(),
-                BeneficiaryId = beneficiaryId,
+                BeneficiaryId = participant.Id,
                 BeneficiaryName =
                     $"{response.Data.Beneficiary.FirstName.ToLower()} {response.Data.Beneficiary.LastName.ToLower()}",
                 SchoolCycle = response.Data.Beneficiary.Education?.Cycle.Map()
             };
-            
-            campaign.Participants.Add(entry);
+            newEdition.Participants.Add(entry);
         }
-
+        
         try
         {
-            await _db.AddMochiCampaign(campaign, ct);
-            await SendAsync(new Response(campaign.Edition, campaign.CommunityId), 201, ct);
+            await _db.SaveCampaignAsync(newEdition, ct);
+            await SendAsync(new Response(newEdition.Edition, newEdition.CommunityId),201, ct);
         }
-        catch (UniqueConstraintException e)
+        catch (UniqueConstraintException)
         {
-            AddError("Ya existe una campaña con esa comunidad y edición");
+            AddError("Ya existe una campaña con la misma comunidad y edición");
             await SendErrorsAsync(cancellation: ct);
         }
-
     }
 
-    
-    
+
 }

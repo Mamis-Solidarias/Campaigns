@@ -2,5 +2,9 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=83dd8ee7_002D1a95_002D431f_002Db40f_002D4c47a4fb543a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="WithInvalidParameters_ParticipantDoesNotExists_Fails" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiPostTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithValidParameters_Succeeds&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithInvalidParameters_UserNotAuthenticated_Fails&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithInvalidParameters_CampaignNotFound_Fails&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiIdPostTest.WithInvalidParameters_RepeatedCommunityAndEdition_Fails&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
