@@ -16,6 +16,7 @@ internal static class MiddlewareRegistrator
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseFastEndpoints();
+        app.MapGraphQL();
 
         using (var scope = app.Services.CreateScope())
         {

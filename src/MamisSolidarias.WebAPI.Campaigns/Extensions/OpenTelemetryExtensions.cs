@@ -32,7 +32,9 @@ internal static class OpenTelemetryExtensions
                     t.SetHttpFlavor = true;
                 })
                 .AddAspNetCoreInstrumentation(t => t.RecordException = true)
-                .AddEntityFrameworkCoreInstrumentation(t => t.SetDbStatementForText = true);
+                .AddEntityFrameworkCoreInstrumentation(t => t.SetDbStatementForText = true)
+                .AddHotChocolateInstrumentation()
+                ;
         });
     }
 }
