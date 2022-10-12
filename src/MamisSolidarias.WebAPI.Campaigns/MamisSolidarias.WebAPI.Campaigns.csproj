@@ -47,4 +47,11 @@
       <Folder Include="Migrations" />
     </ItemGroup>
 
+    <ItemGroup>
+      <GraphQL Update="Stitching.graphql">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Generator>MSBuild:Compile</Generator>
+      </GraphQL>
+    </ItemGroup>
+
 </Project>

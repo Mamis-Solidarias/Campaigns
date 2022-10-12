@@ -43,19 +43,16 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         foreach (var participant in previousEdition.Participants)
         {
             var response = await _graphQl.GetBeneficiary.ExecuteAsync(participant.BeneficiaryId, ct);
-            if (response.IsErrorResult())
-            {
-                if (response.Errors.Any(t => t.Code is "AUTH_NOT_AUTHORIZED"))
-                    await SendForbiddenAsync(ct);
-                else
-                {
-                    foreach (var error in response.Errors)
-                        AddError(error.Message);
-                    
-                    await SendErrorsAsync(cancellation: ct);
-                }
+            
+            var hasErrors = await response.HandleErrors(
+                async token => await SendForbiddenAsync(token),
+                async token => await SendGraphQlErrors(token),
+                ct
+            );
+
+            if (hasErrors)
                 return;
-            }
+            
             
             if (response.Data?.Beneficiary is null)
             {
@@ -85,6 +82,12 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             AddError("Ya existe una campaña con la misma comunidad y edición");
             await SendErrorsAsync(cancellation: ct);
         }
+    }
+    
+    private async Task SendGraphQlErrors(CancellationToken token)
+    {
+        AddError("Graphql error");
+        await SendErrorsAsync(cancellation: token);
     }
 
 

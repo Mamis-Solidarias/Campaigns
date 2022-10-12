@@ -22,6 +22,13 @@ public enum BeneficiaryGender
     Male, Female, Other
 }
 
+public enum MochiParticipantState
+{
+    MissingDonor,
+    MissingDonation,
+    DonationReceived
+}
+
 public class MochiParticipant
 {
     public int Id { get; set; }
@@ -36,6 +43,8 @@ public class MochiParticipant
     public BeneficiaryGender BeneficiaryGender { get; set; }
     public SchoolCycle? SchoolCycle { get; set; } 
     public MochiDonationType? DonationType { get; set; }
+    public MochiParticipantState State { get; set; } = MochiParticipantState.MissingDonor;
+    public string? DonationDropOffLocation { get; set; }
 }
 
 internal sealed class MochiParticipantConfiguration: IEntityTypeConfiguration<MochiParticipant>{
@@ -73,5 +82,9 @@ internal sealed class MochiParticipantConfiguration: IEntityTypeConfiguration<Mo
 
         builder.Property(t => t.SchoolCycle).IsRequired(false);
         builder.Property(t => t.DonationType).IsRequired(false);
+        builder.Property(t => t.State).IsRequired();
+        builder.Property(t=> t.DonationDropOffLocation)
+            .IsRequired(false)
+            .HasMaxLength(500);
     }
 }
