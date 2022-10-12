@@ -14,6 +14,11 @@ type Query {
   donors("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: DonorFilterInput order: [DonorSortInput!]): DonorsConnection
   donor(id: Int!): Donor
   user(id: Int!): User
+  mochiEditions(where: MochiFilterInput order: [MochiSortInput!]): [Mochi!]!
+  specificMochiEdition(id: Int!): Mochi
+  mochiEdition(edition: String! community: String!): Mochi
+  mochiParticipants(id: Int!): [MochiParticipant!]!
+  filteredMochiParticipants(campaignId: Int! filter: MochiParticipantFiltersInput! where: MochiParticipantFilterInput order: [MochiParticipantSortInput!]): [MochiParticipant!]!
 }
 
 "A connection to a list of items."
@@ -607,6 +612,111 @@ enum Services {
   USERS
   BENEFICIARIES
   DONORS
+  CAMPAIGNS
+}
+
+type Mochi {
+  id: Int!
+  edition: String!
+  communityId: String!
+  participants: [MochiParticipant!]!
+}
+
+type MochiParticipant {
+  id: Int!
+  campaignId: Int!
+  campaign: Mochi
+  beneficiaryId: Int!
+  donorId: Int
+  beneficiaryName: String!
+  donorName: String
+  beneficiaryGender: BeneficiaryGender!
+  schoolCycle: SchoolCycle
+  donationType: MochiDonationType
+}
+
+input ComparableNullableOfInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ListFilterInputTypeOfMochiParticipantFilterInput {
+  all: MochiParticipantFilterInput
+  none: MochiParticipantFilterInput
+  some: MochiParticipantFilterInput
+  any: Boolean
+}
+
+input MochiFilterInput {
+  and: [MochiFilterInput!]
+  or: [MochiFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  edition: StringOperationFilterInput
+  communityId: StringOperationFilterInput
+  participants: ListFilterInputTypeOfMochiParticipantFilterInput
+}
+
+input MochiParticipantFilterInput {
+  and: [MochiParticipantFilterInput!]
+  or: [MochiParticipantFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  campaignId: ComparableInt32OperationFilterInput
+  campaign: MochiFilterInput
+  beneficiaryId: ComparableInt32OperationFilterInput
+  donorId: ComparableNullableOfInt32OperationFilterInput
+  beneficiaryName: StringOperationFilterInput
+  donorName: StringOperationFilterInput
+  beneficiaryGender: BeneficiaryGenderOperationFilterInput
+  schoolCycle: NullableOfSchoolCycleOperationFilterInput
+  donationType: NullableOfMochiDonationTypeOperationFilterInput
+}
+
+input MochiParticipantFiltersInput {
+  beneficiaryName: String
+  beneficiaryGender: BeneficiaryGender
+  schoolCycle: SchoolCycle
+  kitOrBonus: MochiDonationType
+}
+
+input MochiParticipantSortInput {
+  id: SortEnumType
+  campaignId: SortEnumType
+  campaign: MochiSortInput
+  beneficiaryId: SortEnumType
+  donorId: SortEnumType
+  beneficiaryName: SortEnumType
+  donorName: SortEnumType
+  beneficiaryGender: SortEnumType
+  schoolCycle: SortEnumType
+  donationType: SortEnumType
+}
+
+input MochiSortInput {
+  id: SortEnumType
+  edition: SortEnumType
+  communityId: SortEnumType
+}
+
+input NullableOfMochiDonationTypeOperationFilterInput {
+  eq: MochiDonationType
+  neq: MochiDonationType
+  in: [MochiDonationType]
+  nin: [MochiDonationType]
+}
+
+enum MochiDonationType {
+  BONO
+  KIT
 }
 
 "The name scalar represents a valid GraphQL name as specified in the spec and can be used to refer to fields or types."
