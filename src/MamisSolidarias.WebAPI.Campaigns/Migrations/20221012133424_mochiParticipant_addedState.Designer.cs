@@ -3,6 +3,7 @@ using System;
 using MamisSolidarias.Infrastructure.Campaigns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 {
     [DbContext(typeof(CampaignsDbContext))]
-    partial class CampaignsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012133424_mochiParticipant_addedState")]
+    partial class mochiParticipant_addedState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,10 +71,6 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 
                     b.Property<int>("CampaignId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("DonationDropOffLocation")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
 
                     b.Property<int?>("DonationType")
                         .HasColumnType("integer");
