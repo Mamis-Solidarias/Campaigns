@@ -1,5 +1,6 @@
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using YamlDotNet.Serialization.NodeTypeResolvers;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
@@ -13,10 +14,10 @@ internal static class OpenTelemetryExtensions
                 .AddConsoleExporter()
                 .AddJaegerExporter(t =>
                 {
-                    t.Endpoint = new Uri(
-                        configuration["OpenTelemetry:Jaeger:Endpoint"]
-                        ?? "http://localhost:14268/api/traces"
-                    );
+                    var jaegerHost = configuration["OpenTelemetry:Jaeger:Host"];
+                    if (jaegerHost is not null)
+                        t.AgentHost = jaegerHost;
+                    
                 })
                 .AddSource(configuration["OpenTelemetry:Name"])
                 .SetResourceBuilder(
