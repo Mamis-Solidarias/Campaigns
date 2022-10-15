@@ -5,8 +5,6 @@ using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using StrawberryShake;
-using BeneficiaryGender = MamisSolidarias.Infrastructure.Campaigns.Models.BeneficiaryGender;
-using SchoolCycle = MamisSolidarias.Infrastructure.Campaigns.Models.SchoolCycle;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 
@@ -76,7 +74,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             await _db.AddMochiCampaign(campaign, ct);
             await SendAsync(new Response(campaign.Edition, campaign.CommunityId), 201, ct);
         }
-        catch (UniqueConstraintException e)
+        catch (UniqueConstraintException)
         {
             AddError("Ya existe una campaña con esa comunidad y edición");
             await SendErrorsAsync(cancellation: ct);

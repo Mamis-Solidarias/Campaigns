@@ -4,7 +4,6 @@ using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
-using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.POST;
 

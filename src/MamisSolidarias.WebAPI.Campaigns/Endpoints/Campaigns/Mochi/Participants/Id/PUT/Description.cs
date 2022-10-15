@@ -1,7 +1,7 @@
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.POST;
+namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 
 internal sealed class Description : Summary<Endpoint>
 {

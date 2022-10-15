@@ -5,7 +5,7 @@ using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Utils.Test;
-using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.POST;
+using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +13,7 @@ using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class CampaignsMochiParticipantsIdPostTest
+internal sealed class CampaignsMochiParticipantsIdPutTest
 {
     private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();

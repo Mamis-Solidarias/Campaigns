@@ -1,6 +1,5 @@
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using YamlDotNet.Serialization.NodeTypeResolvers;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
