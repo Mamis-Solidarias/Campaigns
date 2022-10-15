@@ -13,7 +13,7 @@ using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class CampaignsMochiParticipantsIdPostTest
+internal sealed class CampaignsMochiParticipantsIdPutTest
 {
     private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();

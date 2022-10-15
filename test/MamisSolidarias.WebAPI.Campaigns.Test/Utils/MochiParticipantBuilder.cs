@@ -14,6 +14,7 @@ internal sealed class MochiParticipantBuilder
         .RuleFor(t=> t.DonationType,f=> f.PickRandom<MochiDonationType>())
         .RuleFor(t=> t.DonorId, f=> f.UniqueIndex)
         .RuleFor(t=> t.DonorName, f=> f.Name.FullName())
+        .RuleFor(t=> t.DonationDropOffLocation, f=> f.Address.FullAddress())
         .RuleFor(t=> t.SchoolCycle, f => f.PickRandom<SchoolCycle>());
     
     
