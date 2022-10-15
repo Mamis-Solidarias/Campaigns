@@ -3,7 +3,7 @@ using FluentValidation;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.POST;
+namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 
 public class Request
 {

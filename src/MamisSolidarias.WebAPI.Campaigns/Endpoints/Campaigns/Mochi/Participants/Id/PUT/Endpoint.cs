@@ -4,7 +4,7 @@ using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.POST;
+namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
@@ -19,7 +19,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override void Configure()
     {
-        Post("campaigns/mochi/participants/{id}");
+        Put("campaigns/mochi/participants/{id}");
         Policies(Utils.Security.Policies.CanWrite);
     }
 

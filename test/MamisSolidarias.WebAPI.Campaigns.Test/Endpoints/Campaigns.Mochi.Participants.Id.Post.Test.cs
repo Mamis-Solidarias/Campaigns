@@ -5,7 +5,7 @@ using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Utils.Test;
-using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.POST;
+using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
 using Moq;
 using NUnit.Framework;
