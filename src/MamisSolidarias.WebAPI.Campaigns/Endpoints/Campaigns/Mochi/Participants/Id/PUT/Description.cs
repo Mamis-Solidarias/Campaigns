@@ -11,7 +11,7 @@ internal sealed class Description : Summary<Endpoint>
         ExampleRequest = new Request
         {
             DonorId = 123,
-            DonationType = MochiDonationType.Bono.ToString(),
+            DonationType = MochiDonationType.Money.ToString(),
             DonationDropOffLocation = "La matanza",
             Id = 111
         };

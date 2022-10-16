@@ -5,7 +5,7 @@ namespace MamisSolidarias.Infrastructure.Campaigns.Models;
 
 public enum MochiDonationType
 {
-    Bono,
+    Money,
     Kit
 }
 
