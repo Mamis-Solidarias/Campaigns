@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class Campaings_Mochi_Participants_Id_Delete_Test
+internal sealed class CampaingsMochiParticipantsIdDeleteTest
 {
     private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();

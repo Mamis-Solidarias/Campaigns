@@ -78,8 +78,6 @@ internal sealed class CampaignsMochiPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
-        _endpoint.Response.Community.Should().Be(campaign.CommunityId);
-        _endpoint.Response.Edition.Should().Be(campaign.Edition);
     }
 
     [Test]
@@ -100,8 +98,6 @@ internal sealed class CampaignsMochiPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
-        _endpoint.Response.Community.Should().Be(campaign.CommunityId);
-        _endpoint.Response.Edition.Should().Be(campaign.Edition);
     }
 
     [Test]
