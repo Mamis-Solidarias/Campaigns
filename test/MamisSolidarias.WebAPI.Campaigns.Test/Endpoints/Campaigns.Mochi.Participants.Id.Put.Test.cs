@@ -40,7 +40,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Bono.ToString(),
+            DonationType = MochiDonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -93,7 +93,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Bono.ToString(),
+            DonationType = MochiDonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -122,7 +122,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Bono.ToString(),
+            DonationType = MochiDonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -167,7 +167,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Bono.ToString(),
+            DonationType = MochiDonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -205,7 +205,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Bono.ToString(),
+            DonationType = MochiDonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);

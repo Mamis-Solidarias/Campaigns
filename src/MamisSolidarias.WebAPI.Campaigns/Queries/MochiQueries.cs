@@ -12,46 +12,37 @@ public class MochiQueries
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<Mochi> GetMochiEditions([FromServices] CampaignsDbContext dbContext)
-    {
-        return dbContext.MochiCampaigns.AsNoTracking();
-    }
+    public IQueryable<Mochi> GetMochiEditions([FromServices] CampaignsDbContext dbContext) => 
+        dbContext.MochiCampaigns.AsNoTracking();
 
     [Authorize(Policy = "CanRead")]
     [UseFirstOrDefault]
     [UseProjection]
-    public IQueryable<Mochi> GetSpecificMochiEdition([FromServices] CampaignsDbContext dbContext, int id)
-    {
-        return dbContext.MochiCampaigns.AsNoTracking().Where(x => x.Id == id);
-    }
+    public IQueryable<Mochi> GetMochiEditionById([FromServices] CampaignsDbContext dbContext, int id) => 
+        dbContext.MochiCampaigns.AsNoTracking().Where(x => x.Id == id);
 
     [Authorize(Policy = "CanRead")]
     [UseFirstOrDefault]
     [UseProjection]
     public IQueryable<Mochi> GetMochiEdition([FromServices] CampaignsDbContext dbContext, string edition,
-        string community)
-    {
-        return dbContext.MochiCampaigns.AsNoTracking().Where(x => x.Edition == edition && x.CommunityId == community);
-    }
+        string community) =>
+        dbContext.MochiCampaigns.AsNoTracking().Where(x => x.Edition == edition && x.CommunityId == community);
 
-    [Authorize(Policy = "CanRead")]
-    [UseProjection]
-    public IQueryable<MochiParticipant> GetMochiParticipants([FromServices] CampaignsDbContext dbContext, int id)
-    {
-        return dbContext.MochiParticipants.AsNoTracking().Where(x => x.CampaignId == id);
-    }
 
     [Authorize(Policy = "CanRead")]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<MochiParticipant> GetFilteredMochiParticipants([FromServices] CampaignsDbContext dbContext,
-        int campaignId, MochiParticipantFilters filter)
+    public IQueryable<MochiParticipant> GetMochiParticipants([FromServices] CampaignsDbContext dbContext,
+        int campaignId, MochiParticipantFilters? filter = null)
     {
         var query = dbContext.MochiParticipants
             .AsNoTracking()
             .Where(t => t.CampaignId == campaignId)
             .AsQueryable();
+
+        if (filter is null)
+            return query;
 
         if (filter.BeneficiaryGender is not null)
             query = query.Where(t => t.BeneficiaryGender == filter.BeneficiaryGender);
@@ -62,16 +53,21 @@ public class MochiQueries
         if (filter.SchoolCycle is not null)
             query = query.Where(t => t.SchoolCycle == filter.SchoolCycle);
 
-        if (filter.KitOrBonus is not null)
-            query = query.Where(t => t.DonationType == filter.KitOrBonus);
+        if (filter.KitOrMoney is not null)
+            query = query.Where(t => t.DonationType == filter.KitOrMoney);
 
         return query;
     }
     
+
+    /// <param name="BeneficiaryName">Part of the name of the beneficiary</param>
+    /// <param name="BeneficiaryGender">Gender of the beneficiary</param>
+    /// <param name="SchoolCycle">School Cycle of the beneficiary</param>
+    /// <param name="KitOrMoney">Whether the donor is donating a kit or money</param>
     public sealed record MochiParticipantFilters(
         string? BeneficiaryName,
         BeneficiaryGender? BeneficiaryGender,
         SchoolCycle? SchoolCycle,
-        MochiDonationType? KitOrBonus
+        MochiDonationType? KitOrMoney
     );
 }
