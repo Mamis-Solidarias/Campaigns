@@ -40,19 +40,15 @@ internal sealed class Endpoint : Endpoint<Request>
         foreach (var id in req.AddedBeneficiaries)
         {
             var response = await _graphQlClient.GetBeneficiary.ExecuteAsync(id, ct);
-            if (response.IsErrorResult())
-            {
-                if (response.Errors.Any(t => t.Code is "AUTH_NOT_AUTHORIZED"))
-                    await SendForbiddenAsync(ct);
-                else
-                {
-                    foreach (var error in response.Errors)
-                        AddError(error.Message);
-                    
-                    await SendErrorsAsync(cancellation: ct);
-                }
+
+            var hasErrors = await response.HandleErrors(
+                async t => await SendForbiddenAsync(t),
+                async (errors, t) => await SendGraphQlErrors(errors, t),
+                ct
+            );
+            
+            if (hasErrors)
                 return;
-            }
             
             if (response.Data?.Beneficiary is null)
             {
@@ -76,6 +72,14 @@ internal sealed class Endpoint : Endpoint<Request>
         await _db.SaveParticipantsAsync(participants, ct);
         await _db.SaveChangesAsync(ct);
         await SendOkAsync(ct);
+    }
+    
+    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
+    {
+        foreach (var clientError in errors)
+            AddError(clientError.Message);
+        
+        await SendErrorsAsync(cancellation: token);
     }
 
 

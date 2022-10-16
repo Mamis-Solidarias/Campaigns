@@ -4,6 +4,7 @@ using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
+using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.POST;
 
@@ -36,7 +37,9 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         var newEdition = new Infrastructure.Campaigns.Models.Mochi
         {
             CommunityId = req.CommunityId,
-            Edition = req.Edition
+            Edition = req.Edition,
+            Description = previousEdition.Description,
+            Provider = previousEdition.Provider
         };
 
         foreach (var participant in previousEdition.Participants)
@@ -45,13 +48,12 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             
             var hasErrors = await response.HandleErrors(
                 async token => await SendForbiddenAsync(token),
-                async token => await SendGraphQlErrors(token),
+                async (errors,token) => await SendGraphQlErrors(errors,token),
                 ct
             );
 
             if (hasErrors)
                 return;
-            
             
             if (response.Data?.Beneficiary is null)
             {
@@ -74,7 +76,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         try
         {
             await _db.SaveCampaignAsync(newEdition, ct);
-            await SendAsync(new Response(newEdition.Edition, newEdition.CommunityId),201, ct);
+            await SendAsync(new Response(newEdition.Id),201, ct);
         }
         catch (UniqueConstraintException)
         {
@@ -83,9 +85,12 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         }
     }
     
-    private async Task SendGraphQlErrors(CancellationToken token)
+    
+    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
-        AddError("Graphql error");
+        foreach (var clientError in errors)
+            AddError(clientError.Message);
+        
         await SendErrorsAsync(cancellation: token);
     }
 

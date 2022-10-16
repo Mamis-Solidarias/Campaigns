@@ -10,7 +10,9 @@ internal sealed class Description : Summary<Endpoint>
         {
             Edition = "2022",
             CommunityId = "TXT",
-            Beneficiaries = new[] {1, 2, 3}
+            Beneficiaries = new[] {1, 2, 3},
+            Description = "Campaign Description",
+            Provider = "Provider name",
         };
 
         Summary = "Created a new edition of the 'Una Mochi como la tuya' campaign";
