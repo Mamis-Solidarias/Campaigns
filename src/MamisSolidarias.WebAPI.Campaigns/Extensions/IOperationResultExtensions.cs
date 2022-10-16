@@ -9,7 +9,7 @@ internal static class IOperationResultExtensions
 
     public static async Task<bool> HandleErrors<T>(this IOperationResult<T> result,
         Func<CancellationToken,Task>? onAuthError, 
-        Func<CancellationToken,Task>? onOtherError,
+        Func<IReadOnlyList<IClientError>,CancellationToken,Task>? onOtherError,
         CancellationToken token
         ) 
         where T : class
@@ -23,7 +23,7 @@ internal static class IOperationResultExtensions
         
         if (result.IsErrorResult() && onOtherError is not null)
         {
-            await onOtherError.Invoke(token);
+            await onOtherError.Invoke(result.Errors,token);
             return true;
         }
         

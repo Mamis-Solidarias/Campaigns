@@ -31,25 +31,23 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         {
             CommunityId = req.CommunityId.Trim(),
             Edition = req.Edition.Trim(),
+            Description = req.Description,
+            Provider = req.Provider
         };
         
         foreach (var beneficiaryId in req.Beneficiaries)
         {
             var response = await _graphQlClient.GetBeneficiary.ExecuteAsync(beneficiaryId, ct);
-            if (response.IsErrorResult())
-            {
-                if (response.Errors.Any(t => t.Code is "AUTH_NOT_AUTHORIZED"))
-                    await SendForbiddenAsync(ct);
-                else
-                {
-                    foreach (var error in response.Errors)
-                        AddError(error.Message);
-                    
-                    await SendErrorsAsync(cancellation: ct);
-                }
-                return;
-            }
+
+            var hasErrors = await response.HandleErrors(
+                async t => await SendForbiddenAsync(t),
+                async (errors,t) => await SendGraphQlErrors(errors,t),
+                ct
+            );
             
+            if (hasErrors)
+                return;
+
             if (response.Data?.Beneficiary is null)
             {
                 AddError("Beneficiario no valido");
@@ -72,7 +70,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         try
         {
             await _db.AddMochiCampaign(campaign, ct);
-            await SendAsync(new Response(campaign.Edition, campaign.CommunityId), 201, ct);
+            await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)
         {
@@ -80,6 +78,14 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             await SendErrorsAsync(cancellation: ct);
         }
 
+    }
+    
+    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
+    {
+        foreach (var clientError in errors)
+            AddError(clientError.Message);
+        
+        await SendErrorsAsync(cancellation: token);
     }
 
     

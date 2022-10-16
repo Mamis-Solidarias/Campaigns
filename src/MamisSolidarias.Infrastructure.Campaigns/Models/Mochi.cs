@@ -8,6 +8,8 @@ public class Mochi
     public int Id { get; set; }
     public string Edition { get; set; } = string.Empty;
     public string CommunityId { get; set; } = string.Empty;
+    public string? Provider { get; set; }
+    public string? Description { get; set; }
     public virtual ICollection<MochiParticipant> Participants { get; set; } = new List<MochiParticipant>();
     
 }
@@ -27,6 +29,14 @@ internal sealed class MochiConfigurator : IEntityTypeConfiguration<Mochi>
         builder.Property(t => t.CommunityId)
             .IsRequired()
             .HasMaxLength(10);
+
+        builder.Property(t => t.Description)
+            .HasMaxLength(500)
+            .IsRequired(false);
+        
+        builder.Property(t=> t.Provider)
+            .HasMaxLength(300)
+            .IsRequired(false);
 
         builder.HasMany(t => t.Participants)
             .WithOne(t => t.Campaign)

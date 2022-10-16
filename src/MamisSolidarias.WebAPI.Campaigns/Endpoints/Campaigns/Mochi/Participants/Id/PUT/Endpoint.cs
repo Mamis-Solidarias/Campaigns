@@ -3,6 +3,7 @@ using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
+using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 
@@ -36,7 +37,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         var hasErrors = await executor.HandleErrors(
             async token => await SendForbiddenAsync(token),
-            async token => await SendGraphQlErrors(token),
+            async (errors,token) => await SendGraphQlErrors(errors,token),
             ct
         );
         if (hasErrors)
@@ -58,9 +59,11 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         await SendAsync(new Response(participant.State), cancellation: ct);
     }
 
-    private async Task SendGraphQlErrors(CancellationToken token)
+    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
-        AddError("Graphql error");
+        foreach (var clientError in errors)
+            AddError(clientError.Message);
+        
         await SendErrorsAsync(cancellation: token);
     }
 }
