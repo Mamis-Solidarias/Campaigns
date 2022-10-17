@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MamisSolidarias.Infrastructure.Campaigns.Models;
 
-public class Mochi
+public class MochiCampaign
 {
     public int Id { get; set; }
     public string Edition { get; set; } = string.Empty;
@@ -14,9 +14,9 @@ public class Mochi
     
 }
 
-internal sealed class MochiConfigurator : IEntityTypeConfiguration<Mochi>
+internal sealed class MochiConfigurator : IEntityTypeConfiguration<MochiCampaign>
 {
-    public void Configure(EntityTypeBuilder<Mochi> builder)
+    public void Configure(EntityTypeBuilder<MochiCampaign> builder)
     {
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Id).ValueGeneratedOnAdd().IsRequired();

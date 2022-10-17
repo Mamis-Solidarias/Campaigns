@@ -3,6 +3,7 @@ using System;
 using MamisSolidarias.Infrastructure.Campaigns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 {
     [DbContext(typeof(CampaignsDbContext))]
-    partial class CampaignsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221017153229_juntos")]
+    partial class juntos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +47,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                         .HasColumnType("character varying(10)");
 
                     b.Property<decimal>("FundraiserGoal")
-                        .HasColumnType("numeric");
+                        .HasPrecision(2)
+                        .HasColumnType("numeric(2)");
 
                     b.Property<string>("Provider")
                         .HasMaxLength(300)
@@ -67,15 +70,11 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BeneficiaryId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("CampaignId")
                         .HasColumnType("integer");
 
                     b.Property<string>("DonationDropOffPoint")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<int?>("DonationType")
                         .HasColumnType("integer");
@@ -84,8 +83,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("DonorName")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Gender")
                         .HasColumnType("integer");

@@ -17,5 +17,6 @@
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsMochiParticipantsIdPostTest.WithInvalidParameters_GraphQlError_Fails&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaings_Mochi_Participants_Id_Delete_Test.WithValidParameters_Succeeds&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaings_Mochi_Participants_Id_Delete_Test.ParticipantDoesNotExists_Fails&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net6.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsJuntosPostTest&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
