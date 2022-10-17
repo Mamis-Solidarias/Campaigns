@@ -40,7 +40,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Money.ToString(),
+            DonationType = DonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -81,7 +81,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
-        _endpoint.Response.State.Should().Be(MochiParticipantState.MissingDonation);
+        _endpoint.Response.State.Should().Be(ParticipantState.MissingDonation);
 
     }
 
@@ -93,7 +93,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Money.ToString(),
+            DonationType = DonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -122,7 +122,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Money.ToString(),
+            DonationType = DonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -167,7 +167,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Money.ToString(),
+            DonationType = DonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
@@ -205,7 +205,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         {
             DonorId = 123,
             DonationDropOffLocation = "La casa de la abuela",
-            DonationType = MochiDonationType.Money.ToString(),
+            DonationType = DonationType.Money.ToString(),
             Id = 999
         };
         MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);

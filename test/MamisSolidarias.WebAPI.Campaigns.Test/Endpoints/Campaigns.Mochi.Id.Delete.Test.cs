@@ -31,7 +31,7 @@ internal sealed class CampaignsMochiIdDeleteTest
     public async Task CampaignExists_Success()
     {
         // Arrange
-        Mochi mochi = DataFactory.GetMochi();
+        MochiCampaign mochi = DataFactory.GetMochi();
         _mockDb.Setup(x => x.GetMochiAsync(
             It.Is<int>(t=> t == mochi.Id),
             It.IsAny<CancellationToken>()
@@ -39,7 +39,7 @@ internal sealed class CampaignsMochiIdDeleteTest
         ).ReturnsAsync(mochi);
 
         _mockDb.Setup(t => t.DeleteMochiAsync(
-                It.Is<Mochi>(r => r.Id == mochi.Id),
+                It.Is<MochiCampaign>(r => r.Id == mochi.Id),
                 It.IsAny<CancellationToken>()
             )
         ).Returns(Task.CompletedTask);
@@ -57,12 +57,12 @@ internal sealed class CampaignsMochiIdDeleteTest
     public async Task CampaignDoesNotExists_Fails()
     {
         // Arrange
-        Mochi mochi = DataFactory.GetMochi();
+        MochiCampaign mochi = DataFactory.GetMochi();
         _mockDb.Setup(x => x.GetMochiAsync(
             It.Is<int>(t=> t == mochi.Id),
             It.IsAny<CancellationToken>()
             )
-        ).ReturnsAsync((Mochi?)null);
+        ).ReturnsAsync((MochiCampaign?)null);
 
 
         var req = new Request {Id = mochi.Id};

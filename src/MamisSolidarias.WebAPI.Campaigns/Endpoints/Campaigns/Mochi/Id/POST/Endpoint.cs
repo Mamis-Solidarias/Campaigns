@@ -27,14 +27,14 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        Infrastructure.Campaigns.Models.Mochi? previousEdition = await _db.GetCampaignAsync(req.PreviousCampaignId, ct);
+        Infrastructure.Campaigns.Models.MochiCampaign? previousEdition = await _db.GetCampaignAsync(req.PreviousCampaignId, ct);
         if (previousEdition is null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        var newEdition = new Infrastructure.Campaigns.Models.Mochi
+        var newEdition = new Infrastructure.Campaigns.Models.MochiCampaign
         {
             CommunityId = req.CommunityId,
             Edition = req.Edition,
@@ -44,7 +44,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         foreach (var participant in previousEdition.Participants)
         {
-            var response = await _graphQl.GetBeneficiary.ExecuteAsync(participant.BeneficiaryId, ct);
+            var response = await _graphQl.GetBeneficiaryWithEducation.ExecuteAsync(participant.BeneficiaryId, ct);
             
             var hasErrors = await response.HandleErrors(
                 async token => await SendForbiddenAsync(token),

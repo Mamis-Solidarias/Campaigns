@@ -1,0 +1,5 @@
+query GetCommunity($id: String!){
+    community(id: $id){
+        id
+    }
+}

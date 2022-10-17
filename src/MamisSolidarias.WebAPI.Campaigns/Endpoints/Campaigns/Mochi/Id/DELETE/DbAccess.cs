@@ -16,13 +16,13 @@ internal class DbAccess
         _dbContext = dbContext;
     }
 
-    public virtual Task<Infrastructure.Campaigns.Models.Mochi?> GetMochiAsync(int id, CancellationToken ct)
+    public virtual Task<Infrastructure.Campaigns.Models.MochiCampaign?> GetMochiAsync(int id, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         return _dbContext.MochiCampaigns.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id, ct);
     }
 
-    public virtual async Task DeleteMochiAsync(Infrastructure.Campaigns.Models.Mochi mochi, CancellationToken ct)
+    public virtual async Task DeleteMochiAsync(Infrastructure.Campaigns.Models.MochiCampaign mochi, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         _dbContext.MochiCampaigns.Remove(mochi);

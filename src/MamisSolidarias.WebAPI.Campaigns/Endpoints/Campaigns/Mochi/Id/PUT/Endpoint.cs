@@ -39,7 +39,7 @@ internal sealed class Endpoint : Endpoint<Request>
         
         foreach (var id in req.AddedBeneficiaries)
         {
-            var response = await _graphQlClient.GetBeneficiary.ExecuteAsync(id, ct);
+            var response = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(id, ct);
 
             var hasErrors = await response.HandleErrors(
                 async t => await SendForbiddenAsync(t),

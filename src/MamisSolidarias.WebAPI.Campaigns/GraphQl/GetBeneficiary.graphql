@@ -1,4 +1,4 @@
-query GetBeneficiary($id: Int!){
+query GetBeneficiaryWithEducation($id: Int!){
     beneficiary(id: $id){
         firstName
         lastName
@@ -9,8 +9,12 @@ query GetBeneficiary($id: Int!){
     }
 }
 
-#public string BeneficiaryName { get; set; } = string.Empty;
-#public BeneficiaryGender BeneficiaryGender { get; set; }
-#public Schoolcycle? SchoolCycle { get; set; }
-#public MochiDonationType DonationType { get; set; }
+query GetBeneficiaryWithClothes($id: Int!){
+    beneficiary(id: $id){
+        gender
+        clothes {
+            shoeSize
+        }
+    }
+}
 

@@ -39,7 +39,7 @@ internal class RequestValidator : Validator<Request>
         
         RuleFor(t=> t.DonationType)
             .NotEmpty().WithMessage("El tipo de donación no puede ser vacío")
-            .IsEnumName(typeof(MochiDonationType),false).WithMessage("El tipo de donación no es válido");
+            .IsEnumName(typeof(DonationType),false).WithMessage("El tipo de donación no es válido");
         
         RuleFor(t=> t.DonationDropOffLocation)
             .MaximumLength(500).WithMessage("La ubicación de la donación no puede ser mayor a 500 caracteres");

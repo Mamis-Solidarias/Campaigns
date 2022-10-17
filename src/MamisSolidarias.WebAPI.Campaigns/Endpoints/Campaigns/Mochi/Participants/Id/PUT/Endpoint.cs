@@ -52,8 +52,8 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         participant.DonorId = req.DonorId;
         participant.DonorName = executor.Data.Donor.Name;
         participant.DonationDropOffLocation = req.DonationDropOffLocation;
-        participant.DonationType = Enum.Parse<MochiDonationType>(req.DonationType, true);
-        participant.State = MochiParticipantState.MissingDonation;
+        participant.DonationType = Enum.Parse<DonationType>(req.DonationType, true);
+        participant.State = ParticipantState.MissingDonation;
 
         await _db.SaveParticipantAsync(participant, ct);
         await SendAsync(new Response(participant.State), cancellation: ct);

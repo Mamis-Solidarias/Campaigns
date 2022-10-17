@@ -15,7 +15,7 @@ internal class DbAccess
         _dbContext = dbContext;
     }
 
-    public virtual async Task AddMochiCampaign(Infrastructure.Campaigns.Models.Mochi campaign, CancellationToken ct)
+    public virtual async Task AddMochiCampaign(Infrastructure.Campaigns.Models.MochiCampaign campaign, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         await _dbContext.MochiCampaigns.AddAsync(campaign, ct);

@@ -11,7 +11,7 @@ internal sealed class MochiParticipantBuilder
         .RuleFor(t=> t.BeneficiaryGender, f=> f.PickRandom<BeneficiaryGender>())
         .RuleFor(t=> t.BeneficiaryId, f=> f.UniqueIndex)
         .RuleFor(t=> t.BeneficiaryName, f=> f.Name.FullName())
-        .RuleFor(t=> t.DonationType,f=> f.PickRandom<MochiDonationType>())
+        .RuleFor(t=> t.DonationType,f=> f.PickRandom<DonationType>())
         .RuleFor(t=> t.DonorId, f=> f.UniqueIndex)
         .RuleFor(t=> t.DonorName, f=> f.Name.FullName())
         .RuleFor(t=> t.DonationDropOffLocation, f=> f.Address.FullAddress())
@@ -40,7 +40,7 @@ internal sealed class MochiParticipantBuilder
         return this;
     }
     
-    public MochiParticipantBuilder WithCampaign(Mochi? campaign)
+    public MochiParticipantBuilder WithCampaign(MochiCampaign? campaign)
     {
         _mochiParticipant.CampaignId = campaign?.Id ?? 0;
         _mochiParticipant.Campaign = campaign;
@@ -48,7 +48,7 @@ internal sealed class MochiParticipantBuilder
     }
 
 
-    public MochiParticipantBuilder WithDonor(string? donorName, int? id, MochiDonationType? donationType)
+    public MochiParticipantBuilder WithDonor(string? donorName, int? id, DonationType? donationType)
     {
         _mochiParticipant.DonationType = donationType;
         _mochiParticipant.DonorId = id;
@@ -81,7 +81,7 @@ internal sealed class MochiParticipantBuilder
         _mochiParticipant.DonorId = donorId;
         return this;
     }
-    public MochiParticipantBuilder WithDonationType(MochiDonationType donationType)
+    public MochiParticipantBuilder WithDonationType(DonationType donationType)
     {
         _mochiParticipant.DonationType = donationType;
         return this;

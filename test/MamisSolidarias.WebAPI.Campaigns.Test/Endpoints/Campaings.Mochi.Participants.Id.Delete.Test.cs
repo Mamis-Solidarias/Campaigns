@@ -56,7 +56,7 @@ internal sealed class CampaingsMochiParticipantsIdDeleteTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
         _endpoint.Response.ParticipantId.Should().Be(participant.Id);
-        participant.State.Should().Be(MochiParticipantState.MissingDonor);
+        participant.State.Should().Be(ParticipantState.MissingDonor);
         participant.DonorId.Should().BeNull();
         participant.DonorName.Should().BeNull();
         participant.DonationType.Should().BeNull();
