@@ -3,7 +3,6 @@ using System.Linq;
 using Bogus;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Utils;
 
@@ -26,9 +25,9 @@ internal sealed class JuntosBuilder
         .RuleFor(t => t.Provider, f => f.Company.CompanyName())
         .RuleFor(t => t.FundraiserGoal, f => f.Random.Decimal(0, 999999999));
 
-    private readonly JuntosCampaign _juntos = Generator.Generate();
-
     private readonly CampaignsDbContext? _dbContext;
+
+    private readonly JuntosCampaign _juntos = Generator.Generate();
 
     public JuntosBuilder(CampaignsDbContext? db)
     {
@@ -97,6 +96,6 @@ internal sealed class JuntosBuilder
 
     public static implicit operator JuntosBuilder(JuntosCampaign b)
     {
-        return new(b);
+        return new JuntosBuilder(b);
     }
 }

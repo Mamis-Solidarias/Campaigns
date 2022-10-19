@@ -1,5 +1,4 @@
 using Bogus;
-using Bogus.DataSets;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 
@@ -18,9 +17,9 @@ internal sealed class JuntosParticipantBuilder
         .RuleFor(t => t.ShoeSize, f => $"{f.Random.Number(10, 50)}")
         .RuleFor(t => t.DonationDropOffPoint, f => f.Address.City());
 
-    private readonly JuntosParticipant _JuntosParticipant = Generator.Generate();
-
     private readonly CampaignsDbContext? _dbContext;
+
+    private readonly JuntosParticipant _juntosParticipant = Generator.Generate();
 
     public JuntosParticipantBuilder(CampaignsDbContext? db = null)
     {
@@ -29,70 +28,70 @@ internal sealed class JuntosParticipantBuilder
 
     public JuntosParticipantBuilder(JuntosParticipant obj)
     {
-        _JuntosParticipant = obj;
+        _juntosParticipant = obj;
     }
 
     public JuntosParticipantBuilder WithCampaign(JuntosCampaign campaign)
     {
-        _JuntosParticipant.CampaignId = campaign.Id;
-        _JuntosParticipant.Campaign = campaign;
+        _juntosParticipant.CampaignId = campaign.Id;
+        _juntosParticipant.Campaign = campaign;
         return this;
     }
 
     public JuntosParticipantBuilder WithDonationDropOff(string? donationDropOff)
     {
-        _JuntosParticipant.DonationDropOffPoint = donationDropOff;
+        _juntosParticipant.DonationDropOffPoint = donationDropOff;
         return this;
     }
 
     public JuntosParticipantBuilder WithShoeSize(string? shoeSize)
     {
-        _JuntosParticipant.ShoeSize = shoeSize;
+        _juntosParticipant.ShoeSize = shoeSize;
         return this;
     }
 
     public JuntosParticipantBuilder WithDonorName(string? donorName)
     {
-        _JuntosParticipant.DonorName = donorName;
+        _juntosParticipant.DonorName = donorName;
         return this;
     }
 
     public JuntosParticipantBuilder WithDonationType(DonationType type)
     {
-        _JuntosParticipant.DonationType = type;
+        _juntosParticipant.DonationType = type;
         return this;
     }
 
     public JuntosParticipantBuilder WithBeneficiaryId(int id)
     {
-        _JuntosParticipant.BeneficiaryId = id;
+        _juntosParticipant.BeneficiaryId = id;
         return this;
     }
 
     public JuntosParticipantBuilder WithId(int id)
     {
-        _JuntosParticipant.Id = id;
+        _juntosParticipant.Id = id;
         return this;
     }
 
     public JuntosParticipantBuilder WithGender(BeneficiaryGender gender)
     {
-        _JuntosParticipant.Gender = gender;
+        _juntosParticipant.Gender = gender;
         return this;
     }
 
     public JuntosParticipantBuilder WithState(ParticipantState state)
     {
-        _JuntosParticipant.State = state;
+        _juntosParticipant.State = state;
         return this;
     }
 
     public JuntosParticipant Build()
     {
-        _dbContext?.Add(_JuntosParticipant);
+        _dbContext?.Add(_juntosParticipant);
         _dbContext?.SaveChanges();
         _dbContext?.ChangeTracker.Clear();
-        return _JuntosParticipant;
+        return _juntosParticipant;
     }
 
     public static implicit operator JuntosParticipant(JuntosParticipantBuilder b)
@@ -102,6 +101,6 @@ internal sealed class JuntosParticipantBuilder
 
     public static implicit operator JuntosParticipantBuilder(JuntosParticipant b)
     {
-        return new(b);
+        return new JuntosParticipantBuilder(b);
     }
 }

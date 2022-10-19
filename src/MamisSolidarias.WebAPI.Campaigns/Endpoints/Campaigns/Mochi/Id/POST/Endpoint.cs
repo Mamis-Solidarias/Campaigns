@@ -13,7 +13,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     private readonly DbAccess _db;
     private readonly IGraphQlClient _graphQl;
 
-    public Endpoint(CampaignsDbContext dbContext,IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
+    public Endpoint(CampaignsDbContext dbContext, IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
     {
         _db = dbAccess ?? new DbAccess(dbContext);
         _graphQl = graphQlClient;
@@ -27,14 +27,14 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        Infrastructure.Campaigns.Models.MochiCampaign? previousEdition = await _db.GetCampaignAsync(req.PreviousCampaignId, ct);
+        var previousEdition = await _db.GetCampaignAsync(req.PreviousCampaignId, ct);
         if (previousEdition is null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
 
-        var newEdition = new Infrastructure.Campaigns.Models.MochiCampaign
+        var newEdition = new MochiCampaign
         {
             CommunityId = req.CommunityId,
             Edition = req.Edition,
@@ -45,20 +45,20 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         foreach (var participant in previousEdition.Participants)
         {
             var response = await _graphQl.GetBeneficiaryWithEducation.ExecuteAsync(participant.BeneficiaryId, ct);
-            
+
             var hasErrors = await response.HandleErrors(
                 async token => await SendForbiddenAsync(token),
-                async (errors,token) => await SendGraphQlErrors(errors,token),
+                async (errors, token) => await SendGraphQlErrors(errors, token),
                 ct
             );
 
             if (hasErrors)
                 return;
-            
+
             if (response.Data?.Beneficiary is null)
             {
                 AddError("Beneficiario no valido");
-                await SendErrorsAsync(409,cancellation: ct);
+                await SendErrorsAsync(409, ct);
                 return;
             }
 
@@ -72,11 +72,11 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             };
             newEdition.Participants.Add(entry);
         }
-        
+
         try
         {
             await _db.SaveCampaignAsync(newEdition, ct);
-            await SendAsync(new Response(newEdition.Id),201, ct);
+            await SendAsync(new Response(newEdition.Id), 201, ct);
         }
         catch (UniqueConstraintException)
         {
@@ -84,15 +84,13 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             await SendErrorsAsync(cancellation: ct);
         }
     }
-    
-    
+
+
     private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
         foreach (var clientError in errors)
             AddError(clientError.Message);
-        
+
         await SendErrorsAsync(cancellation: token);
     }
-
-
 }

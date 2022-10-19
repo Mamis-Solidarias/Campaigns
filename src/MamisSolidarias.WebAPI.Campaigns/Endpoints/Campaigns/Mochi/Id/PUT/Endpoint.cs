@@ -26,14 +26,15 @@ internal sealed class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var mochi = await _db.GetMochiAsync(req.Id, ct);
-        if (mochi is null)
+        var campaign = await _db.GetMochiAsync(req.Id, ct);
+        if (campaign is null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
         
-        await _db.DeleteParticipantsAsync(req.RemovedBeneficiaries, ct);
+        if (req.RemovedBeneficiaries.Any()) 
+            await _db.DeleteParticipantsAsync(req.RemovedBeneficiaries, ct);
         
         var participants = new List<MochiParticipant>();
         
@@ -64,7 +65,7 @@ internal sealed class Endpoint : Endpoint<Request>
                 BeneficiaryName =
                     $"{response.Data.Beneficiary.FirstName.ToLower()} {response.Data.Beneficiary.LastName.ToLower()}",
                 SchoolCycle = response.Data.Beneficiary.Education?.Cycle.Map(),
-                CampaignId = mochi.Id
+                CampaignId = campaign.Id
             };
             participants.Add(entry);
         }
