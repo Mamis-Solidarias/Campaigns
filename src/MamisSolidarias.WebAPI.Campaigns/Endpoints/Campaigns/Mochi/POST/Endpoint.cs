@@ -12,7 +12,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly DbAccess _db;
     private readonly IGraphQlClient _graphQlClient;
-    
+
     public Endpoint(CampaignsDbContext dbContext, IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
     {
         _db = dbAccess ?? new DbAccess(dbContext);
@@ -27,31 +27,31 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var campaign = new Infrastructure.Campaigns.Models.MochiCampaign
+        var campaign = new MochiCampaign
         {
             CommunityId = req.CommunityId.Trim(),
             Edition = req.Edition.Trim(),
             Description = req.Description,
             Provider = req.Provider
         };
-        
+
         foreach (var beneficiaryId in req.Beneficiaries)
         {
             var response = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(beneficiaryId, ct);
 
             var hasErrors = await response.HandleErrors(
                 async t => await SendForbiddenAsync(t),
-                async (errors,t) => await SendGraphQlErrors(errors,t),
+                async (errors, t) => await SendGraphQlErrors(errors, t),
                 ct
             );
-            
+
             if (hasErrors)
                 return;
 
             if (response.Data?.Beneficiary is null)
             {
                 AddError("Beneficiario no valido");
-                await SendErrorsAsync(409,cancellation: ct);
+                await SendErrorsAsync(409, ct);
                 return;
             }
 
@@ -63,7 +63,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
                     $"{response.Data.Beneficiary.FirstName.ToLower()} {response.Data.Beneficiary.LastName.ToLower()}",
                 SchoolCycle = response.Data.Beneficiary.Education?.Cycle.Map()
             };
-            
+
             campaign.Participants.Add(entry);
         }
 
@@ -77,17 +77,13 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             AddError("Ya existe una campaña con esa comunidad y edición");
             await SendErrorsAsync(cancellation: ct);
         }
-
     }
-    
+
     private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
         foreach (var clientError in errors)
             AddError(clientError.Message);
-        
+
         await SendErrorsAsync(cancellation: token);
     }
-
-    
-    
 }

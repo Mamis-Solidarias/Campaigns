@@ -14,7 +14,7 @@ public class JuntosParticipant
 
     public ParticipantState State { get; set; } = ParticipantState.MissingDonor;
     public int CampaignId { get; set; }
-    public virtual JuntosCampaign Campaign { get; set; }
+    public virtual JuntosCampaign Campaign { get; set; } = null!;
     
     public int BeneficiaryId { get; set; }
     public int? DonorId { get; set; }

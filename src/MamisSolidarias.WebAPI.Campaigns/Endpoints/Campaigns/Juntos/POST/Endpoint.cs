@@ -10,8 +10,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
-    private readonly IGraphQlClient _graphQlClient;
     private readonly DbAccess _db;
+    private readonly IGraphQlClient _graphQlClient;
 
     public Endpoint(IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
     {
@@ -27,7 +27,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var campaign = new JuntosCampaign()
+        var campaign = new JuntosCampaign
         {
             Description = req.Description?.Trim(),
             CommunityId = req.CommunityId.Trim(),
@@ -36,15 +36,15 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             Participants = new List<JuntosParticipant>(),
             Provider = req.Provider?.Trim()
         };
-        
+
         var communityExecutor = await _graphQlClient.GetCommunity.ExecuteAsync(campaign.CommunityId, ct);
 
-        var hasErrors =  await communityExecutor.HandleErrors(
+        var hasErrors = await communityExecutor.HandleErrors(
             async t => await SendForbiddenAsync(t),
             async (e, t) => await SendGraphQlErrors(e, t),
             ct
         );
-        
+
         if (hasErrors)
             return;
 
@@ -53,7 +53,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         foreach (var beneficiaryId in req.Beneficiaries.Distinct())
         {
             var response = await _graphQlClient
@@ -62,17 +62,17 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
             hasErrors = await response.HandleErrors(
                 async t => await SendForbiddenAsync(t),
-                async (errors,t) => await SendGraphQlErrors(errors,t),
+                async (errors, t) => await SendGraphQlErrors(errors, t),
                 ct
             );
-            
+
             if (hasErrors)
                 return;
 
             if (response.Data?.Beneficiary is null)
             {
                 AddError("Beneficiario no valido");
-                await SendErrorsAsync(409,cancellation: ct);
+                await SendErrorsAsync(409, ct);
                 return;
             }
 
@@ -82,7 +82,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
                 ShoeSize = response.Data.Beneficiary.Clothes?.ShoeSize,
                 BeneficiaryId = beneficiaryId
             };
-            
+
             campaign.Participants.Add(entry);
         }
 
@@ -96,15 +96,13 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             AddError("Ya existe una campaña con esa comunidad y edición");
             await SendErrorsAsync(cancellation: ct);
         }
-        
     }
 
     private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
         foreach (var clientError in errors)
             AddError(clientError.Message);
-        
+
         await SendErrorsAsync(cancellation: token);
     }
-
 }
