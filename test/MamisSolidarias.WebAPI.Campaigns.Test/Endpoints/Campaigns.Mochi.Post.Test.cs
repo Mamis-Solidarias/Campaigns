@@ -39,26 +39,26 @@ internal sealed class CampaignsMochiPostTest
     public async Task WithValidParameters_ManyParticipants_Successful()
     {
         // Arrange
-        Mochi campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochi();
 
         foreach (var participant in campaign.Participants)
         {
-            var getBeneficiaryResult = new Mock<IGetBeneficiaryResult>();
+            var getBeneficiaryResult = new Mock<IGetBeneficiaryWithEducationResult>();
             getBeneficiaryResult.Setup(t => t.Beneficiary)
-                .Returns(new GetBeneficiary_Beneficiary_Beneficiary(
+                .Returns(new GetBeneficiaryWithEducation_Beneficiary_Beneficiary(
                         participant.BeneficiaryName, "",
                         participant.BeneficiaryGender.Map(),
-                        new GetBeneficiary_Beneficiary_Education_Education(participant.SchoolCycle.Map())
+                        new GetBeneficiaryWithEducation_Beneficiary_Education_Education(participant.SchoolCycle.Map())
                     )
                 );
 
-            var operationResult = new Mock<IOperationResult<IGetBeneficiaryResult>>();
+            var operationResult = new Mock<IOperationResult<IGetBeneficiaryWithEducationResult>>();
             operationResult.SetupGet(t => t.Data)
                 .Returns(getBeneficiaryResult.Object);
             operationResult.SetupGet(t => t.Errors)
                 .Returns(new List<IClientError>());
             
-            _mockGraphQl.Setup(t => t.GetBeneficiary.ExecuteAsync(
+            _mockGraphQl.Setup(t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                         It.Is<int>(r => r == participant.BeneficiaryId),
                         It.IsAny<CancellationToken>()
                     )
@@ -84,7 +84,7 @@ internal sealed class CampaignsMochiPostTest
     public async Task WithValidParameters_NoParticipants_Successful()
     {
         // Arrange
-        Mochi campaign = DataFactory.GetMochi().WithParticipants(new List<MochiParticipant>());
+        MochiCampaign campaign = DataFactory.GetMochi().WithParticipants(new List<MochiParticipant>());
 
         var req = new Request
         {
@@ -104,18 +104,18 @@ internal sealed class CampaignsMochiPostTest
     public async Task WithInvalidParameters_ParticipantDoesNotExists_Fails()
     {
         // Arrange
-        Mochi campaign = DataFactory.GetMochi()
+        MochiCampaign campaign = DataFactory.GetMochi()
             .WithParticipants(Enumerable.Range(0, 3).Select(_ => new MochiParticipantBuilder().Build())
             );
 
-        var operationResult = new Mock<IOperationResult<IGetBeneficiaryResult>>();
+        var operationResult = new Mock<IOperationResult<IGetBeneficiaryWithEducationResult>>();
 
         operationResult.SetupGet(t => t.Data)
-            .Returns((IGetBeneficiaryResult?) null);
+            .Returns((IGetBeneficiaryWithEducationResult?) null);
         operationResult.SetupGet(t => t.Errors)
             .Returns(new List<IClientError>());
 
-        _mockGraphQl.Setup(t => t.GetBeneficiary.ExecuteAsync(
+        _mockGraphQl.Setup(t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                     It.IsAny<int>(),
                     It.IsAny<CancellationToken>()
                 )
@@ -141,18 +141,18 @@ internal sealed class CampaignsMochiPostTest
     public async Task WithInvalidParameters_UserDoesNotHavePermission_Fails()
     {
         // Arrange
-        Mochi campaign = DataFactory.GetMochi()
+        MochiCampaign campaign = DataFactory.GetMochi()
             .WithParticipants(Enumerable.Range(0, 3).Select(_ => new MochiParticipantBuilder().Build())
             );
 
-        var operationResult = new Mock<IOperationResult<IGetBeneficiaryResult>>();
+        var operationResult = new Mock<IOperationResult<IGetBeneficiaryWithEducationResult>>();
 
         operationResult.SetupGet(t => t.Data)
-            .Returns((IGetBeneficiaryResult?) null);
+            .Returns((IGetBeneficiaryWithEducationResult?) null);
         operationResult.SetupGet(t => t.Errors)
             .Returns(new[] {new ClientError("Auth invalid", "AUTH_NOT_AUTHORIZED")});
 
-        _mockGraphQl.Setup(t => t.GetBeneficiary.ExecuteAsync(
+        _mockGraphQl.Setup(t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                     It.IsAny<int>(),
                     It.IsAny<CancellationToken>()
                 )
@@ -178,7 +178,7 @@ internal sealed class CampaignsMochiPostTest
     public async Task WithInvalidParameters_RepeatedEditionAndCommunity_Fails()
     {
         // Arrange
-        Mochi campaign = DataFactory.GetMochi().WithParticipants(new List<MochiParticipant>());
+        MochiCampaign campaign = DataFactory.GetMochi().WithParticipants(new List<MochiParticipant>());
 
         var req = new Request
         {
@@ -188,7 +188,7 @@ internal sealed class CampaignsMochiPostTest
         };
 
         _mockDb.Setup(r => r.AddMochiCampaign(
-                It.Is<Mochi>(t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition),
+                It.Is<MochiCampaign>(t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition),
                 CancellationToken.None)
             )
             .ThrowsAsync(new UniqueConstraintException());

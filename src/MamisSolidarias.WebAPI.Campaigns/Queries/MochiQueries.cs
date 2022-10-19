@@ -12,19 +12,19 @@ public class MochiQueries
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<Mochi> GetMochiEditions([FromServices] CampaignsDbContext dbContext) => 
+    public IQueryable<MochiCampaign> GetMochiEditions([FromServices] CampaignsDbContext dbContext) => 
         dbContext.MochiCampaigns.AsNoTracking();
 
     [Authorize(Policy = "CanRead")]
     [UseFirstOrDefault]
     [UseProjection]
-    public IQueryable<Mochi> GetMochiEditionById([FromServices] CampaignsDbContext dbContext, int id) => 
+    public IQueryable<MochiCampaign> GetMochiEditionById([FromServices] CampaignsDbContext dbContext, int id) => 
         dbContext.MochiCampaigns.AsNoTracking().Where(x => x.Id == id);
 
     [Authorize(Policy = "CanRead")]
     [UseFirstOrDefault]
     [UseProjection]
-    public IQueryable<Mochi> GetMochiEdition([FromServices] CampaignsDbContext dbContext, string edition,
+    public IQueryable<MochiCampaign> GetMochiEdition([FromServices] CampaignsDbContext dbContext, string edition,
         string community) =>
         dbContext.MochiCampaigns.AsNoTracking().Where(x => x.Edition == edition && x.CommunityId == community);
 
@@ -68,6 +68,6 @@ public class MochiQueries
         string? BeneficiaryName,
         BeneficiaryGender? BeneficiaryGender,
         SchoolCycle? SchoolCycle,
-        MochiDonationType? KitOrMoney
+        DonationType? KitOrMoney
     );
 }

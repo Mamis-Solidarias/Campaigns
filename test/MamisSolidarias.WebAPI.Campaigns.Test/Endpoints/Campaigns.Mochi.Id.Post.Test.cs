@@ -39,9 +39,9 @@ internal sealed class CampaignsMochiIdPostTest
     public async Task WithValidParameters_Succeeds()
     {
         // Arrange
-        Mochi previousCampaign = DataFactory.GetMochi().WithId(123);
+        MochiCampaign previousCampaign = DataFactory.GetMochi().WithId(123);
         
-        Mochi campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochi();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
@@ -50,23 +50,23 @@ internal sealed class CampaignsMochiIdPostTest
 
         foreach (var participant in previousCampaign.Participants)
         {
-            var getBeneficiaryResult = new Mock<IGetBeneficiaryResult>();
+            var getBeneficiaryResult = new Mock<IGetBeneficiaryWithEducationResult>();
             getBeneficiaryResult.Setup(t => t.Beneficiary)
-                .Returns(new GetBeneficiary_Beneficiary_Beneficiary(
+                .Returns(new GetBeneficiaryWithEducation_Beneficiary_Beneficiary(
                         participant.BeneficiaryName, "",
                         participant.BeneficiaryGender.Map(),
-                        new GetBeneficiary_Beneficiary_Education_Education(participant.SchoolCycle.Map())
+                        new GetBeneficiaryWithEducation_Beneficiary_Education_Education(participant.SchoolCycle.Map())
                     )
                 );
 
-            var operationResult = new Mock<IOperationResult<IGetBeneficiaryResult>>();
+            var operationResult = new Mock<IOperationResult<IGetBeneficiaryWithEducationResult>>();
             operationResult.SetupGet(t => t.Data)
                 .Returns(getBeneficiaryResult.Object);
             
             operationResult.SetupGet(t => t.Errors)
                 .Returns(new List<IClientError>());
             
-            _mockGraphQl.Setup(t => t.GetBeneficiary.ExecuteAsync(
+            _mockGraphQl.Setup(t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                         It.Is<int>(r => r == participant.BeneficiaryId),
                         It.IsAny<CancellationToken>()
                     )
@@ -92,25 +92,25 @@ internal sealed class CampaignsMochiIdPostTest
     public async Task WithInvalidParameters_UserNotAuthenticated_Fails()
     {
         // Arrange
-        Mochi previousCampaign = DataFactory.GetMochi()
+        MochiCampaign previousCampaign = DataFactory.GetMochi()
             .WithId(123)
             .WithParticipants(Enumerable.Range(0, 3).Select(_ => new MochiParticipantBuilder().Build())
             );
-        Mochi campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochi();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(previousCampaign);
 
-        var operationResult = new Mock<IOperationResult<IGetBeneficiaryResult>>();
+        var operationResult = new Mock<IOperationResult<IGetBeneficiaryWithEducationResult>>();
 
         operationResult.SetupGet(t => t.Data)
-            .Returns((IGetBeneficiaryResult?) null);
+            .Returns((IGetBeneficiaryWithEducationResult?) null);
         operationResult.SetupGet(t => t.Errors)
             .Returns(new[] {new ClientError("Auth invalid", "AUTH_NOT_AUTHORIZED")});
 
-        _mockGraphQl.Setup(t => t.GetBeneficiary.ExecuteAsync(
+        _mockGraphQl.Setup(t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                     It.IsAny<int>(),
                     It.IsAny<CancellationToken>()
                 )
@@ -136,14 +136,14 @@ internal sealed class CampaignsMochiIdPostTest
     public async Task WithInvalidParameters_CampaignNotFound_Fails()
     {
         // Arrange
-        Mochi previousCampaign = DataFactory.GetMochi()
+        MochiCampaign previousCampaign = DataFactory.GetMochi()
             .WithId(123);
-        Mochi campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochi();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Mochi?)null);
+            .ReturnsAsync((MochiCampaign?)null);
 
 
         var req = new Request
@@ -165,9 +165,9 @@ internal sealed class CampaignsMochiIdPostTest
     {
         
         // Arrange
-        Mochi previousCampaign = DataFactory.GetMochi().WithId(123);
+        MochiCampaign previousCampaign = DataFactory.GetMochi().WithId(123);
         
-        Mochi campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochi();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
@@ -175,29 +175,29 @@ internal sealed class CampaignsMochiIdPostTest
             .ReturnsAsync(previousCampaign);
 
         _mockDb.Setup(t => t.SaveCampaignAsync(
-                It.IsAny<Mochi>(), It.IsAny<CancellationToken>())
+                It.IsAny<MochiCampaign>(), It.IsAny<CancellationToken>())
             )
             .ThrowsAsync(new UniqueConstraintException());
 
         foreach (var participant in previousCampaign.Participants)
         {
-            var getBeneficiaryResult = new Mock<IGetBeneficiaryResult>();
+            var getBeneficiaryResult = new Mock<IGetBeneficiaryWithEducationResult>();
             getBeneficiaryResult.Setup(t => t.Beneficiary)
-                .Returns(new GetBeneficiary_Beneficiary_Beneficiary(
+                .Returns(new GetBeneficiaryWithEducation_Beneficiary_Beneficiary(
                         participant.BeneficiaryName, "",
                         participant.BeneficiaryGender.Map(),
-                        new GetBeneficiary_Beneficiary_Education_Education(participant.SchoolCycle.Map())
+                        new GetBeneficiaryWithEducation_Beneficiary_Education_Education(participant.SchoolCycle.Map())
                     )
                 );
 
-            var operationResult = new Mock<IOperationResult<IGetBeneficiaryResult>>();
+            var operationResult = new Mock<IOperationResult<IGetBeneficiaryWithEducationResult>>();
             operationResult.SetupGet(t => t.Data)
                 .Returns(getBeneficiaryResult.Object);
             
             operationResult.SetupGet(t => t.Errors)
                 .Returns(new List<IClientError>());
             
-            _mockGraphQl.Setup(t => t.GetBeneficiary.ExecuteAsync(
+            _mockGraphQl.Setup(t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                         It.Is<int>(r => r == participant.BeneficiaryId),
                         It.IsAny<CancellationToken>()
                     )

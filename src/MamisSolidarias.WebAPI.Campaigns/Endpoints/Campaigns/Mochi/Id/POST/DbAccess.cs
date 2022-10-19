@@ -16,7 +16,7 @@ internal class DbAccess
         _dbContext = dbContext;
     }
 
-    public virtual Task<Infrastructure.Campaigns.Models.Mochi?> GetCampaignAsync(int id, CancellationToken ct)
+    public virtual Task<Infrastructure.Campaigns.Models.MochiCampaign?> GetCampaignAsync(int id, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         return _dbContext.MochiCampaigns
@@ -25,7 +25,7 @@ internal class DbAccess
             .FirstOrDefaultAsync(t=> t.Id == id, ct);
     }
 
-    public virtual async Task SaveCampaignAsync(Infrastructure.Campaigns.Models.Mochi campaign, CancellationToken ct)
+    public virtual async Task SaveCampaignAsync(Infrastructure.Campaigns.Models.MochiCampaign campaign, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         await _dbContext.MochiCampaigns.AddAsync(campaign, ct);

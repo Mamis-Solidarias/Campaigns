@@ -3,12 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MamisSolidarias.Infrastructure.Campaigns.Models;
 
-public enum MochiDonationType
-{
-    Money,
-    Kit
-}
-
 public enum SchoolCycle
 {
     PreSchool,
@@ -17,23 +11,11 @@ public enum SchoolCycle
     HighSchool
 }
 
-public enum BeneficiaryGender
-{
-    Male, Female, Other
-}
-
-public enum MochiParticipantState
-{
-    MissingDonor,
-    MissingDonation,
-    DonationReceived
-}
-
 public class MochiParticipant
 {
     public int Id { get; set; }
     public int CampaignId { get; set; }
-    public virtual Mochi? Campaign { get; set; }
+    public virtual MochiCampaign? Campaign { get; set; }
 
     public int BeneficiaryId { get; set; }
     public int? DonorId { get; set; }
@@ -42,8 +24,8 @@ public class MochiParticipant
     public string? DonorName { get; set; } = string.Empty;
     public BeneficiaryGender BeneficiaryGender { get; set; }
     public SchoolCycle? SchoolCycle { get; set; } 
-    public MochiDonationType? DonationType { get; set; }
-    public MochiParticipantState State { get; set; } = MochiParticipantState.MissingDonor;
+    public DonationType? DonationType { get; set; }
+    public ParticipantState State { get; set; } = ParticipantState.MissingDonor;
     public string? DonationDropOffLocation { get; set; }
 }
 

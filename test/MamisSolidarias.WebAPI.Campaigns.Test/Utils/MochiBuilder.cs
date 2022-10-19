@@ -8,7 +8,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Utils;
 
 internal sealed class MochiBuilder
 {
-    private static readonly Faker<Mochi> Generator = new Faker<Mochi>()
+    private static readonly Faker<MochiCampaign> Generator = new Faker<MochiCampaign>()
         .RuleFor(t => t.Id, f => f.IndexGlobal + 1)
         .RuleFor(t => t.Edition, f => f.Date.Recent().Year.ToString())
         .RuleFor(t=> t.CommunityId, f=> f.Name.FirstName()[..2].ToUpper())
@@ -18,12 +18,12 @@ internal sealed class MochiBuilder
                 .ToList()
         );
     
-    private readonly Mochi _mochi = Generator.Generate();
+    private readonly MochiCampaign _mochi = Generator.Generate();
 
     private readonly CampaignsDbContext? _dbContext;
 
     public MochiBuilder(CampaignsDbContext? db) => _dbContext = db;
-    public MochiBuilder(Mochi obj) => _mochi = obj;
+    public MochiBuilder(MochiCampaign obj) => _mochi = obj;
     
     public MochiBuilder WithId(int id)
     {
@@ -48,7 +48,7 @@ internal sealed class MochiBuilder
         return this;
     }
 
-    public Mochi Build()
+    public MochiCampaign Build()
     {
         _dbContext?.Add(_mochi);
         _dbContext?.SaveChanges();
@@ -56,7 +56,7 @@ internal sealed class MochiBuilder
         return _mochi;
     }
 
-    public static implicit operator Mochi(MochiBuilder b) => b.Build();
-    public static implicit operator MochiBuilder(Mochi b) => new(b);
+    public static implicit operator MochiCampaign(MochiBuilder b) => b.Build();
+    public static implicit operator MochiBuilder(MochiCampaign b) => new(b);
 
 }

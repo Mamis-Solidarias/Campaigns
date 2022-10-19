@@ -32,7 +32,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         participant.DonorName = null;
         participant.DonationDropOffLocation = null;
         participant.DonationType = null;
-        participant.State = MochiParticipantState.MissingDonor;
+        participant.State = ParticipantState.MissingDonor;
 
         await _db.UpdateParticipantAsync(participant, ct);
         await SendOkAsync(new Response(participant.Id), ct);

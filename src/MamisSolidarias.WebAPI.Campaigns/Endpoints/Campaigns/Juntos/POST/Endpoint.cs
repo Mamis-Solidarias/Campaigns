@@ -6,40 +6,61 @@ using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using StrawberryShake;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
+namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
-    private readonly DbAccess _db;
     private readonly IGraphQlClient _graphQlClient;
-    
-    public Endpoint(CampaignsDbContext dbContext, IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
+    private readonly DbAccess _db;
+
+    public Endpoint(IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
     {
-        _db = dbAccess ?? new DbAccess(dbContext);
         _graphQlClient = graphQlClient;
+        _db = dbAccess ?? new DbAccess(dbContext);
     }
 
     public override void Configure()
     {
-        Post("/campaigns/mochi");
+        Post("campaigns/juntos");
         Policies(Utils.Security.Policies.CanWrite);
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var campaign = new Infrastructure.Campaigns.Models.MochiCampaign
+        var campaign = new JuntosCampaign()
         {
+            Description = req.Description?.Trim(),
             CommunityId = req.CommunityId.Trim(),
             Edition = req.Edition.Trim(),
-            Description = req.Description,
-            Provider = req.Provider
+            FundraiserGoal = req.FundraiserGoal,
+            Participants = new List<JuntosParticipant>(),
+            Provider = req.Provider?.Trim()
         };
         
-        foreach (var beneficiaryId in req.Beneficiaries)
-        {
-            var response = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(beneficiaryId, ct);
+        var communityExecutor = await _graphQlClient.GetCommunity.ExecuteAsync(campaign.CommunityId, ct);
 
-            var hasErrors = await response.HandleErrors(
+        var hasErrors =  await communityExecutor.HandleErrors(
+            async t => await SendForbiddenAsync(t),
+            async (e, t) => await SendGraphQlErrors(e, t),
+            ct
+        );
+        
+        if (hasErrors)
+            return;
+
+        if (communityExecutor.Data?.Community is null)
+        {
+            await SendNotFoundAsync(ct);
+            return;
+        }
+        
+        foreach (var beneficiaryId in req.Beneficiaries.Distinct())
+        {
+            var response = await _graphQlClient
+                .GetBeneficiaryWithClothes
+                .ExecuteAsync(beneficiaryId, ct);
+
+            hasErrors = await response.HandleErrors(
                 async t => await SendForbiddenAsync(t),
                 async (errors,t) => await SendGraphQlErrors(errors,t),
                 ct
@@ -55,13 +76,11 @@ internal sealed class Endpoint : Endpoint<Request, Response>
                 return;
             }
 
-            var entry = new MochiParticipant
+            var entry = new JuntosParticipant
             {
-                BeneficiaryGender = response.Data.Beneficiary.Gender.Map(),
-                BeneficiaryId = beneficiaryId,
-                BeneficiaryName =
-                    $"{response.Data.Beneficiary.FirstName.ToLower()} {response.Data.Beneficiary.LastName.ToLower()}",
-                SchoolCycle = response.Data.Beneficiary.Education?.Cycle.Map()
+                Gender = response.Data.Beneficiary.Gender.Map(),
+                ShoeSize = response.Data.Beneficiary.Clothes?.ShoeSize,
+                BeneficiaryId = beneficiaryId
             };
             
             campaign.Participants.Add(entry);
@@ -69,7 +88,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         try
         {
-            await _db.AddMochiCampaign(campaign, ct);
+            await _db.AddCampaign(campaign, ct);
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)
@@ -77,9 +96,9 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             AddError("Ya existe una campaña con esa comunidad y edición");
             await SendErrorsAsync(cancellation: ct);
         }
-
+        
     }
-    
+
     private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
         foreach (var clientError in errors)
@@ -88,6 +107,4 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         await SendErrorsAsync(cancellation: token);
     }
 
-    
-    
 }
