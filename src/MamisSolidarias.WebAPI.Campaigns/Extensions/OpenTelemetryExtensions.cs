@@ -26,11 +26,7 @@ internal static class OpenTelemetryExtensions
                             serviceVersion: configuration["OpenTelemetry:Version"]
                         )
                 )
-                .AddHttpClientInstrumentation(t =>
-                {
-                    t.RecordException = true;
-                    t.SetHttpFlavor = true;
-                })
+                .AddHttpClientInstrumentation(t => t.RecordException = true)
                 .AddAspNetCoreInstrumentation(t => t.RecordException = true)
                 .AddEntityFrameworkCoreInstrumentation(t => t.SetDbStatementForText = true)
                 .AddHotChocolateInstrumentation()
