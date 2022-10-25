@@ -12,6 +12,9 @@ RUN dotnet publish src/MamisSolidarias.WebAPI.Campaigns/MamisSolidarias.WebAPI.C
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+
+ENV OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT=4094
+
 EXPOSE 80
 EXPOSE 443
 WORKDIR /app
