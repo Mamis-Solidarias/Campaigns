@@ -10,7 +10,7 @@ internal static class ServiceRegistrator
     {
 
         builder.Services.AddDataProtection(builder.Configuration);
-        builder.Services.AddOpenTelemetry(builder.Configuration);
+        builder.Services.AddOpenTelemetry(builder.Configuration,builder.Logging);
         builder.Services.AddFastEndpoints(t=> t.SourceGeneratorDiscoveredTypes = DiscoveredTypes.All);
         builder.Services.AddDbContext(builder.Configuration, builder.Environment);
         builder.Services.AddAuth(builder.Configuration);
