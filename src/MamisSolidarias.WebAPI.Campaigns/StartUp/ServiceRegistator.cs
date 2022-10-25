@@ -9,6 +9,7 @@ internal static class ServiceRegistrator
     public static void Register(WebApplicationBuilder builder)
     {
 
+        builder.Services.AddDataProtection(builder.Configuration);
         builder.Services.AddOpenTelemetry(builder.Configuration);
         builder.Services.AddFastEndpoints(t=> t.SourceGeneratorDiscoveredTypes = DiscoveredTypes.All);
         builder.Services.AddDbContext(builder.Configuration, builder.Environment);
