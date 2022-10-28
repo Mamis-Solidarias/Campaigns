@@ -37,8 +37,11 @@ internal sealed class Endpoint : Endpoint<Request>
             await _db.DeleteParticipantsAsync(req.RemovedBeneficiaries, ct);
         
         var participants = new List<MochiParticipant>();
+        var idList = req.AddedBeneficiaries
+            .Distinct()
+            .Where(id => campaign.Participants.All(p => p.BeneficiaryId != id));
         
-        foreach (var id in req.AddedBeneficiaries)
+        foreach (var id in idList)
         {
             var response = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(id, ct);
 
@@ -69,6 +72,9 @@ internal sealed class Endpoint : Endpoint<Request>
             };
             participants.Add(entry);
         }
+
+        campaign.Description = string.IsNullOrWhiteSpace(req.Description) ? null : req.Description.Trim();
+        campaign.Provider = string.IsNullOrWhiteSpace(req.Provider) ? null : req.Provider.Trim();
         
         await _db.SaveParticipantsAsync(participants, ct);
         await _db.SaveChangesAsync(ct);
