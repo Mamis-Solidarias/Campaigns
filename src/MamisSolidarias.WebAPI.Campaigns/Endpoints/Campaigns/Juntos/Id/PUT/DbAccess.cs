@@ -45,6 +45,7 @@ internal class DbAccess
         ArgumentNullException.ThrowIfNull(_dbContext);
         return _dbContext.JuntosCampaigns
             .AsTracking()
+            .Include(t=> t.Participants)
             .FirstOrDefaultAsync(t=> t.Id == reqId, ct);
     }
 }

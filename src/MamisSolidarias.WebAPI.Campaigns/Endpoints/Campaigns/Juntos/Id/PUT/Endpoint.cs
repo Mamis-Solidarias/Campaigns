@@ -37,8 +37,11 @@ internal sealed class Endpoint : Endpoint<Request>
             await _db.DeleteParticipants(req.Id,req.RemovedBeneficiaries, ct);
         
         var participants = new List<JuntosParticipant>();
+        var idList = req.AddedBeneficiaries
+            .Distinct()
+            .Where(id => campaign.Participants.All(p => p.BeneficiaryId != id));
         
-        foreach (var id in req.AddedBeneficiaries)
+        foreach (var id in idList)
         {
             var response = await _graphQlClient.GetBeneficiaryWithClothes.ExecuteAsync(id, ct);
 
@@ -58,7 +61,7 @@ internal sealed class Endpoint : Endpoint<Request>
                 return;
             }
 
-            var entry = new JuntosParticipant()
+            var entry = new JuntosParticipant
             {
                 BeneficiaryId = id,
                 CampaignId = campaign.Id,
