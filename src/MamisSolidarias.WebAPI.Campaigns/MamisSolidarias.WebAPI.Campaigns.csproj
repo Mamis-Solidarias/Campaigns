@@ -21,6 +21,7 @@
         <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.15.0" />
         <PackageReference Include="HotChocolate.Diagnostics" Version="12.15.0" />
         <PackageReference Include="HotChocolate.Stitching" Version="12.15.0" />
+        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.15.0" />
         <PackageReference Include="MamisSolidarias.Utils" Version="1.3.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
           <PrivateAssets>all</PrivateAssets>
