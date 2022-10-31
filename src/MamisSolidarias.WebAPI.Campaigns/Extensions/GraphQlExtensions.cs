@@ -2,6 +2,7 @@ using HotChocolate.Diagnostics;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Utils.Security;
 using MamisSolidarias.WebAPI.Campaigns.Queries;
+using StackExchange.Redis;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
@@ -25,6 +26,9 @@ internal static class GraphQlExtensions
                     t.DefaultRequestHeaders.Add("Authorization", auth.First());
             });
 
+        var redisConnectionString = $"{configuration["Redis:Host"]}:{configuration["Redis:Port"]}";
+        services.AddSingleton(ConnectionMultiplexer.Connect(redisConnectionString));
+
         services.AddGraphQLServer()
             .AddQueryType<MochiQueries>()
             .AddInstrumentation(t =>
@@ -39,10 +43,13 @@ internal static class GraphQlExtensions
             .AddFiltering()
             .AddSorting()
             .RegisterDbContext<CampaignsDbContext>()
+            .InitializeOnStartup()
             .PublishSchemaDefinition(t => t
                 .SetName($"{Services.Campaigns}gql")
                 .AddTypeExtensionsFromFile("./Stitching.graphql")
-            
+                .PublishToRedis(configuration["GraphQl:GlobalSchemaName"],
+                    sp => sp.GetRequiredService<ConnectionMultiplexer>()
+                )
             );
         
     }
