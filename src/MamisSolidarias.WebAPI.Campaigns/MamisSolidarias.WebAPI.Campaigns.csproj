@@ -40,7 +40,7 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.8" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.0.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.8" />
-        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.15.0" />
+        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.15.1" />
         <PackageReference Include="StrawberryShake.Transport.Http" Version="12.15.0" />
     </ItemGroup>
 
