@@ -23,7 +23,7 @@
         <PackageReference Include="HotChocolate.Stitching" Version="12.15.2" />
         <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.15.2" />
         <PackageReference Include="MamisSolidarias.Utils" Version="1.4.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
