@@ -15,7 +15,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FastEndpoints.Security" Version="5.4.0" />
-        <PackageReference Include="FastEndpoints.Swagger" Version="5.4.0" />
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.4.1" />
         <PackageReference Include="HotChocolate.AspNetCore" Version="12.15.2" />
         <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.15.2" />
         <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.15.2" />
