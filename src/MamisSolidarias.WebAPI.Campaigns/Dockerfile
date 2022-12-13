@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-env
 WORKDIR /app
 # Copy everything
 COPY . ./
@@ -11,7 +11,7 @@ RUN dotnet publish src/MamisSolidarias.WebAPI.Campaigns/MamisSolidarias.WebAPI.C
     --no-restore 
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine
 
 ENV OTEL_ATTRIBUTE_VALUE_LENGTH_LIMIT=4094
 
