@@ -1,4 +1,5 @@
 using Npgsql;
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -8,17 +9,27 @@ namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
 internal static class OpenTelemetryExtensions
 {
+    private static ILogger? _logger;
     public static void AddOpenTelemetry(this IServiceCollection services, IConfiguration configuration,
-        ILoggingBuilder logging)
+        ILoggingBuilder logging, ILoggerFactory loggerFactory)
     {
+        _logger = loggerFactory.CreateLogger("OpenTelemetryExtensions");
         var options = configuration.GetSection("OpenTelemetry").Get<OpenTelemetryOptions>();
+
+        if (options is null)
+        {
+            _logger.LogWarning("OpenTelemetry options are not configured");
+            return;
+        }
 
         var resourceBuilder = ResourceBuilder
             .CreateDefault()
             .AddService(options.Name, "MamisSolidarias", options.Version)
             .AddTelemetrySdk();
 
-        services.AddOpenTelemetryTracing(tracerProviderBuilder =>
+        var builder = services.AddOpenTelemetry().StartWithHost();
+
+        builder.WithTracing(tracerProviderBuilder =>
         {
             tracerProviderBuilder
                 .SetResourceBuilder(resourceBuilder)
@@ -32,7 +43,7 @@ internal static class OpenTelemetryExtensions
                 .AddNpgsql();
         });
 
-        services.AddOpenTelemetryMetrics(meterProviderBuilder =>
+        builder.WithMetrics(meterProviderBuilder =>
         {
             meterProviderBuilder
                 .SetResourceBuilder(resourceBuilder)
@@ -61,7 +72,10 @@ internal static class OpenTelemetryExtensions
         NewRelicOptions? newRelicOptions)
     {
         if (string.IsNullOrWhiteSpace(newRelicOptions?.Url) || string.IsNullOrWhiteSpace(newRelicOptions.ApiKey))
+        {
+            _logger?.LogWarning("NewRelic traces are not configured");
             return builder;
+        }
 
         return builder.AddOtlpExporter(t =>
         {
@@ -74,7 +88,10 @@ internal static class OpenTelemetryExtensions
         NewRelicOptions? newRelicOptions)
     {
         if (string.IsNullOrWhiteSpace(newRelicOptions?.Url) || string.IsNullOrWhiteSpace(newRelicOptions.ApiKey))
+        {
+            _logger?.LogWarning("NewRelic logs are not configured");
             return builder;
+        }
 
         return builder.AddOtlpExporter(t =>
         {
@@ -87,7 +104,10 @@ internal static class OpenTelemetryExtensions
         NewRelicOptions? newRelicOptions)
     {
         if (string.IsNullOrWhiteSpace(newRelicOptions?.Url) || string.IsNullOrWhiteSpace(newRelicOptions.ApiKey))
+        {
+            _logger?.LogWarning("NewRelic metrics are not configured");
             return builder;
+        }
 
         return builder.AddOtlpExporter((t, m) =>
         {
@@ -101,7 +121,10 @@ internal static class OpenTelemetryExtensions
         JaegerOptions? jaegerOptions)
     {
         if (jaegerOptions is null || string.IsNullOrWhiteSpace(jaegerOptions.Url))
+        {
+            _logger?.LogWarning("Jaeger traces are not configured");
             return builder;
+        }
 
         return builder.AddJaegerExporter(t => t.AgentHost = jaegerOptions.Url);
     }
@@ -113,15 +136,12 @@ internal static class OpenTelemetryExtensions
         return builder;
     }
 
-    // ReSharper disable once ClassNeverInstantiated.Local
     private sealed class NewRelicOptions
     {
-        // ReSharper disable file UnusedAutoPropertyAccessor.Local
         public string? ApiKey { get; init; }
         public string? Url { get; init; }
     }
 
-    // ReSharper disable once ClassNeverInstantiated.Local
     private sealed class JaegerOptions
     {
         public string? Url { get; init; }
