@@ -1,11 +1,12 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using MamisSolidarias.Infrastructure.Campaigns;
+using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.StartUp;
 
-internal static class MiddlewareRegistrator
+internal static class MiddlewareRegistrar
 {
     public static void Register(WebApplication app)
     {
@@ -15,11 +16,7 @@ internal static class MiddlewareRegistrator
         app.UseFastEndpoints();
         app.MapGraphQL();
 
-        using (var scope = app.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<CampaignsDbContext>();
-            db.Database.Migrate();
-        }
+        app.RunMigrations();
 
         if (!app.Environment.IsProduction())
         {

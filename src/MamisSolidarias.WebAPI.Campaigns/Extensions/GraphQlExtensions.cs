@@ -8,12 +8,21 @@ namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
 internal static class GraphQlExtensions
 {
-    public static void AddGraphQl(this IServiceCollection services, IConfiguration configuration)
+    public static void AddGraphQl(this IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
     {
+        var logger = loggerFactory.CreateLogger("GraphQL");
+        var options = configuration.GetSection("GraphQL").Get<GraphQlOptions>();
+
+        if (options is null)
+        {
+            logger.LogError("GraphQL configuration is missing");
+            throw new ArgumentException("GraphQL configuration is missing");
+        }
+        
         services.AddGraphQlClient()
             .ConfigureHttpClient((s, t) =>
             {
-                t.BaseAddress = new Uri(configuration["GraphQL:Endpoint"]);
+                t.BaseAddress = new Uri(options.Endpoint);
                 t.Timeout = TimeSpan.FromSeconds(10);
 
                 var context = s.GetRequiredService<IHttpContextAccessor>().HttpContext;
@@ -47,10 +56,10 @@ internal static class GraphQlExtensions
             .PublishSchemaDefinition(t => t
                 .SetName($"{Services.Campaigns}gql")
                 .AddTypeExtensionsFromFile("./Stitching.graphql")
-                .PublishToRedis(configuration["GraphQl:GlobalSchemaName"],
+                .PublishToRedis(options.GlobalSchemaName,
                     sp => sp.GetRequiredService<ConnectionMultiplexer>()
                 )
             );
-        
     }
+    private sealed record GraphQlOptions(string Endpoint, string GlobalSchemaName);
 }
