@@ -1,8 +1,6 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
-using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.StartUp;
 
