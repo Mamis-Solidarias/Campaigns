@@ -14,7 +14,7 @@ internal sealed class JuntosParticipantBuilder
         .RuleFor(t => t.DonationType, f => f.PickRandom<DonationType>())
         .RuleFor(t => t.DonorId, f => f.IndexGlobal + 1)
         .RuleFor(t => t.DonorName, f => f.Name.FullName())
-        .RuleFor(t => t.ShoeSize, f => $"{f.Random.Number(10, 50)}")
+        .RuleFor(t => t.ShoeSize, f => f.Random.Number(10, 50))
         .RuleFor(t => t.DonationDropOffPoint, f => f.Address.City());
 
     private readonly CampaignsDbContext? _dbContext;
@@ -44,7 +44,7 @@ internal sealed class JuntosParticipantBuilder
         return this;
     }
 
-    public JuntosParticipantBuilder WithShoeSize(string? shoeSize)
+    public JuntosParticipantBuilder WithShoeSize(int? shoeSize)
     {
         _juntosParticipant.ShoeSize = shoeSize;
         return this;

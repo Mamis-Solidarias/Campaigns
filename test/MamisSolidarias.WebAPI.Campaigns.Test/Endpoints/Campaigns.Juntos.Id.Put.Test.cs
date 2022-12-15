@@ -53,7 +53,7 @@ internal sealed class CampaignsJuntosIdPutTest
         };
 
         foreach (var beneficiary in request.AddedBeneficiaries)
-            SetUpGetBeneficiaryWithClothes(beneficiary,BeneficiaryGender.Female,"38");
+            SetUpGetBeneficiaryWithClothes(beneficiary,BeneficiaryGender.Female,38);
 
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
@@ -153,7 +153,7 @@ internal sealed class CampaignsJuntosIdPutTest
             .ReturnsAsync(campaign);
     }
 
-    private void SetUpGetBeneficiaryWithClothes(int beneficiaryId, BeneficiaryGender gender, string? shoeSize)
+    private void SetUpGetBeneficiaryWithClothes(int beneficiaryId, BeneficiaryGender gender, int? shoeSize)
     {
         var getBeneficiaryResult = new Mock<IGetBeneficiaryWithClothesResult>();
         getBeneficiaryResult.Setup(t => t.Beneficiary)
