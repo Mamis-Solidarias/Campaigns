@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build-env
+# note: this needs to be pinned to an amd64 image in order to publish armv7 binaries
+# https://github.com/dotnet/dotnet-docker/issues/1537#issuecomment-615269150
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine-amd64 AS build-env
 WORKDIR /app
 # Copy everything
 COPY . ./
