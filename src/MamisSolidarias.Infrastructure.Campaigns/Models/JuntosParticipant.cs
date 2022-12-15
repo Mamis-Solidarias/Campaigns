@@ -10,7 +10,7 @@ public class JuntosParticipant
     
     public BeneficiaryGender Gender { get; set; }
     
-    public string? ShoeSize { get; set; }
+    public int? ShoeSize { get; set; }
 
     public ParticipantState State { get; set; } = ParticipantState.MissingDonor;
     public int CampaignId { get; set; }

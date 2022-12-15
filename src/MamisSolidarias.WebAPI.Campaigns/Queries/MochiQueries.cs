@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Queries;
 
+[ExtendObjectType("Query")]
 public class MochiQueries
 {
     [Authorize(Policy = "CanRead")]

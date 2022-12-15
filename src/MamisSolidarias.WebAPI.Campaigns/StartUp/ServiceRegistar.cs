@@ -22,8 +22,9 @@ internal static class ServiceRegistrar
         builder.Services.AddOpenTelemetry(builder.Configuration, builder.Logging, loggerFactory);
         builder.Services.AddFastEndpoints(t => t.SourceGeneratorDiscoveredTypes = DiscoveredTypes.All);
         builder.Services.AddEntityFramework(builder.Configuration, builder.Environment, loggerFactory);
-        builder.Services.AddAuth(builder.Configuration,loggerFactory);
-        builder.Services.AddGraphQl(builder.Configuration,loggerFactory);
+        builder.Services.AddAuth(builder.Configuration, loggerFactory);
+        builder.Services.AddGraphQl(builder.Configuration, loggerFactory);
+        builder.Services.AddRedis(builder.Configuration, loggerFactory);
         builder.Services.AddSwaggerDoc();
     }
 }

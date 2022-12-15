@@ -3,6 +3,13 @@
 }
 
 type Query {
+  user(id: Int): User
+  mochiEditions(where: MochiCampaignFilterInput order: [MochiCampaignSortInput!]): [MochiCampaign!]!
+  mochiEditionById(id: Int!): MochiCampaign
+  mochiEdition(edition: String! community: String!): MochiCampaign
+  mochiParticipants(campaignId: Int! filter: MochiParticipantFiltersInput where: MochiParticipantFilterInput order: [MochiParticipantSortInput!]): [MochiParticipant!]!
+  donors(filters: DonorFiltersInput "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: DonorFilterInput order: [DonorSortInput!]): DonorsConnection
+  donor(id: Int): Donor
   beneficiaries("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: BeneficiaryFilterInput order: [BeneficiarySortInput!]): BeneficiariesConnection
   beneficiary(id: Int!): Beneficiary
   filteredBeneficiaries(filter: FilterParamsInput! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [BeneficiarySortInput!]): FilteredBeneficiariesConnection
@@ -11,14 +18,298 @@ type Query {
   families("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: FamilyFilterInput order: [FamilySortInput!]): FamiliesConnection
   family(id: String!): Family
   filteredFamilies(filter: FamiliesFilterInput! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: FamilyFilterInput order: [FamilySortInput!]): FilteredFamiliesConnection
-  donors("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: DonorFilterInput order: [DonorSortInput!]): DonorsConnection
-  donor(id: Int!): Donor
-  user(id: Int!): User
-  mochiEditions(where: MochiFilterInput order: [MochiSortInput!]): [Mochi!]!
-  specificMochiEdition(id: Int!): Mochi
-  mochiEdition(edition: String! community: String!): Mochi
-  mochiParticipants(id: Int!): [MochiParticipant!]!
-  filteredMochiParticipants(campaignId: Int! filter: MochiParticipantFiltersInput! where: MochiParticipantFilterInput order: [MochiParticipantSortInput!]): [MochiParticipant!]!
+}
+
+type Role {
+  id: Int!
+  service: Services!
+  canRead: Boolean!
+  canWrite: Boolean!
+}
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  phone: String!
+  roles: [Role!]!
+  isActive: Boolean
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+enum Services {
+  USERS
+  BENEFICIARIES
+  DONORS
+  CAMPAIGNS
+}
+
+type MochiCampaign {
+  id: Int!
+  edition: String!
+  communityId: String!
+  provider: String
+  description: String
+  participants: [MochiParticipant!]!
+}
+
+type MochiParticipant {
+  id: Int!
+  campaignId: Int!
+  campaign: MochiCampaign
+  beneficiaryId: Int!
+  donorId: Int
+  beneficiaryName: String!
+  donorName: String
+  beneficiaryGender: BeneficiaryGender!
+  schoolCycle: SchoolCycle
+  donationType: DonationType
+  state: ParticipantState!
+  donationDropOffLocation: String
+  beneficiary: Beneficiary
+  donor: Donor
+}
+
+input BeneficiaryGenderOperationFilterInput {
+  eq: BeneficiaryGender
+  neq: BeneficiaryGender
+  in: [BeneficiaryGender!]
+  nin: [BeneficiaryGender!]
+}
+
+input ComparableInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ComparableNullableOfInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ListFilterInputTypeOfMochiParticipantFilterInput {
+  all: MochiParticipantFilterInput
+  none: MochiParticipantFilterInput
+  some: MochiParticipantFilterInput
+  any: Boolean
+}
+
+input MochiCampaignFilterInput {
+  and: [MochiCampaignFilterInput!]
+  or: [MochiCampaignFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  edition: StringOperationFilterInput
+  communityId: StringOperationFilterInput
+  provider: StringOperationFilterInput
+  description: StringOperationFilterInput
+  participants: ListFilterInputTypeOfMochiParticipantFilterInput
+}
+
+input MochiCampaignSortInput {
+  id: SortEnumType
+  edition: SortEnumType
+  communityId: SortEnumType
+  provider: SortEnumType
+  description: SortEnumType
+}
+
+input MochiParticipantFilterInput {
+  and: [MochiParticipantFilterInput!]
+  or: [MochiParticipantFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  campaignId: ComparableInt32OperationFilterInput
+  campaign: MochiCampaignFilterInput
+  beneficiaryId: ComparableInt32OperationFilterInput
+  donorId: ComparableNullableOfInt32OperationFilterInput
+  beneficiaryName: StringOperationFilterInput
+  donorName: StringOperationFilterInput
+  beneficiaryGender: BeneficiaryGenderOperationFilterInput
+  schoolCycle: NullableOfSchoolCycleOperationFilterInput
+  donationType: NullableOfDonationTypeOperationFilterInput
+  state: ParticipantStateOperationFilterInput
+  donationDropOffLocation: StringOperationFilterInput
+}
+
+input MochiParticipantFiltersInput {
+  beneficiaryName: String
+  beneficiaryGender: BeneficiaryGender
+  schoolCycle: SchoolCycle
+  kitOrMoney: DonationType
+}
+
+input MochiParticipantSortInput {
+  id: SortEnumType
+  campaignId: SortEnumType
+  campaign: MochiCampaignSortInput
+  beneficiaryId: SortEnumType
+  donorId: SortEnumType
+  beneficiaryName: SortEnumType
+  donorName: SortEnumType
+  beneficiaryGender: SortEnumType
+  schoolCycle: SortEnumType
+  donationType: SortEnumType
+  state: SortEnumType
+  donationDropOffLocation: SortEnumType
+}
+
+input NullableOfDonationTypeOperationFilterInput {
+  eq: DonationType
+  neq: DonationType
+  in: [DonationType]
+  nin: [DonationType]
+}
+
+input NullableOfSchoolCycleOperationFilterInput {
+  eq: SchoolCycle
+  neq: SchoolCycle
+  in: [SchoolCycle]
+  nin: [SchoolCycle]
+}
+
+input ParticipantStateOperationFilterInput {
+  eq: ParticipantState
+  neq: ParticipantState
+  in: [ParticipantState!]
+  nin: [ParticipantState!]
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+enum BeneficiaryGender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum DonationType {
+  MONEY
+  OBJECT
+}
+
+enum ParticipantState {
+  MISSING_DONOR
+  MISSING_DONATION
+  DONATION_RECEIVED
+}
+
+enum SchoolCycle {
+  PRE_SCHOOL
+  PRIMARY_SCHOOL
+  MIDDLE_SCHOOL
+  HIGH_SCHOOL
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+type Donor {
+  id: Int!
+  name: String!
+  email: String
+  phone: String
+  isGodFather: Boolean!
+  createdBy: Int!
+  owner: User
+}
+
+"A connection to a list of items."
+type DonorsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [DonorsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Donor!]
+}
+
+"An edge in a connection."
+type DonorsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Donor!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input DonorFilterInput {
+  and: [DonorFilterInput!]
+  or: [DonorFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  email: StringOperationFilterInput
+  phone: StringOperationFilterInput
+  isGodFather: BooleanOperationFilterInput
+  createdBy: ComparableInt32OperationFilterInput
+}
+
+input DonorFiltersInput {
+  isGodFather: Boolean
+  ownerId: Int
+  name: String
+}
+
+input DonorSortInput {
+  id: SortEnumType
+  name: SortEnumType
+  email: SortEnumType
+  phone: SortEnumType
+  isGodFather: SortEnumType
+  createdBy: SortEnumType
 }
 
 "A connection to a list of items."
@@ -60,7 +351,7 @@ type Beneficiary {
 
 type Clothes {
   id: Int!
-  shoeSize: String
+  shoeSize: Int
   shirtSize: String
   pantsSize: String
 }
@@ -184,18 +475,6 @@ type Job {
   title: String!
 }
 
-"Information about pagination in a connection."
-type PageInfo {
-  "Indicates whether more edges exist following the set defined by the clients arguments."
-  hasNextPage: Boolean!
-  "Indicates whether more edges exist prior the set defined by the clients arguments."
-  hasPreviousPage: Boolean!
-  "When paginating backwards, the cursor to continue."
-  startCursor: String
-  "When paginating forwards, the cursor to continue."
-  endCursor: String
-}
-
 input BeneficiaryFilterInput {
   and: [BeneficiaryFilterInput!]
   or: [BeneficiaryFilterInput!]
@@ -215,13 +494,6 @@ input BeneficiaryFilterInput {
   education: EducationFilterInput
   health: HealthFilterInput
   job: JobFilterInput
-}
-
-input BeneficiaryGenderOperationFilterInput {
-  eq: BeneficiaryGender
-  neq: BeneficiaryGender
-  in: [BeneficiaryGender!]
-  nin: [BeneficiaryGender!]
 }
 
 input BeneficiarySortInput {
@@ -250,16 +522,11 @@ input BeneficiaryTypeOperationFilterInput {
   nin: [BeneficiaryType!]
 }
 
-input BooleanOperationFilterInput {
-  eq: Boolean
-  neq: Boolean
-}
-
 input ClothesFilterInput {
   and: [ClothesFilterInput!]
   or: [ClothesFilterInput!]
   id: ComparableInt32OperationFilterInput
-  shoeSize: StringOperationFilterInput
+  shoeSize: ComparableNullableOfInt32OperationFilterInput
   shirtSize: StringOperationFilterInput
   pantsSize: StringOperationFilterInput
 }
@@ -301,21 +568,6 @@ input ComparableDateOnlyOperationFilterInput {
   nlt: Date
   lte: Date
   nlte: Date
-}
-
-input ComparableInt32OperationFilterInput {
-  eq: Int
-  neq: Int
-  in: [Int!]
-  nin: [Int!]
-  gt: Int
-  ngt: Int
-  gte: Int
-  ngte: Int
-  lt: Int
-  nlt: Int
-  lte: Int
-  nlte: Int
 }
 
 input ContactFilterInput {
@@ -444,13 +696,6 @@ input ListFilterInputTypeOfFamilyFilterInput {
   any: Boolean
 }
 
-input NullableOfSchoolCycleOperationFilterInput {
-  eq: SchoolCycle
-  neq: SchoolCycle
-  in: [SchoolCycle]
-  nin: [SchoolCycle]
-}
-
 input NullableOfSchoolYearOperationFilterInput {
   eq: SchoolYear
   neq: SchoolYear
@@ -465,32 +710,6 @@ input NullableOfTransportationMethodOperationFilterInput {
   nin: [TransportationMethod]
 }
 
-input StringOperationFilterInput {
-  and: [StringOperationFilterInput!]
-  or: [StringOperationFilterInput!]
-  eq: String
-  neq: String
-  contains: String
-  ncontains: String
-  in: [String]
-  nin: [String]
-  startsWith: String
-  nstartsWith: String
-  endsWith: String
-  nendsWith: String
-}
-
-enum ApplyPolicy {
-  BEFORE_RESOLVER
-  AFTER_RESOLVER
-}
-
-enum BeneficiaryGender {
-  MALE
-  FEMALE
-  OTHER
-}
-
 enum BeneficiaryType {
   CHILD
   ADULT
@@ -503,13 +722,6 @@ enum ContactType {
   FACEBOOK
   INSTAGRAM
   OTHER
-}
-
-enum SchoolCycle {
-  PRE_SCHOOL
-  PRIMARY_SCHOOL
-  MIDDLE_SCHOOL
-  HIGH_SCHOOL
 }
 
 enum SchoolYear {
@@ -531,11 +743,6 @@ enum SchoolYear {
   HIGH_SCHOOL6
 }
 
-enum SortEnumType {
-  ASC
-  DESC
-}
-
 enum TransportationMethod {
   WALKING
   CAR
@@ -543,180 +750,6 @@ enum TransportationMethod {
   BIKE
   HORSE
   OTHER
-}
-
-type Donor {
-  id: Int!
-  name: String!
-  email: String
-  phone: String
-  isGodFather: Boolean!
-  createdBy: Int!
-}
-
-"A connection to a list of items."
-type DonorsConnection {
-  "Information to aid in pagination."
-  pageInfo: PageInfo!
-  "A list of edges."
-  edges: [DonorsEdge!]
-  "A flattened list of the nodes."
-  nodes: [Donor!]
-}
-
-"An edge in a connection."
-type DonorsEdge {
-  "A cursor for use in pagination."
-  cursor: String!
-  "The item at the end of the edge."
-  node: Donor!
-}
-
-input DonorFilterInput {
-  and: [DonorFilterInput!]
-  or: [DonorFilterInput!]
-  id: ComparableInt32OperationFilterInput
-  name: StringOperationFilterInput
-  email: StringOperationFilterInput
-  phone: StringOperationFilterInput
-  isGodFather: BooleanOperationFilterInput
-  createdBy: ComparableInt32OperationFilterInput
-}
-
-input DonorSortInput {
-  id: SortEnumType
-  name: SortEnumType
-  email: SortEnumType
-  phone: SortEnumType
-  isGodFather: SortEnumType
-  createdBy: SortEnumType
-}
-
-type Role {
-  id: Int!
-  service: Services!
-  canRead: Boolean!
-  canWrite: Boolean!
-}
-
-type User {
-  id: Int!
-  name: String!
-  email: String!
-  phone: String!
-  roles: [Role!]!
-  isActive: Boolean
-}
-
-enum Services {
-  USERS
-  BENEFICIARIES
-  DONORS
-  CAMPAIGNS
-}
-
-type Mochi {
-  id: Int!
-  edition: String!
-  communityId: String!
-  participants: [MochiParticipant!]!
-}
-
-type MochiParticipant {
-  id: Int!
-  campaignId: Int!
-  campaign: Mochi
-  beneficiaryId: Int!
-  donorId: Int
-  beneficiaryName: String!
-  donorName: String
-  beneficiaryGender: BeneficiaryGender!
-  schoolCycle: SchoolCycle
-  donationType: MochiDonationType
-}
-
-input ComparableNullableOfInt32OperationFilterInput {
-  eq: Int
-  neq: Int
-  in: [Int]
-  nin: [Int]
-  gt: Int
-  ngt: Int
-  gte: Int
-  ngte: Int
-  lt: Int
-  nlt: Int
-  lte: Int
-  nlte: Int
-}
-
-input ListFilterInputTypeOfMochiParticipantFilterInput {
-  all: MochiParticipantFilterInput
-  none: MochiParticipantFilterInput
-  some: MochiParticipantFilterInput
-  any: Boolean
-}
-
-input MochiFilterInput {
-  and: [MochiFilterInput!]
-  or: [MochiFilterInput!]
-  id: ComparableInt32OperationFilterInput
-  edition: StringOperationFilterInput
-  communityId: StringOperationFilterInput
-  participants: ListFilterInputTypeOfMochiParticipantFilterInput
-}
-
-input MochiParticipantFilterInput {
-  and: [MochiParticipantFilterInput!]
-  or: [MochiParticipantFilterInput!]
-  id: ComparableInt32OperationFilterInput
-  campaignId: ComparableInt32OperationFilterInput
-  campaign: MochiFilterInput
-  beneficiaryId: ComparableInt32OperationFilterInput
-  donorId: ComparableNullableOfInt32OperationFilterInput
-  beneficiaryName: StringOperationFilterInput
-  donorName: StringOperationFilterInput
-  beneficiaryGender: BeneficiaryGenderOperationFilterInput
-  schoolCycle: NullableOfSchoolCycleOperationFilterInput
-  donationType: NullableOfMochiDonationTypeOperationFilterInput
-}
-
-input MochiParticipantFiltersInput {
-  beneficiaryName: String
-  beneficiaryGender: BeneficiaryGender
-  schoolCycle: SchoolCycle
-  kitOrBonus: MochiDonationType
-}
-
-input MochiParticipantSortInput {
-  id: SortEnumType
-  campaignId: SortEnumType
-  campaign: MochiSortInput
-  beneficiaryId: SortEnumType
-  donorId: SortEnumType
-  beneficiaryName: SortEnumType
-  donorName: SortEnumType
-  beneficiaryGender: SortEnumType
-  schoolCycle: SortEnumType
-  donationType: SortEnumType
-}
-
-input MochiSortInput {
-  id: SortEnumType
-  edition: SortEnumType
-  communityId: SortEnumType
-}
-
-input NullableOfMochiDonationTypeOperationFilterInput {
-  eq: MochiDonationType
-  neq: MochiDonationType
-  in: [MochiDonationType]
-  nin: [MochiDonationType]
-}
-
-enum MochiDonationType {
-  BONO
-  KIT
 }
 
 "The name scalar represents a valid GraphQL name as specified in the spec and can be used to refer to fields or types."

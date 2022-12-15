@@ -35,11 +35,9 @@ internal static class GraphQlExtensions
                     t.DefaultRequestHeaders.Add("Authorization", auth.First());
             });
 
-        var redisConnectionString = $"{configuration["Redis:Host"]}:{configuration["Redis:Port"]}";
-        services.AddSingleton(ConnectionMultiplexer.Connect(redisConnectionString));
-
         services.AddGraphQLServer()
-            .AddQueryType<MochiQueries>()
+            .AddQueryType(t=> t.Name("Query"))
+            .AddCampaignsTypes()
             .AddInstrumentation(t =>
             {
                 t.Scopes = ActivityScopes.All;
