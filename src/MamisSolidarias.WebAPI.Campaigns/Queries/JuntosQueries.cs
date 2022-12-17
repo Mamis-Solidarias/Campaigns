@@ -8,16 +8,43 @@ namespace MamisSolidarias.WebAPI.Campaigns.Queries;
 public class JuntosQueries
 {
     [Authorize(Policy = "CanRead")]
-    public List<Shoe> GetShoesFromCampaign(int campaignId, CampaignsDbContext dbContext)
+    [UseFirstOrDefault]
+    [UseProjection]
+    public IQueryable<JuntosCampaign> GetJuntosCampaign(CampaignsDbContext context, string community, string edition)
     {
-        return dbContext.JuntosCampaigns
-            .Where(t => t.Id == campaignId)
-            .SelectMany(t => t.Participants)
-            .GroupBy(t => new { t.ShoeSize, t.Gender })
-            .Select(t => new Shoe(t.Count(), t.Key.Gender, t.Key.ShoeSize ?? -1))
-            .ToList();
-
+        return context.JuntosCampaigns.Where(t => t.CommunityId == community && t.Edition == edition);
     }
     
-    public sealed record Shoe(int Count, BeneficiaryGender Gender, int Size);
+    [Authorize(Policy = "CanRead")]
+    [UseFirstOrDefault]
+    [UseProjection]
+    public IQueryable<JuntosCampaign> GetJuntosCampaignById(CampaignsDbContext context, int id)
+    {
+        return context.JuntosCampaigns.Where(t => t.Id == id);
+    }
+
+    [Authorize(Policy = "CanRead")]
+    [UseFirstOrDefault]
+    [UseProjection]
+    public IQueryable<JuntosCampaign> GetJuntosCampaigns(CampaignsDbContext context)
+    {
+        return context.JuntosCampaigns;
+    }
+}
+
+[ExtendObjectType(typeof(JuntosCampaign))]
+public class JuntosCampaignsExtensions
+{
+    [Authorize(Policy = "CanRead")]
+    public List<Shoe> GetShoeDetails([Parent] JuntosCampaign campaign, CampaignsDbContext dbContext)
+    {
+        return dbContext.JuntosCampaigns
+            .Where(t => t.Id == campaign.Id)
+            .SelectMany(t => t.Participants)
+            .GroupBy(t => new { t.ShoeSize, t.Gender })
+            .Select(t => new Shoe(t.Count(), t.Key.Gender, t.Key.ShoeSize))
+            .ToList();
+    }
+
+    public sealed record Shoe(int Count, BeneficiaryGender Gender, int? Size);
 }
