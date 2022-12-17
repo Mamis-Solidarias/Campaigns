@@ -16,6 +16,7 @@ internal static class RedisExtensions
             throw new ArgumentException("Redis connection string is null");
         }
         
+        
         var redis = ConnectionMultiplexer.Connect(connectionString);
 
         if (redis is null)
