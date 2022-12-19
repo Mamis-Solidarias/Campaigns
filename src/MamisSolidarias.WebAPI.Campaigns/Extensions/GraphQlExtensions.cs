@@ -1,7 +1,6 @@
 using HotChocolate.Diagnostics;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Utils.Security;
-using MamisSolidarias.WebAPI.Campaigns.Queries;
 using StackExchange.Redis;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
