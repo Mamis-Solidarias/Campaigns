@@ -11,11 +11,9 @@ internal sealed class JuntosParticipantBuilder
         .RuleFor(t => t.Gender, f => f.PickRandom<BeneficiaryGender>())
         .RuleFor(t => t.State, f => f.PickRandom<ParticipantState>())
         .RuleFor(t => t.BeneficiaryId, f => f.IndexGlobal + 1)
-        .RuleFor(t => t.DonationType, f => f.PickRandom<DonationType>())
         .RuleFor(t => t.DonorId, f => f.IndexGlobal + 1)
         .RuleFor(t => t.DonorName, f => f.Name.FullName())
-        .RuleFor(t => t.ShoeSize, f => f.Random.Number(10, 50))
-        .RuleFor(t => t.DonationDropOffPoint, f => f.Address.City());
+        .RuleFor(t => t.ShoeSize, f => f.Random.Number(10, 50));
 
     private readonly CampaignsDbContext? _dbContext;
 
