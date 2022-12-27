@@ -1,21 +1,19 @@
 using FastEndpoints;
-using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
-using MamisSolidarias.WebAPI.Campaigns.Extensions;
-using StrawberryShake;
+using MamisSolidarias.Messages;
+using MassTransit;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.PUT;
 
 internal sealed class Endpoint : Endpoint<Request>
 {
     private readonly DbAccess _db;
-    private readonly IGraphQlClient _graphQlClient;
+    private readonly IBus _bus;
 
-    public Endpoint(IGraphQlClient graphQlClient,CampaignsDbContext dbContext, DbAccess? dbAccess = null)
+    public Endpoint(IBus bus,CampaignsDbContext dbContext, DbAccess? dbAccess = null)
     {
         _db = dbAccess ?? new DbAccess(dbContext);
-        _graphQlClient = graphQlClient;
+        _bus = bus;
     }
 
     public override void Configure()
@@ -32,62 +30,27 @@ internal sealed class Endpoint : Endpoint<Request>
             await SendNotFoundAsync(ct);
             return;
         }
-        
-        if (req.RemovedBeneficiaries.Any()) 
+
+        if (req.RemovedBeneficiaries.Any())
             await _db.DeleteParticipantsAsync(req.RemovedBeneficiaries, ct);
         
-        var participants = new List<MochiParticipant>();
+        campaign.Description = string.IsNullOrWhiteSpace(req.Description) ? null : req.Description.Trim();
+        campaign.Provider = string.IsNullOrWhiteSpace(req.Provider) ? null : req.Provider.Trim();
+
+        await _db.SaveChangesAsync(ct);
+        
         var idList = req.AddedBeneficiaries
             .Distinct()
             .Where(id => campaign.Participants.All(p => p.BeneficiaryId != id));
-        
+
         foreach (var id in idList)
         {
-            var response = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(id, ct);
-
-            var hasErrors = await response.HandleErrors(
-                async t => await SendForbiddenAsync(t),
-                async (errors, t) => await SendGraphQlErrors(errors, t),
+            await _bus.Publish<ParticipantAddedToMochiCampaign>(
+                new(id, campaign.Id),
                 ct
             );
-            
-            if (hasErrors)
-                return;
-            
-            if (response.Data?.Beneficiary is null)
-            {
-                AddError("Beneficiario no valido");
-                await SendErrorsAsync(409,cancellation: ct);
-                return;
-            }
-
-            var entry = new MochiParticipant
-            {
-                BeneficiaryGender = response.Data.Beneficiary.Gender.Map(),
-                BeneficiaryId = id,
-                BeneficiaryName =
-                    $"{response.Data.Beneficiary.FirstName.ToLower()} {response.Data.Beneficiary.LastName.ToLower()}",
-                SchoolCycle = response.Data.Beneficiary.Education?.Cycle.Map(),
-                CampaignId = campaign.Id
-            };
-            participants.Add(entry);
         }
 
-        campaign.Description = string.IsNullOrWhiteSpace(req.Description) ? null : req.Description.Trim();
-        campaign.Provider = string.IsNullOrWhiteSpace(req.Provider) ? null : req.Provider.Trim();
-        
-        await _db.SaveParticipantsAsync(participants, ct);
-        await _db.SaveChangesAsync(ct);
         await SendOkAsync(ct);
     }
-    
-    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
-    {
-        foreach (var clientError in errors)
-            AddError(clientError.Message);
-        
-        await SendErrorsAsync(cancellation: token);
-    }
-
-
 }

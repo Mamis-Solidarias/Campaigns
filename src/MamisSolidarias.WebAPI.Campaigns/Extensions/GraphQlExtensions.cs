@@ -1,3 +1,4 @@
+using FastEndpoints.Security;
 using HotChocolate.Diagnostics;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Utils.Security;
@@ -26,12 +27,28 @@ internal static class GraphQlExtensions
 
                 var context = s.GetRequiredService<IHttpContextAccessor>().HttpContext;
                 if (context is null)
+                {
+                    var config = s.GetRequiredService<IConfiguration>();
+
+                    var jwt = JWTBearer.CreateToken(
+                        config["JWT:Key"] ?? throw new ArgumentException("Jwt:Key not found in configuration"),
+                        claims: new[] {("Id", "-1"), ("Name", "Campaigns")},
+                        permissions: Enum.GetNames<Services>()
+                            .Select(r=> $"{r}/read")
+                            .ToArray(),
+                        expireAt:DateTime.UtcNow.AddMinutes(1),
+                        issuer: config["JWT:Issuer"],
+                        signingStyle: JWTBearer.TokenSigningStyle.Symmetric
+                    );
+                    t.DefaultRequestHeaders.Add("Authorization", $"Bearer {jwt}");
                     return;
+                }
 
                 if (context.Request.Headers.TryGetValue("Cookie", out var cookie) && cookie.Any())
                     t.DefaultRequestHeaders.Add("Cookie", cookie.First());
                 if (context.Request.Headers.TryGetValue("Authorization", out var auth) && auth.Any())
                     t.DefaultRequestHeaders.Add("Authorization", auth.First());
+               
             });
 
         services.AddGraphQLServer()

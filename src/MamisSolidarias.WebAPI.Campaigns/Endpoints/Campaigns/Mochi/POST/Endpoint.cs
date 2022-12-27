@@ -1,22 +1,23 @@
 using EntityFramework.Exceptions.Common;
 using FastEndpoints;
-using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
-using MamisSolidarias.WebAPI.Campaigns.Extensions;
-using StrawberryShake;
+using MamisSolidarias.Messages;
+using MassTransit;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly DbAccess _db;
-    private readonly IGraphQlClient _graphQlClient;
+    private readonly IBus _bus;
+    
+    
 
-    public Endpoint(CampaignsDbContext dbContext, IGraphQlClient graphQlClient, DbAccess? dbAccess = null)
+    public Endpoint(CampaignsDbContext dbContext, IBus bus, DbAccess? dbAccess = null)
     {
         _db = dbAccess ?? new DbAccess(dbContext);
-        _graphQlClient = graphQlClient;
+        _bus = bus;
     }
 
     public override void Configure()
@@ -34,42 +35,18 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             Description = req.Description,
             Provider = req.Provider
         };
-
-        foreach (var beneficiaryId in req.Beneficiaries)
-        {
-            var response = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(beneficiaryId, ct);
-
-            var hasErrors = await response.HandleErrors(
-                async t => await SendForbiddenAsync(t),
-                async (errors, t) => await SendGraphQlErrors(errors, t),
-                ct
-            );
-
-            if (hasErrors)
-                return;
-
-            if (response.Data?.Beneficiary is null)
-            {
-                AddError("Beneficiario no valido");
-                await SendErrorsAsync(409, ct);
-                return;
-            }
-
-            var entry = new MochiParticipant
-            {
-                BeneficiaryGender = response.Data.Beneficiary.Gender.Map(),
-                BeneficiaryId = beneficiaryId,
-                BeneficiaryName =
-                    $"{response.Data.Beneficiary.FirstName.ToLower()} {response.Data.Beneficiary.LastName.ToLower()}",
-                SchoolCycle = response.Data.Beneficiary.Education?.Cycle.Map()
-            };
-
-            campaign.Participants.Add(entry);
-        }
-
         try
         {
             await _db.AddMochiCampaign(campaign, ct);
+            
+            foreach (var beneficiaryId in req.Beneficiaries)
+            {
+                await _bus.Publish<ParticipantAddedToMochiCampaign>(
+                    new(beneficiaryId, campaign.Id),
+                    ct
+                );
+            }
+            
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)
@@ -77,13 +54,5 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             AddError("Ya existe una campaña con esa comunidad y edición");
             await SendErrorsAsync(cancellation: ct);
         }
-    }
-
-    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
-    {
-        foreach (var clientError in errors)
-            AddError(clientError.Message);
-
-        await SendErrorsAsync(cancellation: token);
     }
 }

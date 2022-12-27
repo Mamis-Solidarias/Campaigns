@@ -3,7 +3,9 @@ using FastEndpoints;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
+using MassTransit;
 using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
@@ -11,11 +13,13 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly DbAccess _db;
+    private readonly IBus _bus;
     private readonly IGraphQlClient _graphQlClient;
 
-    public Endpoint(IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
+    public Endpoint(IBus bus, IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
     {
         _graphQlClient = graphQlClient;
+        _bus = bus;
         _db = dbAccess ?? new DbAccess(dbContext);
     }
 
@@ -53,42 +57,17 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             await SendNotFoundAsync(ct);
             return;
         }
-
-        foreach (var beneficiaryId in req.Beneficiaries.Distinct())
-        {
-            var response = await _graphQlClient
-                .GetBeneficiaryWithClothes
-                .ExecuteAsync(beneficiaryId, ct);
-
-            hasErrors = await response.HandleErrors(
-                async t => await SendForbiddenAsync(t),
-                async (errors, t) => await SendGraphQlErrors(errors, t),
-                ct
-            );
-
-            if (hasErrors)
-                return;
-
-            if (response.Data?.Beneficiary is null)
-            {
-                AddError("Beneficiario no valido");
-                await SendErrorsAsync(409, ct);
-                return;
-            }
-
-            var entry = new JuntosParticipant
-            {
-                Gender = response.Data.Beneficiary.Gender.Map(),
-                ShoeSize = response.Data.Beneficiary.Clothes?.ShoeSize,
-                BeneficiaryId = beneficiaryId
-            };
-
-            campaign.Participants.Add(entry);
-        }
-
+        
         try
         {
             await _db.AddCampaign(campaign, ct);
+            foreach (var beneficiaryId in req.Beneficiaries.Distinct())
+            {
+                await _bus.Publish<ParticipantAddedToJuntosCampaign>(
+                    new(campaign.Id, beneficiaryId),
+                    ct
+                );
+            }
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)
