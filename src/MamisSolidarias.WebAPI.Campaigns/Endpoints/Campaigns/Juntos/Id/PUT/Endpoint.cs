@@ -1,20 +1,19 @@
 using FastEndpoints;
-using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
-using MamisSolidarias.WebAPI.Campaigns.Extensions;
+using MamisSolidarias.Messages;
+using MassTransit;
 using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.PUT;
 
 internal sealed class Endpoint : Endpoint<Request>
 {
+    private readonly IBus _bus;
     private readonly DbAccess _db;
-    private readonly IGraphQlClient _graphQlClient;
 
-    public Endpoint(IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
+    public Endpoint(IBus bus, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
     {
-        _graphQlClient = graphQlClient;
+        _bus = bus;
         _db = dbAccess ?? new DbAccess(dbContext);
     }
 
@@ -32,50 +31,26 @@ internal sealed class Endpoint : Endpoint<Request>
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         if (req.RemovedBeneficiaries.Any())
-            await _db.DeleteParticipants(req.Id,req.RemovedBeneficiaries, ct);
-        
-        var participants = new List<JuntosParticipant>();
+            await _db.DeleteParticipants(req.Id, req.RemovedBeneficiaries, ct);
+
         var idList = req.AddedBeneficiaries
             .Distinct()
             .Where(id => campaign.Participants.All(p => p.BeneficiaryId != id));
-        
+
         foreach (var id in idList)
         {
-            var response = await _graphQlClient.GetBeneficiaryWithClothes.ExecuteAsync(id, ct);
-
-            var hasErrors = await response.HandleErrors(
-                async t => await SendForbiddenAsync(t),
-                async (errors, t) => await SendGraphQlErrors(errors, t),
+            await _bus.Publish<ParticipantAddedToJuntosCampaign>(
+                new(campaign.Id, id),
                 ct
             );
-            
-            if (hasErrors)
-                return;
-            
-            if (response.Data?.Beneficiary is null)
-            {
-                AddError("Beneficiario no valido");
-                await SendErrorsAsync(409,cancellation: ct);
-                return;
-            }
-
-            var entry = new JuntosParticipant
-            {
-                BeneficiaryId = id,
-                CampaignId = campaign.Id,
-                Gender = response.Data.Beneficiary.Gender.Map(),
-                ShoeSize = response.Data.Beneficiary.Clothes?.ShoeSize
-            };
-            participants.Add(entry);
         }
 
         campaign.Description = string.IsNullOrWhiteSpace(req.Description) ? null : req.Description.Trim();
         campaign.Provider = string.IsNullOrWhiteSpace(req.Provider) ? null : req.Provider.Trim();
         campaign.FundraiserGoal = req.FundraiserGoal;
-        
-        await _db.SaveParticipants(participants, ct);
+
         await _db.SaveChanges(ct);
         await SendOkAsync(ct);
     }

@@ -26,5 +26,6 @@ internal static class ServiceRegistrar
         builder.Services.AddGraphQl(builder.Configuration, loggerFactory);
         builder.Services.AddRedis(builder.Configuration, loggerFactory);
         builder.Services.AddSwaggerDoc();
+        builder.Services.AddMassTransit();
     }
 }

@@ -7,7 +7,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Utils;
 internal sealed class MochiParticipantBuilder
 {
     private static readonly Faker<MochiParticipant> Generator = new Faker<MochiParticipant>()
-        .RuleFor(t=> t.Id, f => f.IndexFaker)
+        .RuleFor(t=> t.Id, f => f.IndexGlobal + 1)
         .RuleFor(t=> t.BeneficiaryGender, f=> f.PickRandom<BeneficiaryGender>())
         .RuleFor(t=> t.BeneficiaryId, f=> f.UniqueIndex)
         .RuleFor(t=> t.BeneficiaryName, f=> f.Name.FullName())

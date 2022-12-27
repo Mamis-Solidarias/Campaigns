@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -49,30 +48,14 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
                 )
             )
             .ReturnsAsync(participant);
-
-        var mockResult = new Mock<IGetDonorResult>();
-        mockResult.SetupGet(t => t.Donor)
-            .Returns(new GetDonor_Donor_Donor(participant.DonorName!));
         
-        var operationResult = new Mock<IOperationResult<IGetDonorResult>>();
-        operationResult.SetupGet(t => t.Data)
-            .Returns(mockResult.Object);
-
-        operationResult.SetupGet(t => t.Errors)
-            .Returns(new List<IClientError>());
-
-        _mockGraphQl.Setup(t => t.GetDonor.ExecuteAsync(
-                It.Is<int>(r => r == request.DonorId),
-                It.IsAny<CancellationToken>()
-            )
-        ).ReturnsAsync(operationResult.Object);
+        _mockGraphQl.MockGetDonor(t => t == request.DonorId, participant.DonorName!);
 
         _mockDb.Setup(t => t.SaveChanges(
                 It.IsAny<CancellationToken>()
             )
         ).Returns(Task.CompletedTask);
-        
-        
+
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
         
@@ -126,22 +109,10 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
             )
             .ReturnsAsync(participant);
 
-        var mockResult = new Mock<IGetDonorResult>();
-        mockResult.SetupGet(t => t.Donor)
-            .Returns(null as GetDonor_Donor_Donor);
-        
-        var operationResult = new Mock<IOperationResult<IGetDonorResult>>();
-        operationResult.SetupGet(t => t.Data)
-            .Returns(mockResult.Object);
-
-        operationResult.SetupGet(t => t.Errors)
-            .Returns(new List<IClientError>());
-
-        _mockGraphQl.Setup(t => t.GetDonor.ExecuteAsync(
+        _mockGraphQl.MockEmptyResponse(t => t.GetDonor.ExecuteAsync(
                 It.Is<int>(r => r == request.DonorId),
-                It.IsAny<CancellationToken>()
-            )
-        ).ReturnsAsync(operationResult.Object);
+                It.IsAny<CancellationToken>())
+        );
 
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
@@ -168,16 +139,11 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
                 )
             )
             .ReturnsAsync(participant);
-        
-        var operationResult = new Mock<IOperationResult<IGetDonorResult>>();
-        operationResult.SetupGet(t => t.Errors)
-            .Returns(new List<IClientError> { new ClientError("","AUTH_NOT_AUTHORIZED") });
 
-        _mockGraphQl.Setup(t => t.GetDonor.ExecuteAsync(
-                It.Is<int>(r => r == request.DonorId),
-                It.IsAny<CancellationToken>()
-            )
-        ).ReturnsAsync(operationResult.Object);
+        _mockGraphQl.MockAuthenticationError(t => t.GetDonor.ExecuteAsync(
+            It.Is<int>(r => r == request.DonorId),
+            It.IsAny<CancellationToken>())
+        );
         
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
@@ -205,16 +171,12 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
             )
             .ReturnsAsync(participant);
         
-        var operationResult = new Mock<IOperationResult<IGetDonorResult>>();
-        operationResult.SetupGet(t => t.Errors)
-            .Returns(new List<IClientError> { new ClientError("","OTHER ERROR") });
+        _mockGraphQl.MockErrors(t => t.GetDonor.ExecuteAsync( 
+            It.Is<int>(r => r == request.DonorId),
+            It.IsAny<CancellationToken>()),
+            new ClientError("","OTHER ERROR")
+        );
 
-        _mockGraphQl.Setup(t => t.GetDonor.ExecuteAsync(
-                It.Is<int>(r => r == request.DonorId),
-                It.IsAny<CancellationToken>()
-            )
-        ).ReturnsAsync(operationResult.Object);
-        
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
         
