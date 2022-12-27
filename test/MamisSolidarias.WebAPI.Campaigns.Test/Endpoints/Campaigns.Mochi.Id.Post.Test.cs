@@ -39,9 +39,9 @@ internal sealed class CampaignsMochiIdPostTest
     public async Task WithValidParameters_Succeeds()
     {
         // Arrange
-        MochiCampaign previousCampaign = DataFactory.GetMochi().WithId(123);
+        MochiCampaign previousCampaign = DataFactory.GetMochiCampaign().WithId(123);
         
-        MochiCampaign campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochiCampaign();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
@@ -92,11 +92,11 @@ internal sealed class CampaignsMochiIdPostTest
     public async Task WithInvalidParameters_UserNotAuthenticated_Fails()
     {
         // Arrange
-        MochiCampaign previousCampaign = DataFactory.GetMochi()
+        MochiCampaign previousCampaign = DataFactory.GetMochiCampaign()
             .WithId(123)
             .WithParticipants(Enumerable.Range(0, 3).Select(_ => new MochiParticipantBuilder().Build())
             );
-        MochiCampaign campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochiCampaign();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
@@ -136,9 +136,9 @@ internal sealed class CampaignsMochiIdPostTest
     public async Task WithInvalidParameters_CampaignNotFound_Fails()
     {
         // Arrange
-        MochiCampaign previousCampaign = DataFactory.GetMochi()
+        MochiCampaign previousCampaign = DataFactory.GetMochiCampaign()
             .WithId(123);
-        MochiCampaign campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochiCampaign();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 
@@ -165,9 +165,9 @@ internal sealed class CampaignsMochiIdPostTest
     {
         
         // Arrange
-        MochiCampaign previousCampaign = DataFactory.GetMochi().WithId(123);
+        MochiCampaign previousCampaign = DataFactory.GetMochiCampaign().WithId(123);
         
-        MochiCampaign campaign = DataFactory.GetMochi();
+        MochiCampaign campaign = DataFactory.GetMochiCampaign();
         
         _mockDb.Setup(t=> t.GetCampaignAsync(
                 It.Is<int>(r => r == previousCampaign.Id), 

@@ -6,7 +6,7 @@ internal static class OperationResultExtensions
 {
     public static bool HasAuthError<T>(this IOperationResult<T> result) where T : class
     {
-        return result.Errors.Any(t => t.Code is "AUTH_NOT_AUTHORIZED");
+        return result.Errors.Any(t => t.Code is "AUTH_NOT_AUTHORIZED" || t.Message is "AUTH_NOT_AUTHORIZED");
     }
 
     public static async Task<bool> HandleErrors<T>(this IOperationResult<T> result,
