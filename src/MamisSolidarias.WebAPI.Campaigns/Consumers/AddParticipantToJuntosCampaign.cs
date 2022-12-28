@@ -25,20 +25,18 @@ public class AddParticipantToJuntosCampaign : IConsumer<ParticipantAddedToJuntos
 
         var response = await _graphQlClient
             .GetBeneficiaryWithClothes
-            .ExecuteAsync(beneficiaryId);
+            .ExecuteAsync(beneficiaryId, context.CancellationToken);
 
         var hasErrors = await response.HandleErrors(
-             _ => Task.CompletedTask,
-             (_, _) => Task.CompletedTask,
+            _ => Task.CompletedTask,
+            (_, _) => Task.CompletedTask,
             default
         );
 
-        if (hasErrors)
-        {
+        if (hasErrors) 
             throw new GraphQLException("Error getting beneficiary with clothes");
-        }
 
-        if (response.Data?.Beneficiary is null) 
+        if (response.Data?.Beneficiary is null)
             throw new ArgumentException("Beneficiary not found");
 
         var entry = new JuntosParticipant
@@ -49,7 +47,7 @@ public class AddParticipantToJuntosCampaign : IConsumer<ParticipantAddedToJuntos
             CampaignId = campaignId
         };
 
-        await _db.JuntosParticipants.AddAsync(entry);
-        await _db.SaveChangesAsync();
+        await _db.JuntosParticipants.AddAsync(entry, context.CancellationToken);
+        await _db.SaveChangesAsync(context.CancellationToken);
     }
 }

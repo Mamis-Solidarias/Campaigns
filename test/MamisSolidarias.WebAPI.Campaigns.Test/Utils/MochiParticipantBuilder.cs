@@ -9,13 +9,14 @@ internal sealed class MochiParticipantBuilder
     private static readonly Faker<MochiParticipant> Generator = new Faker<MochiParticipant>()
         .RuleFor(t=> t.Id, f => f.IndexGlobal + 1)
         .RuleFor(t=> t.BeneficiaryGender, f=> f.PickRandom<BeneficiaryGender>())
-        .RuleFor(t=> t.BeneficiaryId, f=> f.UniqueIndex)
+        .RuleFor(t=> t.BeneficiaryId, f=> f.IndexGlobal + 1)
         .RuleFor(t=> t.BeneficiaryName, f=> f.Name.FullName())
         .RuleFor(t=> t.DonationType,f=> f.PickRandom<DonationType>())
-        .RuleFor(t=> t.DonorId, f=> f.UniqueIndex)
+        .RuleFor(t=> t.DonorId, f=> f.IndexGlobal + 1)
         .RuleFor(t=> t.DonorName, f=> f.Name.FullName())
         .RuleFor(t=> t.DonationDropOffLocation, f=> f.Address.FullAddress())
-        .RuleFor(t=> t.SchoolCycle, f => f.PickRandom<SchoolCycle>());
+        .RuleFor(t=> t.SchoolCycle, f => f.PickRandom<SchoolCycle>())
+        ;
     
     
     private readonly MochiParticipant _mochiParticipant = Generator.Generate();
