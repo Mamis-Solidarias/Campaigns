@@ -29,6 +29,12 @@ internal sealed class JuntosParticipantBuilder
         _juntosParticipant = obj;
     }
 
+    public JuntosParticipantBuilder WithCampaignId(int campaignId)
+    {
+        _juntosParticipant.CampaignId = campaignId;
+        return this;
+    }
+
     public JuntosParticipantBuilder WithCampaign(JuntosCampaign campaign)
     {
         _juntosParticipant.CampaignId = campaign.Id;
