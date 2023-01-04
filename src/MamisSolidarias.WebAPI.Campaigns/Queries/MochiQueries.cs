@@ -1,4 +1,5 @@
 using HotChocolate.AspNetCore.Authorization;
+using HotChocolate.Types;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using Microsoft.AspNetCore.Mvc;

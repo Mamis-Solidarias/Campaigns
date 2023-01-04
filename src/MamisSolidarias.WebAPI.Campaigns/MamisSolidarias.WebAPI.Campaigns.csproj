@@ -15,13 +15,11 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FastEndpoints.Swagger" Version="5.6.0" />
-        <PackageReference Include="HotChocolate.AspNetCore" Version="12.15.2" />
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.15.2" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.15.2" />
-        <PackageReference Include="HotChocolate.Diagnostics" Version="12.15.2" />
-        <PackageReference Include="HotChocolate.Stitching" Version="12.15.2" />
-        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.15.2" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.15.2">
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.16.0" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.16.0" />
+        <PackageReference Include="HotChocolate.Diagnostics" Version="12.16.0" />
+        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.16.0" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.16.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -45,7 +43,7 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.10" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.1.0-beta.2" />
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.10" />
-        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.15.2" />
+        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.16.0" />
         <PackageReference Include="StrawberryShake.Transport.Http" Version="12.15.2" />
     </ItemGroup>
 
