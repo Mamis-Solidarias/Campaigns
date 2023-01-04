@@ -16,7 +16,7 @@ internal static class AuthExtensions
             throw new ArgumentException("JWT options not found");
         }
         
-        services.AddAuthenticationJWTBearer(options.Key, options.Issuer);
+        services.AddJWTBearerAuth(options.Key, tokenValidation: parameters => parameters.ValidIssuer = options.Issuer);
         services.AddAuthorization(t=> t.ConfigurePolicies(Services.Campaigns));
     }
     
