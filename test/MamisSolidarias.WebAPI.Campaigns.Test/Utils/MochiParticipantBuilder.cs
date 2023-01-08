@@ -16,6 +16,7 @@ internal sealed class MochiParticipantBuilder
         .RuleFor(t=> t.DonorName, f=> f.Name.FullName())
         .RuleFor(t=> t.DonationDropOffLocation, f=> f.Address.FullAddress())
         .RuleFor(t=> t.SchoolCycle, f => f.PickRandom<SchoolCycle>())
+        .RuleFor(t=> t.DonationId, f => f.Random.Guid())
         ;
     
     
@@ -112,8 +113,44 @@ internal sealed class MochiParticipantBuilder
         _mochiParticipant.BeneficiaryGender = beneficiaryGender;
         return this;
     }
-    
-    
+
+    public MochiParticipantBuilder AsNoDonorAssigned()
+    {
+        _mochiParticipant.State = ParticipantState.MissingDonor;
+        _mochiParticipant.DonorId = null;
+        _mochiParticipant.DonorName = null;
+        _mochiParticipant.DonationType = null;
+        _mochiParticipant.DonationDropOffLocation = null;
+        _mochiParticipant.DonationId = null;
+        return this;
+    }
+
+    public MochiParticipantBuilder AsNoDonationAssigned()
+    {
+        var tmp = Generator.Generate();
+        
+        _mochiParticipant.State = ParticipantState.MissingDonation;
+        _mochiParticipant.DonationDropOffLocation = tmp.DonationDropOffLocation;
+        _mochiParticipant.DonorId = tmp.DonorId;
+        _mochiParticipant.DonationType = DonationType.Money;
+        _mochiParticipant.DonorName = tmp.DonorName;
+        _mochiParticipant.DonationId = null;
+        return this;
+
+    }
+
+    public MochiParticipantBuilder AsDonationAssigned()
+    {
+        var tmp = Generator.Generate();
+
+        _mochiParticipant.State = ParticipantState.DonationReceived;
+        _mochiParticipant.DonationDropOffLocation = tmp.DonationDropOffLocation;
+        _mochiParticipant.DonorId = tmp.DonorId;
+        _mochiParticipant.DonationType = DonationType.Money;
+        _mochiParticipant.DonorName = tmp.DonorName;
+        _mochiParticipant.DonationId = tmp.DonationId;
+        return this;
+    }
 
     public static implicit operator MochiParticipant(MochiParticipantBuilder b) => b.Build();
     public static implicit operator MochiParticipantBuilder(MochiParticipant b) => new(b);
