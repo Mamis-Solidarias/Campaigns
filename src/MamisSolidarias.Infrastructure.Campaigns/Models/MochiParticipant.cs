@@ -19,7 +19,7 @@ public class MochiParticipant
 
     public int BeneficiaryId { get; set; }
     public int? DonorId { get; set; }
-
+    public Guid? DonationId { get; set; }
     public string BeneficiaryName { get; set; } = string.Empty;
     public string? DonorName { get; set; } = string.Empty;
     public BeneficiaryGender BeneficiaryGender { get; set; }
@@ -68,5 +68,11 @@ internal sealed class MochiParticipantConfiguration: IEntityTypeConfiguration<Mo
         builder.Property(t=> t.DonationDropOffLocation)
             .IsRequired(false)
             .HasMaxLength(500);
+        
+        builder.Property(t => t.DonationId)
+            .IsRequired(false);
+
+        builder.HasIndex(t => t.DonationId)
+            .IsUnique();
     }
 }
