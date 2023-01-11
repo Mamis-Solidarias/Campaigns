@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HotChocolate.Utilities;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Messages;

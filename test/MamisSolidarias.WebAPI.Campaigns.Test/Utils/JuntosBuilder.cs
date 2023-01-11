@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bogus;
@@ -78,6 +79,14 @@ internal sealed class JuntosBuilder
     public JuntosBuilder WithProvider(string provider)
     {
         _juntos.Provider = provider;
+        return this;
+    }
+
+    public JuntosBuilder WithDonations(params Guid[] donations)
+    {
+        _juntos.Donations.Clear();
+        foreach (var donation in donations)
+            _juntos.Donations.Add(donation);
         return this;
     }
 
