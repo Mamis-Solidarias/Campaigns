@@ -3,6 +3,7 @@ using System;
 using MamisSolidarias.Infrastructure.Campaigns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MamisSolidarias.WebAPI.Campaigns.Migrations
 {
     [DbContext(typeof(CampaignsDbContext))]
-    partial class CampaignsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230108130320_AddedDonationIdToMochiParticipant")]
+    partial class AddedDonationIdToMochiParticipant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,29 +197,6 @@ namespace MamisSolidarias.WebAPI.Campaigns.Migrations
                         .IsUnique();
 
                     b.ToTable("MochiParticipants");
-                });
-
-            modelBuilder.Entity("MamisSolidarias.Infrastructure.Campaigns.Models.JuntosCampaign", b =>
-                {
-                    b.OwnsMany("MamisSolidarias.Infrastructure.Campaigns.Models.Donation", "Donations", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("CampaignId")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("CampaignId");
-
-                            b1.ToTable("JuntosDonations", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("CampaignId");
-                        });
-
-                    b.Navigation("Donations");
                 });
 
             modelBuilder.Entity("MamisSolidarias.Infrastructure.Campaigns.Models.JuntosParticipant", b =>
