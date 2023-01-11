@@ -38,6 +38,11 @@ public class JuntosCampaign
     /// Participants of the campaign edition
     /// </summary>
     public virtual ICollection<JuntosParticipant> Participants { get; set; } = new List<JuntosParticipant>();
+
+    /// <summary>
+    /// List of Donation's IDs for the campaign edition
+    /// </summary>
+    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
 }
 
 internal sealed class JuntosCampaignConfigurator : IEntityTypeConfiguration<JuntosCampaign>
@@ -72,5 +77,15 @@ internal sealed class JuntosCampaignConfigurator : IEntityTypeConfiguration<Junt
             .HasPrincipalKey(t => t.Id)
             .HasForeignKey(t => t.CampaignId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.OwnsMany(t => t.Donations,
+            r =>
+            {
+                r.ToTable("JuntosDonations");
+                r.WithOwner().HasForeignKey("CampaignId");
+                r.HasKey(x => x.Id);
+                r.Property(x => x.Id).ValueGeneratedNever();
+            });
+
     }
 }
