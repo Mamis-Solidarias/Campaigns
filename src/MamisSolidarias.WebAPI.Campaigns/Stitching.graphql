@@ -1,9 +1,14 @@
 extend type MochiParticipant {
     beneficiary: Beneficiary @delegate(schema: "Beneficiariesgql", path: "beneficiary(id: $fields:beneficiaryId)")
     donor: Donor @delegate(schema: "Donorsgql", path: "donor(id: $fields:donorId)")
+    donation: MonetaryDonation @delegate(schema: "Donationsgql", path: "monetaryDonation(id: $fields:donationId)")
 }
 
 extend type JuntosParticipant {
     beneficiary: Beneficiary @delegate(schema: "Beneficiariesgql", path: "beneficiary(id: $fields:beneficiaryId)")
     donor: Donor @delegate(schema: "Donorsgql", path: "donor(id: $fields:donorId)")
+}
+
+extend type CampaignDonation {
+    monetaryDonation: MonetaryDonation @delegate(schema: "Donationsgql", path: "monetaryDonation(id: $fields:id)")
 }
