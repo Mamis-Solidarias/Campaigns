@@ -42,7 +42,7 @@ public class JuntosCampaign
     /// <summary>
     /// List of Donation's IDs for the campaign edition
     /// </summary>
-    public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
+    public virtual ICollection<CampaignDonation> Donations { get; set; } = new List<CampaignDonation>();
 }
 
 internal sealed class JuntosCampaignConfigurator : IEntityTypeConfiguration<JuntosCampaign>

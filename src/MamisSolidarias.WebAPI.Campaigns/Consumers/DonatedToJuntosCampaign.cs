@@ -1,5 +1,4 @@
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Messages;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;

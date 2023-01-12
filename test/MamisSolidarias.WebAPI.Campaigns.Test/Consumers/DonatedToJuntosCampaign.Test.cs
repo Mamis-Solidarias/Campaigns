@@ -128,6 +128,6 @@ public class DonatedToJuntosCampaign_Test
         // Assert
         var result = await _dbContext.JuntosCampaigns.SingleAsync(t => t.Id == campaign.Id);
         result.Donations.Should().HaveCount(1);
-        result.Donations.Should().ContainEquivalentOf((Donation)donation);
+        result.Donations.Should().ContainEquivalentOf((CampaignDonation)donation);
     }
 }
