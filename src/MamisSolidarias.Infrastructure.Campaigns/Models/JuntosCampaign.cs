@@ -1,3 +1,4 @@
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,6 +1,6 @@
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.DELETE;
 
@@ -37,6 +37,4 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         await _db.UpdateParticipantAsync(participant, ct);
         await SendOkAsync(new Response(participant.Id), ct);
     }
-
-
 }

@@ -125,7 +125,7 @@ public class AddParticipantToJuntosCampaignTest
         participant.Should().NotBeNull();
         participant?.BeneficiaryId.Should().Be(beneficiaryId);
         participant?.CampaignId.Should().Be(campaign.Id);
-        participant?.Gender.Should().Be(Infrastructure.Campaigns.Models.BeneficiaryGender.Male);
+        participant?.Gender.Should().Be(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Male);
         participant?.ShoeSize.Should().Be(beneficiariesShoeSize);
     }
 }

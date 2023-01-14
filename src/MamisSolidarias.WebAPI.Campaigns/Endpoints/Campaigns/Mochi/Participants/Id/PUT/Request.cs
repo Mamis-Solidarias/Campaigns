@@ -1,6 +1,6 @@
 using FastEndpoints;
 using FluentValidation;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
@@ -8,19 +8,20 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participant
 public class Request
 {
     /// <summary>
-    /// The id of the participant
+    ///     The id of the participant
     /// </summary>
-    [FromRoute] public int Id { get; set; }
+    [FromRoute]
+    public int Id { get; set; }
 
     /// <summary>
-    /// The assigned donor
+    ///     The assigned donor
     /// </summary>
     public int DonorId { get; set; }
 
     public string DonationType { get; set; } = string.Empty;
-    
+
     /// <summary>
-    /// Donation drop off location
+    ///     Donation drop off location
     /// </summary>
     public string? DonationDropOffLocation { get; set; }
 }
@@ -29,19 +30,19 @@ internal class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {
-        RuleFor(t=> t.Id)
+        RuleFor(t => t.Id)
             .NotEmpty().WithMessage("El id del participante no puede ser vacío")
             .GreaterThan(0).WithMessage("El id del participante debe ser mayor a 0");
-        
-        RuleFor(t=> t.DonorId)
+
+        RuleFor(t => t.DonorId)
             .NotEmpty().WithMessage("El id del donante no puede ser vacío")
             .GreaterThan(0).WithMessage("El id del donante debe ser mayor a 0");
-        
-        RuleFor(t=> t.DonationType)
+
+        RuleFor(t => t.DonationType)
             .NotEmpty().WithMessage("El tipo de donación no puede ser vacío")
-            .IsEnumName(typeof(DonationType),false).WithMessage("El tipo de donación no es válido");
-        
-        RuleFor(t=> t.DonationDropOffLocation)
+            .IsEnumName(typeof(DonationType), false).WithMessage("El tipo de donación no es válido");
+
+        RuleFor(t => t.DonationDropOffLocation)
             .MaximumLength(500).WithMessage("La ubicación de la donación no puede ser mayor a 500 caracteres");
     }
 }
