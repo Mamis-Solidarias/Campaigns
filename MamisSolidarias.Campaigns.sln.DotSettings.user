@@ -16,6 +16,8 @@
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsAbrigaditosPostTest.WithInvalidParameters_UserDoesNotHavePermission_Fails&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsAbrigaditosPostTest.WithInvalidParameters_RepeatedEditionAndCommunity_Fails&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsAbrigaditosPostTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns_Abrigaditos_Id_Delete_Test.WithAValidCampaign_ShouldDeleteIt&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns_Abrigaditos_Id_Delete_Test.CampaignDoesNotExists_ShouldFail&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f477ee30_002Dcf7a_002D4ebd_002D998a_002Dcb64c1d86c6d/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
