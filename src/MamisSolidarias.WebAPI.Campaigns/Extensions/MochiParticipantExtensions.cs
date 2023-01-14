@@ -1,4 +1,5 @@
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 

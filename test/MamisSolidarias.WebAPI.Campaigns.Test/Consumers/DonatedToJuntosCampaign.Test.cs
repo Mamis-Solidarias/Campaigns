@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
 using Microsoft.Data.Sqlite;
@@ -94,20 +94,20 @@ public class DonatedToJuntosCampaign_Test
         var campaign = _dataFactory.GenerateJuntosCampaign()
             .WithDonations(donation)
             .Build();
-        
+
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 donation, null, null, campaign.Id, Messages.Campaigns.JuntosALaPar
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
     }
-    
+
     [Test]
     public async Task DonationIsValid_ShouldSucceed()
     {
@@ -121,10 +121,10 @@ public class DonatedToJuntosCampaign_Test
                 donation, null, null, campaign.Id, Messages.Campaigns.JuntosALaPar
             )
         );
-        
+
         // Act
         await _consumer.Consume(context);
-        
+
         // Assert
         var result = await _dbContext.JuntosCampaigns.SingleAsync(t => t.Id == campaign.Id);
         result.Donations.Should().HaveCount(1);

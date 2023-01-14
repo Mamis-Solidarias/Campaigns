@@ -83,7 +83,7 @@ public class JuntosParticipantUpdateTest
             .WithParticipants(new List<JuntosParticipant>()).Build();
         var participant = _dataFactory.GenerateJuntosParticipant()
             .WithCampaignId(campaign.Id)
-            .WithGender(Infrastructure.Campaigns.Models.BeneficiaryGender.Other)
+            .WithGender(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Other)
             .WithShoeSize(null)
             .Build();
         

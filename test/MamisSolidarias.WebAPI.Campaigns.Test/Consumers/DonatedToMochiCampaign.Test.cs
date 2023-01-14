@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
 using Microsoft.Data.Sqlite;

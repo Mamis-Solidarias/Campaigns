@@ -84,7 +84,7 @@ public class MochiParticipantUpdateTest
             .WithParticipants(new List<MochiParticipant>()).Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .WithSchoolCycle(Infrastructure.Campaigns.Models.SchoolCycle.PreSchool)
-            .WithBeneficiaryGender(Infrastructure.Campaigns.Models.BeneficiaryGender.Female)
+            .WithBeneficiaryGender(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Female)
             .WithBeneficiaryName("Test 123")
             .WithCampaignId(campaign.Id)
             .Build();

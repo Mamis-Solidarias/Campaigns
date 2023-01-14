@@ -3,6 +3,7 @@ using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Queries;
 

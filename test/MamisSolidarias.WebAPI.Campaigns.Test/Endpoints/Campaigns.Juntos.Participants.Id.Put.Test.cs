@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Participants.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;

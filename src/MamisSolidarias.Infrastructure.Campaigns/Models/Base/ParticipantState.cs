@@ -1,4 +1,4 @@
-namespace MamisSolidarias.Infrastructure.Campaigns.Models;
+namespace MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
 public enum ParticipantState
 {

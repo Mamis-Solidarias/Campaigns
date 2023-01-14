@@ -4,7 +4,7 @@ using FluentAssertions;
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
 using Microsoft.Data.Sqlite;
@@ -14,7 +14,6 @@ using NUnit.Framework;
 using StrawberryShake;
 using BeneficiaryGender = MamisSolidarias.GraphQlClient.BeneficiaryGender;
 using MockExtensions = MamisSolidarias.WebAPI.Campaigns.Utils.MockExtensions;
-using SchoolCycle = MamisSolidarias.GraphQlClient.SchoolCycle;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
@@ -82,16 +81,16 @@ public class AddParticipantToMochiCampaignTest
         const string firstName = "Lucas";
         const string lastName = "dell";
         const SchoolCycle schoolCycle = SchoolCycle.HighSchool;
-        
+
         const int campaignId = 456;
 
         _mockGraphQlClient.MockGetBeneficiaryWithEducation(
             i => i == beneficiaryId,
-            firstName,lastName,gender,schoolCycle
+            firstName, lastName, gender, schoolCycle
         );
 
         var context = MockExtensions.MockConsumeContext(
-            new ParticipantAddedToMochiCampaign(beneficiaryId,campaignId)
+            new ParticipantAddedToMochiCampaign(beneficiaryId, campaignId)
         );
 
         // Act
@@ -114,16 +113,16 @@ public class AddParticipantToMochiCampaignTest
         const string firstName = "Lucas";
         const string lastName = "dell";
         const SchoolCycle schoolCycle = SchoolCycle.HighSchool;
-        
+
         var campaign = _dataFactory.GenerateMochiCampaign().Build();
-        
+
         _mockGraphQlClient.MockGetBeneficiaryWithEducation(
             i => i == beneficiaryId,
-            firstName,lastName,gender,schoolCycle
+            firstName, lastName, gender, schoolCycle
         );
 
         var context = MockExtensions.MockConsumeContext(
-            new ParticipantAddedToMochiCampaign(beneficiaryId,campaign.Id)
+            new ParticipantAddedToMochiCampaign(beneficiaryId, campaign.Id)
         );
 
         // Act
@@ -136,7 +135,7 @@ public class AddParticipantToMochiCampaignTest
         participant.Should().NotBeNull();
         participant?.BeneficiaryId.Should().Be(beneficiaryId);
         participant?.CampaignId.Should().Be(campaign.Id);
-        participant?.BeneficiaryGender.Should().Be(Infrastructure.Campaigns.Models.BeneficiaryGender.Male);
+        participant?.BeneficiaryGender.Should().Be(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Male);
         participant?.BeneficiaryName.Should().Be($"{firstName} {lastName}".ToLower());
         participant?.SchoolCycle.Should().Be(Infrastructure.Campaigns.Models.SchoolCycle.HighSchool);
         participant?.State.Should().Be(ParticipantState.MissingDonor);

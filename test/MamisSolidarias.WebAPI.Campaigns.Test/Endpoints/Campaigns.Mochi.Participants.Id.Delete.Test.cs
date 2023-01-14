@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.DELETE;
 using MamisSolidarias.WebAPI.Campaigns.Utils;

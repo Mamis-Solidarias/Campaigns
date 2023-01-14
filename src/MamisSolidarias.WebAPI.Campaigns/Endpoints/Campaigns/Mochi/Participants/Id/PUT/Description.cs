@@ -1,5 +1,5 @@
 using FastEndpoints;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 
@@ -15,7 +15,7 @@ internal sealed class Description : Summary<Endpoint>
             DonationDropOffLocation = "La matanza",
             Id = 111
         };
-        
+
         Response<Response>();
         Response(400, "Bad request");
         Response(401, "Unauthorized");
