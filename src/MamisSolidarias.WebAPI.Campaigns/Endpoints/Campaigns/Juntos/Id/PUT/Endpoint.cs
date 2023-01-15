@@ -54,12 +54,4 @@ internal sealed class Endpoint : Endpoint<Request>
         await _db.SaveChanges(ct);
         await SendOkAsync(ct);
     }
-
-    private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
-    {
-        foreach (var clientError in errors)
-            AddError(clientError.Message);
-
-        await SendErrorsAsync(cancellation: token);
-    }
 }
