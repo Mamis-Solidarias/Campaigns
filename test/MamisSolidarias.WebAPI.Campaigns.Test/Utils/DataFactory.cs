@@ -62,6 +62,11 @@ internal class DataFactory
     {
         return new(db: null);
     }
+    
+    public AbrigaditosParticipantBuilder GenerateAbrigaditosParticipant()
+    {
+        return new(_dbContext);
+    }
 
     public static IEnumerable<AbrigaditosParticipantBuilder> GetAbrigaditosParticipants(int n)
     {

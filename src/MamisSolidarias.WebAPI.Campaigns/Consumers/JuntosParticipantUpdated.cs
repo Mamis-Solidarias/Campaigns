@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class MochiParticipantUpdate : IConsumer<BeneficiaryUpdated>
+public class JuntosParticipantUpdated : IConsumer<BeneficiaryUpdated>
 {
     private readonly CampaignsDbContext _dbContext;
     private readonly IGraphQlClient _graphQlClient;
 
-    public MochiParticipantUpdate(CampaignsDbContext dbContext, IGraphQlClient graphQlClient)
+    public JuntosParticipantUpdated(CampaignsDbContext dbContext, IGraphQlClient graphQlClient)
     {
         _dbContext = dbContext;
         _graphQlClient = graphQlClient;
@@ -25,7 +25,7 @@ public class MochiParticipantUpdate : IConsumer<BeneficiaryUpdated>
         var token = context.CancellationToken;
         var beneficiaryId = context.Message.BeneficiaryId;
 
-        var operationResult = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(beneficiaryId,token);
+        var operationResult = await _graphQlClient.GetBeneficiaryWithClothes.ExecuteAsync(beneficiaryId, token);
 
         var hasErrors = await operationResult.HandleErrors(
             _ => Task.CompletedTask,
@@ -38,14 +38,13 @@ public class MochiParticipantUpdate : IConsumer<BeneficiaryUpdated>
 
         var beneficiary = operationResult.Data.Beneficiary;
 
-        var newSchoolCycle = beneficiary.Education?.Cycle.Map();
+        var shoeSize = beneficiary.Clothes?.ShoeSize;
 
-        await _dbContext.MochiParticipants
+        await _dbContext.JuntosParticipants
             .Where(t => t.BeneficiaryId == beneficiaryId)
             .ExecuteUpdateAsync(t =>
-                t.SetProperty(r => r.SchoolCycle, r => newSchoolCycle)
-                    .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
-                    .SetProperty(r => r.BeneficiaryName, $"{beneficiary.FirstName} {beneficiary.LastName}")
-            ,token);
+                    t.SetProperty(r => r.ShoeSize, r => shoeSize)
+                        .SetProperty(r => r.Gender, beneficiary.Gender.Map())
+                , token);
     }
 }

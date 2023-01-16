@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class JuntosParticipantUpdate : IConsumer<BeneficiaryUpdated>
+public class AbrigaditosParticipantUpdated : IConsumer<BeneficiaryUpdated>
 {
     private readonly CampaignsDbContext _dbContext;
     private readonly IGraphQlClient _graphQlClient;
 
-    public JuntosParticipantUpdate(CampaignsDbContext dbContext, IGraphQlClient graphQlClient)
+    public AbrigaditosParticipantUpdated(CampaignsDbContext dbContext, IGraphQlClient graphQlClient)
     {
         _dbContext = dbContext;
         _graphQlClient = graphQlClient;
@@ -25,7 +25,7 @@ public class JuntosParticipantUpdate : IConsumer<BeneficiaryUpdated>
         var token = context.CancellationToken;
         var beneficiaryId = context.Message.BeneficiaryId;
 
-        var operationResult = await _graphQlClient.GetBeneficiaryWithClothes.ExecuteAsync(beneficiaryId, token);
+        var operationResult = await _graphQlClient.GetBeneficiaryWithShirt.ExecuteAsync(beneficiaryId, token);
 
         var hasErrors = await operationResult.HandleErrors(
             _ => Task.CompletedTask,
@@ -37,14 +37,15 @@ public class JuntosParticipantUpdate : IConsumer<BeneficiaryUpdated>
             throw new GraphQLException("Error getting beneficiary");
 
         var beneficiary = operationResult.Data.Beneficiary;
+        var shirtSize = beneficiary.Clothes?.ShirtSize;
 
-        var shoeSize = beneficiary.Clothes?.ShoeSize;
-
-        await _dbContext.JuntosParticipants
+        await _dbContext.AbrigaditosParticipants
             .Where(t => t.BeneficiaryId == beneficiaryId)
-            .ExecuteUpdateAsync(t =>
-                    t.SetProperty(r => r.ShoeSize, r => shoeSize)
-                        .SetProperty(r => r.Gender, beneficiary.Gender.Map())
-                , token);
+            .ExecuteUpdateAsync(t => t
+                        .SetProperty(r => r.ShirtSize, r => shirtSize)
+                        .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
+                        .SetProperty(r=> r.BeneficiaryName, $"{beneficiary.FirstName} {beneficiary.LastName}")
+                , token
+            );
     }
 }
