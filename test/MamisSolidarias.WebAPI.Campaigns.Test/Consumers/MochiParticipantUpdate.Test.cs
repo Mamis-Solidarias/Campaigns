@@ -24,7 +24,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 public class MochiParticipantUpdateTest
 {
     private readonly Mock<IGraphQlClient> _mockGraphQlClient = new();
-    private MochiParticipantUpdate _consumer = null!;
+    private MochiParticipantUpdated _consumer = null!;
     private DataFactory _dataFactory = null!;
     private CampaignsDbContext _dbContext = null!;
 

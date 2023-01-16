@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class JuntosParticipantUpdate : IConsumer<BeneficiaryUpdated>
+public class JuntosParticipantUpdated : IConsumer<BeneficiaryUpdated>
 {
     private readonly CampaignsDbContext _dbContext;
     private readonly IGraphQlClient _graphQlClient;
 
-    public JuntosParticipantUpdate(CampaignsDbContext dbContext, IGraphQlClient graphQlClient)
+    public JuntosParticipantUpdated(CampaignsDbContext dbContext, IGraphQlClient graphQlClient)
     {
         _dbContext = dbContext;
         _graphQlClient = graphQlClient;

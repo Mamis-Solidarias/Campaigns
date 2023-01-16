@@ -23,7 +23,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 public class JuntosParticipantUpdateTest
 {
     private readonly Mock<IGraphQlClient> _mockGraphQlClient = new();
-    private JuntosParticipantUpdate _consumer = null!;
+    private JuntosParticipantUpdated _consumer = null!;
     private DataFactory _dataFactory = null!;
     private CampaignsDbContext _dbContext = null!;
 
