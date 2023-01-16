@@ -2,7 +2,6 @@ using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Messages;
 using MassTransit;
-using StrawberryShake;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.PUT;
 
@@ -40,12 +39,10 @@ internal sealed class Endpoint : Endpoint<Request>
             .Where(id => campaign.Participants.All(p => p.BeneficiaryId != id));
 
         foreach (var id in idList)
-        {
-            await _bus.Publish<ParticipantAddedToJuntosCampaign>(
-                new(campaign.Id, id),
+            await _bus.Publish(
+                new ParticipantAddedToJuntosCampaign(campaign.Id, id),
                 ct
             );
-        }
 
         campaign.Description = string.IsNullOrWhiteSpace(req.Description) ? null : req.Description.Trim();
         campaign.Provider = string.IsNullOrWhiteSpace(req.Provider) ? null : req.Provider.Trim();

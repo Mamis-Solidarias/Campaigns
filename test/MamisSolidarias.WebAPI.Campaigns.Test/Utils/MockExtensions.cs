@@ -68,6 +68,23 @@ internal static class MockExtensions
         );
     }
 
+    public static void MockGetBeneficiaryWithShirt(this Mock<IGraphQlClient> client,
+        Expression<Func<int, bool>> idMatcher,
+        string firstName,string lastName, BeneficiaryGender gender, string? shirtSize)
+    {
+        var result = new GetBeneficiaryWithShirt_Beneficiary_Beneficiary(firstName, lastName,
+            gender, new GetBeneficiaryWithShirt_Beneficiary_Clothes_Clothes(shirtSize)
+        );
+
+        client.MockRequest<IGetBeneficiaryWithShirtResult, IGetBeneficiaryWithShirt_Beneficiary>(
+            t => t.Beneficiary,
+            result,
+            t => t.GetBeneficiaryWithShirt.ExecuteAsync(
+                It.Is(idMatcher),
+                It.IsAny<CancellationToken>())
+        );
+    }
+
     public static void MockGetBeneficiaryWithEducation(this Mock<IGraphQlClient> client,
         Expression<Func<int, bool>> idMatcher,
         string firstName, string lastName,

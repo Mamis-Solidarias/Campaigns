@@ -18,3 +18,14 @@ query GetBeneficiaryWithClothes($id: Int!){
     }
 }
 
+query GetBeneficiaryWithShirt($id: Int!){
+    beneficiary(id: $id){
+        firstName
+        lastName
+        gender
+        clothes {
+            shirtSize
+        }
+    }
+}
+
