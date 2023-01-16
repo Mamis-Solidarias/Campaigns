@@ -7,8 +7,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Utils;
 internal abstract class ParticipantBuilder<T> where T : Participant
 {
     protected readonly CampaignsDbContext? _db;
-    protected readonly T _participant;
     private readonly Faker<T> _generator = new();
+    protected readonly T _participant;
 
     protected ParticipantBuilder(CampaignsDbContext? db = null)
     {
@@ -24,7 +24,7 @@ internal abstract class ParticipantBuilder<T> where T : Participant
         // ReSharper disable once VirtualMemberCallInConstructor
         SetUpGenerator(_generator);
     }
-    
+
     public ParticipantBuilder<T> WithCampaignId(int campaignId)
     {
         _participant.CampaignId = campaignId;
@@ -42,12 +42,20 @@ internal abstract class ParticipantBuilder<T> where T : Participant
         _participant.BeneficiaryId = beneficiaryId;
         return this;
     }
-    
+
+    public ParticipantBuilder<T> WithGender(BeneficiaryGender gender)
+    {
+        _participant.BeneficiaryGender = gender;
+        return this;
+    }
+
     protected virtual void SetUpGenerator(Faker<T> generator)
     {
         generator
             .RuleFor(t => t.Id, f => f.IndexGlobal + 1)
             .RuleFor(t => t.BeneficiaryId, f => f.IndexGlobal + 1)
+            .RuleFor(t => t.BeneficiaryGender, f => f.PickRandom<BeneficiaryGender>())
+            .RuleFor(t => t.BeneficiaryName, f => f.Name.FullName())
             ;
     }
 
@@ -58,7 +66,7 @@ internal abstract class ParticipantBuilder<T> where T : Participant
         _db?.ChangeTracker.Clear();
         return _participant;
     }
-    
+
     public static implicit operator Participant(ParticipantBuilder<T> b)
     {
         return b.Build();
