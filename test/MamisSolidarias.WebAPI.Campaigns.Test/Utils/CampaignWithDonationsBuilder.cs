@@ -47,7 +47,17 @@ internal abstract class CampaignWithDonationsBuilder<TCampaign,TParticipant>
     public CampaignWithDonationsBuilder<TCampaign, TParticipant> WithDonations(IEnumerable<Guid> donations)
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        _campaign.Donations = donations.Cast<CampaignDonation>().ToList();
+        _campaign.Donations = donations.Select(t=> (CampaignDonation)t).ToList();
+        return this;
+    }
+    public CampaignWithDonationsBuilder<TCampaign, TParticipant> WithDonations(params Guid[] donations)
+    {
+        return WithDonations(donations.AsEnumerable());
+    }
+    
+    public CampaignWithDonationsBuilder<TCampaign, TParticipant> WithoutDonations()
+    {
+        _campaign.Donations = new List<CampaignDonation>();
         return this;
     }
     
