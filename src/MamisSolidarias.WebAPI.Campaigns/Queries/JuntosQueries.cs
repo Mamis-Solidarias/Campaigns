@@ -27,7 +27,6 @@ public class JuntosQueries
     }
 
     [Authorize(Policy = "CanRead")]
-    [UseFirstOrDefault]
     [UseProjection]
     public IQueryable<JuntosCampaign> GetJuntosCampaigns(CampaignsDbContext context)
     {
