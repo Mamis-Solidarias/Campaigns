@@ -4,7 +4,7 @@ using Bogus;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Utils;
+namespace MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
 internal abstract class CampaignBuilder<TCampaign, TParticipant> 
     where TCampaign: Campaign<TParticipant>
@@ -24,7 +24,7 @@ internal abstract class CampaignBuilder<TCampaign, TParticipant>
             ;
     }
 
-    protected CampaignBuilder(CampaignsDbContext? db)
+    public CampaignBuilder(CampaignsDbContext? db)
     {
         _db = db;
         // ReSharper disable once VirtualMemberCallInConstructor
@@ -32,7 +32,7 @@ internal abstract class CampaignBuilder<TCampaign, TParticipant>
         _campaign = _generator.Generate();
     }
 
-    protected CampaignBuilder(TCampaign obj)
+    public CampaignBuilder(TCampaign obj)
     {
         _campaign = obj;
     }
@@ -82,6 +82,12 @@ internal abstract class CampaignBuilder<TCampaign, TParticipant>
         return this;
     }
     
+    public CampaignBuilder<TCampaign,TParticipant> WithoutParticipants()
+    {
+        _campaign.Participants = new List<TParticipant>();
+        return this;
+    }
+
     public CampaignBuilder<TCampaign,TParticipant> WithParticipants(IEnumerable<ParticipantBuilder<TParticipant>> participants)
     {
         _campaign.Participants = participants

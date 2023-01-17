@@ -1,5 +1,5 @@
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.DELETE;
@@ -20,7 +20,7 @@ internal class DbAccess
     public virtual Task<MochiParticipant?> GetParticipantAsync(int reqId, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
-        return _dbContext.MochiParticipants.AsNoTracking().FirstOrDefaultAsync(t=> t.Id == reqId, ct);
+        return _dbContext.MochiParticipants.AsNoTracking().FirstOrDefaultAsync(t => t.Id == reqId, ct);
     }
 
     public virtual async Task UpdateParticipantAsync(MochiParticipant participant, CancellationToken ct)

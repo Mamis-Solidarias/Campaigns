@@ -1,7 +1,6 @@
 using FastEndpoints;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using StrawberryShake;
@@ -27,7 +26,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        MochiParticipant? participant = await _db.GetParticipantAsync(req.Id, ct);
+        var participant = await _db.GetParticipantAsync(req.Id, ct);
         if (participant is null)
         {
             await SendNotFoundAsync(ct);
@@ -38,12 +37,12 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         var hasErrors = await executor.HandleErrors(
             async token => await SendForbiddenAsync(token),
-            async (errors,token) => await SendGraphQlErrors(errors,token),
+            async (errors, token) => await SendGraphQlErrors(errors, token),
             ct
         );
         if (hasErrors)
             return;
-        
+
         if (executor.Data?.Donor is null)
         {
             await SendNotFoundAsync(ct);
@@ -52,7 +51,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         participant.DonorId = req.DonorId;
         participant.DonorName = executor.Data.Donor.Name;
-        participant.DonationDropOffLocation = req.DonationDropOffLocation;
+        participant.DonationDropOffPoint = req.DonationDropOffLocation;
         participant.DonationType = Enum.Parse<DonationType>(req.DonationType, true);
         participant.State = ParticipantState.MissingDonation;
 
@@ -64,7 +63,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     {
         foreach (var clientError in errors)
             AddError(clientError.Message);
-        
+
         await SendErrorsAsync(cancellation: token);
     }
 }

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EntityFramework.Exceptions.Common;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -16,9 +16,9 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 internal sealed class CampaignsMochiPostTest
 {
-    private Endpoint _endpoint = null!;
-    private readonly Mock<DbAccess> _mockDb = new();
     private readonly Mock<IBus> _mockBus = new();
+    private readonly Mock<DbAccess> _mockDb = new();
+    private Endpoint _endpoint = null!;
 
     [SetUp]
     public void Setup()
@@ -38,7 +38,7 @@ internal sealed class CampaignsMochiPostTest
     {
         // Arrange
         MochiCampaign campaign = DataFactory.GetMochiCampaign();
-        
+
         var req = new Request
         {
             Edition = campaign.Edition,
@@ -72,7 +72,6 @@ internal sealed class CampaignsMochiPostTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
     }
-    
 
 
     [Test]

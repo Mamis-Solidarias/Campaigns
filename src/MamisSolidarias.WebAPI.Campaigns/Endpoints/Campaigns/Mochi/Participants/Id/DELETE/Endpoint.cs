@@ -30,7 +30,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         participant.DonorId = null;
         participant.DonorName = null;
-        participant.DonationDropOffLocation = null;
+        participant.DonationDropOffPoint = null;
         participant.DonationType = null;
         participant.State = ParticipantState.MissingDonor;
 

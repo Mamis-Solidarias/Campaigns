@@ -137,7 +137,7 @@ public class AddParticipantToMochiCampaignTest
         participant?.CampaignId.Should().Be(campaign.Id);
         participant?.BeneficiaryGender.Should().Be(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Male);
         participant?.BeneficiaryName.Should().Be($"{firstName} {lastName}".ToLower());
-        participant?.SchoolCycle.Should().Be(Infrastructure.Campaigns.Models.SchoolCycle.HighSchool);
+        participant?.SchoolCycle.Should().Be(Infrastructure.Campaigns.Models.Mochi.SchoolCycle.HighSchool);
         participant?.State.Should().Be(ParticipantState.MissingDonor);
     }
 }

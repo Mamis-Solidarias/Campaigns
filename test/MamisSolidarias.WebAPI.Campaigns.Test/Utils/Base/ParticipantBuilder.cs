@@ -2,7 +2,7 @@ using Bogus;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Utils;
+namespace MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
 internal abstract class ParticipantBuilder<T> where T : Participant
 {
@@ -42,6 +42,12 @@ internal abstract class ParticipantBuilder<T> where T : Participant
         _participant.BeneficiaryId = beneficiaryId;
         return this;
     }
+    
+    public ParticipantBuilder<T> WithBeneficiaryName(string name)
+    {
+        _participant.BeneficiaryName = name;
+        return this;
+    }
 
     public ParticipantBuilder<T> WithGender(BeneficiaryGender gender)
     {
@@ -71,4 +77,6 @@ internal abstract class ParticipantBuilder<T> where T : Participant
     {
         return b.Build();
     }
+
+
 }

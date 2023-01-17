@@ -6,7 +6,7 @@ using FluentAssertions;
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -15,9 +15,9 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using StrawberryShake;
-using BeneficiaryGender = MamisSolidarias.GraphQlClient.BeneficiaryGender;
+using BeneficiaryGender = MamisSolidarias.Infrastructure.Campaigns.Models.Base.BeneficiaryGender;
 using MockExtensions = MamisSolidarias.WebAPI.Campaigns.Utils.MockExtensions;
-using SchoolCycle = MamisSolidarias.GraphQlClient.SchoolCycle;
+using SchoolCycle = MamisSolidarias.Infrastructure.Campaigns.Models.Mochi.SchoolCycle;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
@@ -42,7 +42,7 @@ public class MochiParticipantUpdateTest
 
         _dataFactory = new DataFactory(_dbContext);
 
-        _consumer = new(_dbContext,_mockGraphQlClient.Object);
+        _consumer = new MochiParticipantUpdated(_dbContext, _mockGraphQlClient.Object);
     }
 
     [TearDown]
@@ -83,21 +83,21 @@ public class MochiParticipantUpdateTest
         var campaign = _dataFactory.GenerateMochiCampaign()
             .WithParticipants(new List<MochiParticipant>()).Build();
         var participant = _dataFactory.GenerateMochiParticipant()
-            .WithSchoolCycle(Infrastructure.Campaigns.Models.SchoolCycle.PreSchool)
-            .WithBeneficiaryGender(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Female)
+            .WithSchoolCycle(SchoolCycle.PreSchool)
+            .WithGender(BeneficiaryGender.Female)
             .WithBeneficiaryName("Test 123")
             .WithCampaignId(campaign.Id)
             .Build();
-        
+
         var beneficiaryId = participant.BeneficiaryId;
         const string firstName = "John";
         const string lastName = "Doe";
-        const SchoolCycle schoolCycle = SchoolCycle.HighSchool;
-        const BeneficiaryGender gender = BeneficiaryGender.Male;
+        const GraphQlClient.SchoolCycle schoolCycle = GraphQlClient.SchoolCycle.HighSchool;
+        const GraphQlClient.BeneficiaryGender gender = GraphQlClient.BeneficiaryGender.Male;
 
         _mockGraphQlClient.MockGetBeneficiaryWithEducation(
             i => i == beneficiaryId,
-            firstName,lastName, gender, schoolCycle
+            firstName, lastName, gender, schoolCycle
         );
 
         var context = MockExtensions.MockConsumeContext(
@@ -109,13 +109,13 @@ public class MochiParticipantUpdateTest
 
         // Assert
         await action.Should().NotThrowAsync<DbUpdateException>();
-        
+
         var participants = _dbContext.MochiParticipants
-            .Where(t=> t.BeneficiaryId == beneficiaryId)
+            .Where(t => t.BeneficiaryId == beneficiaryId)
             .ToList();
-        
-        participants.Should().Contain(t=> t.BeneficiaryName == $"{firstName} {lastName}");
-        participants.Should().Contain(t=> t.SchoolCycle.Map() == schoolCycle);
+
+        participants.Should().Contain(t => t.BeneficiaryName == $"{firstName} {lastName}");
+        participants.Should().Contain(t => t.SchoolCycle.Map() == schoolCycle);
         participants.Should().Contain(t => t.BeneficiaryGender == gender.Map());
     }
 }

@@ -1,12 +1,13 @@
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
 public static class MochiParticipantExtensions
 {
     public static SchoolCycle? Map(this GraphQlClient.SchoolCycle? beneficiaryGender)
-        => beneficiaryGender switch
+    {
+        return beneficiaryGender switch
         {
             GraphQlClient.SchoolCycle.PreSchool => SchoolCycle.PreSchool,
             GraphQlClient.SchoolCycle.PrimarySchool => SchoolCycle.PrimarySchool,
@@ -15,17 +16,20 @@ public static class MochiParticipantExtensions
             null => null,
             _ => throw new ArgumentOutOfRangeException(nameof(beneficiaryGender), beneficiaryGender, null)
         };
+    }
 
 
     public static BeneficiaryGender Map(this GraphQlClient.BeneficiaryGender beneficiaryGender)
-        => beneficiaryGender switch
+    {
+        return beneficiaryGender switch
         {
             GraphQlClient.BeneficiaryGender.Male => BeneficiaryGender.Male,
             GraphQlClient.BeneficiaryGender.Female => BeneficiaryGender.Female,
             GraphQlClient.BeneficiaryGender.Other => BeneficiaryGender.Other,
             _ => throw new ArgumentOutOfRangeException(nameof(beneficiaryGender), beneficiaryGender, null)
         };
-    
+    }
+
     public static GraphQlClient.SchoolCycle? Map(this SchoolCycle? participantBeneficiaryGender)
     {
         return participantBeneficiaryGender switch

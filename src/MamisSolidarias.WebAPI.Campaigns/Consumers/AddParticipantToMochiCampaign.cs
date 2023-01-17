@@ -1,7 +1,7 @@
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using MassTransit;
@@ -26,7 +26,7 @@ public class AddParticipantToMochiCampaign : IConsumer<ParticipantAddedToMochiCa
 
         var response = await _graphQlClient
             .GetBeneficiaryWithEducation
-            .ExecuteAsync(beneficiaryId,context.CancellationToken);
+            .ExecuteAsync(beneficiaryId, context.CancellationToken);
 
         var hasErrors = await response.HandleErrors(
             _ => Task.CompletedTask,
@@ -34,10 +34,10 @@ public class AddParticipantToMochiCampaign : IConsumer<ParticipantAddedToMochiCa
             context.CancellationToken
         );
 
-        if (hasErrors) 
+        if (hasErrors)
             throw new GraphQLException("Error getting beneficiary with education");
 
-        if (response.Data?.Beneficiary is null) 
+        if (response.Data?.Beneficiary is null)
             throw new GraphQLException("Beneficiary not found");
 
         var entry = new MochiParticipant
@@ -50,7 +50,7 @@ public class AddParticipantToMochiCampaign : IConsumer<ParticipantAddedToMochiCa
             CampaignId = campaignId
         };
 
-        await _dbContext.MochiParticipants.AddAsync(entry,context.CancellationToken);
+        await _dbContext.MochiParticipants.AddAsync(entry, context.CancellationToken);
         await _dbContext.SaveChangesAsync(context.CancellationToken);
     }
 }
