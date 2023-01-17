@@ -4,49 +4,34 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
-using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using MassTransit;
-using Moq;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class CampaignsJuntosIdPutTest
+internal sealed class CampaignsJuntosIdPutTest : EndpointTest<Endpoint>
 {
-    private readonly Mock<IBus> _mockBus = new();
-    private readonly Mock<DbAccess> _mockDb = new();
-    private Endpoint _endpoint = null!;
+    protected override object?[] ConstructorArguments
+        => new object?[] { _dbContext, _mockBus.Object };
 
-    [SetUp]
-    public void Setup()
-    {
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_mockBus.Object, null, _mockDb.Object);
-    }
-
-    [TearDown]
-    public void Teardown()
-    {
-        _mockDb.Reset();
-        _mockBus.Reset();
-    }
 
     [Test]
     public async Task WithValidParameters_Succeeds()
     {
         // Arrange
-        var campaign = new JuntosCampaign();
-        SetUpGetCampaign(campaign.Id, campaign);
+        var campaign = _dataFactory.GenerateJuntosCampaign()
+            .Build();
 
         var request = new Request
         {
             Id = campaign.Id,
-            Description = campaign.Description,
-            Provider = campaign.Provider,
+            Description = "New Description",
+            Provider = "New Provider",
             AddedBeneficiaries = Enumerable.Range(1, 3),
             RemovedBeneficiaries = new List<int>(),
-            FundraiserGoal = campaign.FundraiserGoal
+            FundraiserGoal = 1000,
         };
 
         // Act
@@ -54,6 +39,10 @@ internal sealed class CampaignsJuntosIdPutTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
+        var updatedCampaign = await _dbContext.JuntosCampaigns.SingleAsync(t=> t.Id == campaign.Id);
+        updatedCampaign.Description.Should().Be(request.Description);
+        updatedCampaign.Provider.Should().Be(request.Provider);
+        updatedCampaign.FundraiserGoal.Should().Be(request.FundraiserGoal);
     }
 
     [Test]
@@ -61,9 +50,7 @@ internal sealed class CampaignsJuntosIdPutTest
     {
         // Arrange
         JuntosCampaign campaign = DataFactory.GetJuntosCampaign();
-
-        SetUpGetCampaign(campaign.Id, null);
-
+        
         var request = new Request
         {
             Id = campaign.Id,
@@ -80,13 +67,6 @@ internal sealed class CampaignsJuntosIdPutTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
     }
+    
 
-    private void SetUpGetCampaign(int id, JuntosCampaign? campaign)
-    {
-        _mockDb.Setup(t => t.GetCampaign(
-                It.Is<int>(r => r == id),
-                It.IsAny<CancellationToken>()
-            ))
-            .ReturnsAsync(campaign);
-    }
 }
