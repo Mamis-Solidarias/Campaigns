@@ -37,6 +37,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         var executor = await _graphQlClient
             .GetCommunity
             .ExecuteAsync(campaign.CommunityId, ct);
+        
         var hasErrors = await executor.HandleErrors(
             async t => await SendForbiddenAsync(t),
             async (e, t) => await SendGraphQlErrors(e, t),

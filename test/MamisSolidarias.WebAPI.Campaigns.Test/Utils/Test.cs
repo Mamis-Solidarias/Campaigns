@@ -24,6 +24,7 @@ internal abstract class Test
         var options = new DbContextOptionsBuilder<CampaignsDbContext>()
             .UseSqlite(connection)
             .UseExceptionProcessor()
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
             .Options;
 
         _dbContext = new CampaignsDbContext(options);

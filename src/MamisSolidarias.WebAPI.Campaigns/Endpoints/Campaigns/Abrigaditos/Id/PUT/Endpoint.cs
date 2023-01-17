@@ -34,6 +34,7 @@ internal sealed class Endpoint : Endpoint<Request>
                     .ExecuteDeleteAsync(ct);
 
             var campaign = await _db.AbrigaditosCampaigns
+                .AsTracking()
                 .Include(t => t.Participants)
                 .SingleAsync(t => t.Id == req.Id, ct);
 

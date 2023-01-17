@@ -20,6 +20,7 @@ internal static class EntityFrameworkExtensions
                     .EnableSensitiveDataLogging(!environment.IsProduction())
                     .EnableDetailedErrors(!environment.IsProduction())
                     .UseExceptionProcessor()
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
         );
     }
 
