@@ -1,47 +1,15 @@
 using System.Threading.Tasks;
-using EntityFramework.Exceptions.PostgreSQL;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Abrigaditos.Id.Delete;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-public class Campaigns_Abrigaditos_Id_Delete_Test
+internal class Campaigns_Abrigaditos_Id_Delete_Test : EndpointTest<Endpoint>
 {
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-    private Endpoint _endpoint = null!;
-
-    [SetUp]
-    public void SetUp()
-    {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .UseExceptionProcessor()
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(
-            _dbContext
-        );
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
-    }
+    protected override object?[] ConstructorArguments =>
+        new object?[] { _dbContext };
 
     [Test]
     public async Task WithAValidCampaign_ShouldDeleteIt()

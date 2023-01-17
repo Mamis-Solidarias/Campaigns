@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -17,36 +15,11 @@ using MockExtensions = MamisSolidarias.WebAPI.Campaigns.Utils.MockExtensions;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class AddParticipantToAbrigaditosCampaign_Test
+internal class AddParticipantToAbrigaditosCampaign_Test : ConsumerTest<AddParticipantToAbrigaditosCampaign>
 {
-    private readonly Mock<IGraphQlClient> _mockGraphQlClient = new();
-    private AddParticipantToAbrigaditosCampaign _consumer = null!;
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-
-    [SetUp]
-    public void SetUp()
+    protected override AddParticipantToAbrigaditosCampaign CreateConsumer()
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-
-        _consumer = new AddParticipantToAbrigaditosCampaign(_mockGraphQlClient.Object, _dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
-        _mockGraphQlClient.Reset();
+        return new(GraphQlClient, _dbContext);
     }
 
     [Test]
@@ -61,14 +34,14 @@ public class AddParticipantToAbrigaditosCampaign_Test
             )
         );
 
-        _mockGraphQlClient.MockEmptyResponse(t => t.GetBeneficiaryWithShirt.ExecuteAsync(
+        _mockGraphQl.MockEmptyResponse(t => t.GetBeneficiaryWithShirt.ExecuteAsync(
                 It.Is<int>(r => r == beneficiaryId),
                 It.IsAny<CancellationToken>()
             )
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowExactlyAsync<ArgumentException>();
@@ -86,14 +59,14 @@ public class AddParticipantToAbrigaditosCampaign_Test
             )
         );
 
-        _mockGraphQlClient.MockAuthenticationError(t => t.GetBeneficiaryWithShirt.ExecuteAsync(
+        _mockGraphQl.MockAuthenticationError(t => t.GetBeneficiaryWithShirt.ExecuteAsync(
                 It.Is<int>(r => r == beneficiaryId),
                 It.IsAny<CancellationToken>()
             )
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowExactlyAsync<GraphQLException>();
@@ -116,11 +89,11 @@ public class AddParticipantToAbrigaditosCampaign_Test
             )
         );
 
-        _mockGraphQlClient.MockGetBeneficiaryWithShirt(t => t == beneficiaryId,
+        _mockGraphQl.MockGetBeneficiaryWithShirt(t => t == beneficiaryId,
             firstName, lastName, beneficiaryGender, shirtSize);
 
         // Act
-        await _consumer.Consume(context);
+        await Consumer.Consume(context);
 
         // Assert
         var participant = await _dbContext.AbrigaditosParticipants

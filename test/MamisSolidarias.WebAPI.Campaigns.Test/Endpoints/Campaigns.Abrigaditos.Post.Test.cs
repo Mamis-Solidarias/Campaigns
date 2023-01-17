@@ -2,58 +2,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EntityFramework.Exceptions.Sqlite;
 using FluentAssertions;
-using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Abrigaditos;
-using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Abrigaditos.POST;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using MassTransit;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class CampaignsAbrigaditosPostTest
+internal sealed class CampaignsAbrigaditosPostTest : EndpointTest<Endpoint>
 {
-    private readonly Mock<IBus> _mockBus = new();
-    private readonly Mock<IGraphQlClient> _mockGraphQl = new();
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-    private Endpoint _endpoint = null!;
-
-    [SetUp]
-    public void SetUp()
-    {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .UseExceptionProcessor()
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(
-            _dbContext, _mockGraphQl.Object, _mockBus.Object
-        );
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
-        _mockBus.Reset();
-        _mockGraphQl.Reset();
-    }
-
+    protected override object?[] ConstructorArguments =>
+        new object?[] { _dbContext, _mockGraphQl.Object, _mockBus.Object };
 
     [Test]
     public async Task WithValidParameters_ManyParticipants_Successful()

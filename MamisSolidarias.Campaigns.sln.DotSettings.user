@@ -2,6 +2,20 @@
 	
 	<s:String x:Key="/Default/CodeInspection/Highlighting/SweaWarningsMode/@EntryValue">ShowAndRun</s:String>
 	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/ldellisola/.jetbrains/rider/system/resharper-host/temp/Rider/vAny/CoverageData/_MamisSolidarias.Campaigns.1046769701/Snapshot/snapshot.utdcvr</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8e6aeacb_002D91a1_002D4267_002Da299_002Dba45a8a226e0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CampaignsAbrigaditosPostTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Endpoints.CampaignsAbrigaditosPostTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.AbrigaditosParticipantUpdatesTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.AddParticipantToAbrigaditosCampaign_Test&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.AddParticipantToJuntosCampaignTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.AddParticipantToMochiCampaignTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.DonatedToAbrigaditosCampaign_Test&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.DonatedToJuntosCampaign_Test&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.DonatedToMochiCampaign_Test&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.JuntosParticipantUpdateTest&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::C438A7D2-F3A0-4C5B-AF24-B4800FC1229F::net7.0::MamisSolidarias.WebAPI.Campaigns.Consumers.MochiParticipantUpdateTest&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f477ee30_002Dcf7a_002D4ebd_002D998a_002Dcb64c1d86c6d/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;

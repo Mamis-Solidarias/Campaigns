@@ -1,50 +1,17 @@
 using System.Linq;
 using System.Threading.Tasks;
-using EntityFramework.Exceptions.Sqlite;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Abrigaditos.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using MassTransit;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-public class Campaigns_Abrigaditos_Id_Put_Test
+internal class Campaigns_Abrigaditos_Id_Put_Test : EndpointTest<Endpoint>
 {
-    private readonly Mock<IBus> _mockBus = new();
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-    private Endpoint _endpoint = null!;
-
-    [SetUp]
-    public void SetUp()
-    {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .UseExceptionProcessor()
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_dbContext, _mockBus.Object);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _mockBus.Reset();
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
-    }
+    protected override object?[] ConstructorArguments =>
+        new object?[] { _dbContext, _mockBus.Object };
 
     [Test]
     public async Task WhenTheCampaignDoesNotExists_ShouldReturnNotFound()

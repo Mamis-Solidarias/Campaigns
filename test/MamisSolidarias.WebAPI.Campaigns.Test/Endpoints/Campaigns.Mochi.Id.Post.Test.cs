@@ -1,48 +1,19 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EntityFramework.Exceptions.Sqlite;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
-using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.POST;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class CampaignsMochiIdPostTest
+internal sealed class CampaignsMochiIdPostTest : EndpointTest<Endpoint>
 {
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _db = null!;
-    private Endpoint _endpoint = null!;
-
-    [SetUp]
-    public void Setup()
-    {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .UseExceptionProcessor()
-            .Options;
-
-        _db = new CampaignsDbContext(options);
-        _db.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_db);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db);
-    }
-
-    [TearDown]
-    public void Teardown()
-    {
-        _db.Database.EnsureDeleted();
-        _db.Dispose();
-    }
+    protected override object?[] ConstructorArguments =>
+        new object?[] { _dbContext };
 
     [Test]
     public async Task WithValidParameters_Succeeds()
@@ -67,7 +38,7 @@ internal sealed class CampaignsMochiIdPostTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
 
-        var createdCampaign = await _db.MochiCampaigns
+        var createdCampaign = await _dbContext.MochiCampaigns
             .Include(c => c.Participants)
             .Where(t => t.CommunityId == campaign.CommunityId)
             .Where(t => t.Edition == campaign.Edition)
@@ -108,7 +79,7 @@ internal sealed class CampaignsMochiIdPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
-        _db.MochiCampaigns.Should().BeEmpty();
+        _dbContext.MochiCampaigns.Should().BeEmpty();
     }
 
     [Test]

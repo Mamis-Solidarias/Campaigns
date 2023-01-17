@@ -16,6 +16,9 @@ internal abstract class Test
     protected readonly Mock<IBus> _mockBus = new();
     protected readonly Mock<IGraphQlClient> _mockGraphQl = new();
     
+    protected IGraphQlClient GraphQlClient => _mockGraphQl.Object;
+    protected IBus Bus => _mockBus.Object;
+    
     [SetUp]
     public virtual void Setup()
     {
