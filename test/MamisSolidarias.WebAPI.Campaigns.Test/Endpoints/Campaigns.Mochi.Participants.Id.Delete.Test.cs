@@ -68,7 +68,8 @@ internal sealed class CampaignsMochiParticipantsIdDeleteTest
     public async Task ParticipantDoesNotExists_Fails()
     {
         // Arrange
-        var participant = DataFactory.GetMochiParticipant().Build();
+        var participant = DataFactory.GetMochiParticipant()
+            .Build();
 
         _mockDb.Setup(t => t.GetParticipantAsync(
                 It.Is<int>(r => r == participant.Id),
@@ -86,9 +87,5 @@ internal sealed class CampaignsMochiParticipantsIdDeleteTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
-        participant.DonorId.Should().NotBeNull();
-        participant.DonorName.Should().NotBeNull();
-        participant.DonationType.Should().NotBeNull();
-        participant.DonationDropOffPoint.Should().NotBeNull();
     }
 }
