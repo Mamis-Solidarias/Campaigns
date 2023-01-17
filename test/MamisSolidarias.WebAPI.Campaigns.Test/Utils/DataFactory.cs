@@ -34,6 +34,11 @@ internal class DataFactory
     {
         return new MochiParticipantBuilder(db: null);
     }
+    
+    public static IEnumerable<MochiParticipantBuilder> GetMochiParticipants(int n)
+    {
+        return Enumerable.Range(0, n).Select(_ => new MochiParticipantBuilder());
+    }
 
     public JuntosBuilder GenerateJuntosCampaign()
     {
