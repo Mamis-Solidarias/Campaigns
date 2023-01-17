@@ -18,6 +18,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     {
         Delete("campaigns/mochi/participants/{id}");
         Policies(Utils.Security.Policies.CanWrite);
+        Description(t=> t.WithTags("Una Mochi como la Tuya"));
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)

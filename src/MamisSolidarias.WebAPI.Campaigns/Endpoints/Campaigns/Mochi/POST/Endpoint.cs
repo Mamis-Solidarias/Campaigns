@@ -11,8 +11,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly IBus _bus;
     private readonly CampaignsDbContext _db;
-
-
+    
     public Endpoint(CampaignsDbContext dbContext, IBus bus)
     {
         _db = dbContext;
@@ -23,6 +22,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     {
         Post("/campaigns/mochi");
         Policies(Utils.Security.Policies.CanWrite);
+        Description(t=> t.WithTags("Una Mochi como la Tuya"));
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
@@ -45,7 +45,6 @@ internal sealed class Endpoint : Endpoint<Request, Response>
                 ),
                 ct
             );
-
 
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
