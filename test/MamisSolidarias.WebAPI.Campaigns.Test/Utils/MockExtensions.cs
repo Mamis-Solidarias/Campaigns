@@ -22,7 +22,7 @@ internal static class MockExtensions
         return context.Object;
     }
 
-    public static void MockGetDonor(this Mock<IGraphQlClient> client, 
+    public static void MockGetDonor(this Mock<IGraphQlClient> client,
         Expression<Func<int, bool>> matcher,
         string donorName)
     {
@@ -70,7 +70,7 @@ internal static class MockExtensions
 
     public static void MockGetBeneficiaryWithShirt(this Mock<IGraphQlClient> client,
         Expression<Func<int, bool>> idMatcher,
-        string firstName,string lastName, BeneficiaryGender gender, string? shirtSize)
+        string firstName, string lastName, BeneficiaryGender gender, string? shirtSize)
     {
         var result = new GetBeneficiaryWithShirt_Beneficiary_Beneficiary(firstName, lastName,
             gender, new GetBeneficiaryWithShirt_Beneficiary_Clothes_Clothes(shirtSize)
@@ -91,7 +91,7 @@ internal static class MockExtensions
         BeneficiaryGender gender, SchoolCycle? schoolCycle)
     {
         var result = new GetBeneficiaryWithEducation_Beneficiary_Beneficiary(
-            firstName,lastName,gender,
+            firstName, lastName, gender,
             schoolCycle is null ? null : new GetBeneficiaryWithEducation_Beneficiary_Education_Education(schoolCycle)
         );
 
@@ -138,7 +138,7 @@ internal static class MockExtensions
 
         client.Setup(expression).ReturnsAsync(operationResult.Object);
     }
-    
+
     public static void MockEmptyResponse<T>(this Mock<IGraphQlClient> client,
         Expression<Func<IGraphQlClient, Task<IOperationResult<T>>>> expression
     ) where T : class
@@ -160,5 +160,3 @@ internal static class MockExtensions
         MockErrors(client, expression, new ClientError("AUTH_NOT_AUTHORIZED", "AUTH_NOT_AUTHORIZED"));
     }
 }
-
-

@@ -1,7 +1,6 @@
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
 
-
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.DELETE;
 
 internal sealed class Endpoint : Endpoint<Request>
@@ -27,10 +26,8 @@ internal sealed class Endpoint : Endpoint<Request>
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await _db.DeleteMochiAsync(mochi, ct);
         await SendOkAsync(ct);
     }
-
-
 }

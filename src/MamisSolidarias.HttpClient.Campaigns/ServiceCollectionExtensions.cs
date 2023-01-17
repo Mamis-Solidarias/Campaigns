@@ -1,6 +1,6 @@
+using MamisSolidarias.HttpClient.Campaigns.CampaignsClient;
 using MamisSolidarias.HttpClient.Campaigns.Models;
 using MamisSolidarias.HttpClient.Campaigns.Services;
-using MamisSolidarias.HttpClient.Campaigns.CampaignsClient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +11,7 @@ namespace MamisSolidarias.HttpClient.Campaigns;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// It registers the CampaignsHttpClient using dependency injection
+    ///     It registers the CampaignsHttpClient using dependency injection
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
@@ -25,23 +25,22 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpContextAccessor();
         services.AddSingleton<ICampaignsClient, CampaignsClient.CampaignsClient>();
-        services.AddHttpClient("Campaigns", (s,client) =>
-        {
-            client.BaseAddress = new Uri(config.BaseUrl);
-            client.Timeout = TimeSpan.FromMilliseconds(config.Timeout);
-            
-            var contextAccessor = s.GetService<IHttpContextAccessor>();
-            if (contextAccessor is not null)
+        services.AddHttpClient("Campaigns", (s, client) =>
             {
-                var authHeader = new HeaderService(contextAccessor).GetAuthorization();
-                if (authHeader is not null)
-                    client.DefaultRequestHeaders.Add("Authorization", authHeader);
-            }
-            
-        })
+                client.BaseAddress = new Uri(config.BaseUrl);
+                client.Timeout = TimeSpan.FromMilliseconds(config.Timeout);
+
+                var contextAccessor = s.GetService<IHttpContextAccessor>();
+                if (contextAccessor is not null)
+                {
+                    var authHeader = new HeaderService(contextAccessor).GetAuthorization();
+                    if (authHeader is not null)
+                        client.DefaultRequestHeaders.Add("Authorization", authHeader);
+                }
+            })
             .AddTransientHttpErrorPolicy(t =>
-            t.WaitAndRetryAsync(config.Retries,
-                retryAttempt => TimeSpan.FromMilliseconds(100 * Math.Pow(2, retryAttempt)))
-        );
+                t.WaitAndRetryAsync(config.Retries,
+                    retryAttempt => TimeSpan.FromMilliseconds(100 * Math.Pow(2, retryAttempt)))
+            );
     }
 }

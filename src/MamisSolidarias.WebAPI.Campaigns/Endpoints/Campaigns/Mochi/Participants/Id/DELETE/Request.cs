@@ -7,18 +7,18 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participant
 public class Request
 {
     /// <summary>
-    /// Participant Id
+    ///     Participant Id
     /// </summary>
-    [FromRoute] public int Id { get; set; }
+    [FromRoute]
+    public int Id { get; set; }
 }
 
 internal class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {
-        RuleFor(t=> t.Id)
+        RuleFor(t => t.Id)
             .NotEmpty().WithMessage("El Id del participante es requerido")
             .GreaterThan(0).WithMessage("El Id del participante debe ser mayor a 0");
-        
     }
 }

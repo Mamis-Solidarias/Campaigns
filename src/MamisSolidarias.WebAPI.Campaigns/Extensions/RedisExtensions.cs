@@ -15,8 +15,8 @@ internal static class RedisExtensions
             logger.LogError("Redis connection string is null");
             throw new ArgumentException("Redis connection string is null");
         }
-        
-        
+
+
         var redis = ConnectionMultiplexer.Connect(connectionString);
 
         if (redis is null)
@@ -24,7 +24,7 @@ internal static class RedisExtensions
             logger.LogError("Could not connect to Redis");
             throw new ArgumentException("Could not connect to Redis");
         }
-        
+
         services.AddSingleton(redis);
     }
 }

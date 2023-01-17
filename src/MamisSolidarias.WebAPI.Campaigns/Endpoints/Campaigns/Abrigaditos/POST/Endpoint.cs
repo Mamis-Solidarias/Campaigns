@@ -88,5 +88,4 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         await SendErrorsAsync(cancellation: token);
     }
-
 }

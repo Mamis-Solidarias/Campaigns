@@ -22,8 +22,8 @@ internal class DbAccess
         ArgumentNullException.ThrowIfNull(_dbContext);
         return _dbContext.MochiCampaigns
             .AsNoTracking()
-            .Include(t=> t.Participants)
-            .FirstOrDefaultAsync(t=> t.Id == id, ct);
+            .Include(t => t.Participants)
+            .FirstOrDefaultAsync(t => t.Id == id, ct);
     }
 
     public virtual async Task SaveCampaignAsync(MochiCampaign campaign, CancellationToken ct)

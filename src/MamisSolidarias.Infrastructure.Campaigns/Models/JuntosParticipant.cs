@@ -4,19 +4,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MamisSolidarias.Infrastructure.Campaigns.Models;
 
-
 public class JuntosParticipant
 {
     public int Id { get; set; }
-    
+
     public BeneficiaryGender Gender { get; set; }
-    
+
     public int? ShoeSize { get; set; }
 
     public ParticipantState State { get; set; } = ParticipantState.MissingDonor;
     public int CampaignId { get; set; }
     public virtual JuntosCampaign Campaign { get; set; } = null!;
-    
+
     public int BeneficiaryId { get; set; }
     public int? DonorId { get; set; }
     public string? DonorName { get; set; }
@@ -37,11 +36,11 @@ internal sealed class JuntosParticipantConfigurator : IEntityTypeConfiguration<J
 
         builder.Property(t => t.DonationType)
             .IsRequired(false);
-        
-        builder.Property(t=> t.DonationDropOffPoint)
+
+        builder.Property(t => t.DonationDropOffPoint)
             .IsRequired(false)
             .HasMaxLength(200);
-        
+
         builder.Property(t => t.Id)
             .ValueGeneratedOnAdd()
             .IsRequired();

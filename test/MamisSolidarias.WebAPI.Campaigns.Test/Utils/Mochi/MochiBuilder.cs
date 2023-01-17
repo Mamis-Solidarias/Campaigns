@@ -4,7 +4,7 @@ using MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Utils.Mochi;
 
-internal sealed class MochiBuilder : CampaignBuilder<MochiCampaign,MochiParticipant>
+internal sealed class MochiBuilder : CampaignBuilder<MochiCampaign, MochiParticipant>
 {
     public MochiBuilder(CampaignsDbContext? db) : base(db)
     {

@@ -34,7 +34,7 @@ public class AddParticipantToJuntosCampaign : IConsumer<ParticipantAddedToJuntos
             default
         );
 
-        if (hasErrors) 
+        if (hasErrors)
             throw new GraphQLException("Error getting beneficiary with clothes");
 
         if (response.Data?.Beneficiary is null)

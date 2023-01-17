@@ -25,9 +25,8 @@ public class DonatedToJuntosCampaign : IConsumer<DonationAddedToCampaign>
         var campaign = await _dbContext.JuntosCampaigns
             .AsTracking()
             .SingleAsync(t => t.Id == message.CampaignId, token);
-        
-            campaign.Donations.Add(message.DonationId);
-            await _dbContext.SaveChangesAsync(token);
-            
+
+        campaign.Donations.Add(message.DonationId);
+        await _dbContext.SaveChangesAsync(token);
     }
 }

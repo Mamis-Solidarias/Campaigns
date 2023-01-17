@@ -19,9 +19,9 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 internal sealed class CampaignsMochiPostTest
 {
     private readonly Mock<IBus> _mockBus = new();
+    private DataFactory _dataFactory = null!;
     private CampaignsDbContext _db = null!;
     private Endpoint _endpoint = null!;
-    private DataFactory _dataFactory = null!;
 
     [SetUp]
     public void Setup()
@@ -37,7 +37,7 @@ internal sealed class CampaignsMochiPostTest
         _db.Database.EnsureCreated();
 
         _dataFactory = new DataFactory(_db);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db,_mockBus.Object);
+        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db, _mockBus.Object);
     }
 
     [TearDown]
@@ -69,7 +69,7 @@ internal sealed class CampaignsMochiPostTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
         var result = await _db.MochiCampaigns.SingleOrDefaultAsync(
-            t=> t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
+            t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
 
         result.Should().NotBeNull();
         result!.Edition.Should().Be(campaign.Edition);
@@ -100,7 +100,7 @@ internal sealed class CampaignsMochiPostTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
         var result = await _db.MochiCampaigns.SingleOrDefaultAsync(
-            t=> t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
+            t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
 
         result.Should().NotBeNull();
         result!.Edition.Should().Be(campaign.Edition);
@@ -119,11 +119,11 @@ internal sealed class CampaignsMochiPostTest
             .GenerateMochiCampaign()
             .WithoutParticipants()
             .Build();
-        
+
         var req = new Request
         {
             Edition = campaign.Edition,
-            CommunityId = campaign.CommunityId,
+            CommunityId = campaign.CommunityId
         };
 
         // Act

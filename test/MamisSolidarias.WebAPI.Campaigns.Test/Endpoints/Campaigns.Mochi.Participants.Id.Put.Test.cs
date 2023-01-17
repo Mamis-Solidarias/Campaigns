@@ -5,7 +5,6 @@ using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
-using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -14,16 +13,15 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using StrawberryShake;
-using CancellationToken = System.Threading.CancellationToken;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 internal sealed class CampaignsMochiParticipantsIdPutTest
 {
     private readonly Mock<IGraphQlClient> _mockGraphQl = new();
-    private Endpoint _endpoint = null!;
-    private CampaignsDbContext _db = null!;
     private DataFactory _dataFactory = null!;
+    private CampaignsDbContext _db = null!;
+    private Endpoint _endpoint = null!;
 
     [SetUp]
     public void Setup()
@@ -39,7 +37,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         _db.Database.EnsureCreated();
 
         _dataFactory = new DataFactory(_db);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db,_mockGraphQl.Object);
+        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db, _mockGraphQl.Object);
     }
 
     [TearDown]
@@ -66,7 +64,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             DonationType = DonationType.Money.ToString(),
             Id = participant.Id
         };
-        
+
         _mockGraphQl.MockGetDonor(r => r == request.DonorId, participant.DonorName!);
 
         // Act
@@ -74,13 +72,12 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
-        
-        var result = await _db.MochiParticipants.SingleAsync(t=> t.Id == participant.Id);
+
+        var result = await _db.MochiParticipants.SingleAsync(t => t.Id == participant.Id);
         result.DonorId.Should().Be(request.DonorId);
         result.DonationDropOffPoint.Should().Be(request.DonationDropOffLocation);
         result.DonationType.Should().Be(DonationType.Money);
         result.State.Should().Be(ParticipantState.MissingDonation);
-        
     }
 
     [Test]
@@ -90,7 +87,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
         var participant = DataFactory.GetMochiParticipant()
             .AsNoDonorAssigned()
             .Build();
-        
+
         var request = new Request
         {
             DonorId = 123,
@@ -116,7 +113,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             .AsNoDonorAssigned()
             .WithCampaignId(campaign.Id)
             .Build();
-        
+
         var request = new Request
         {
             DonorId = 123,
@@ -135,7 +132,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
-        var result = await _db.MochiParticipants.SingleAsync(t=> t.Id == participant.Id);
+        var result = await _db.MochiParticipants.SingleAsync(t => t.Id == participant.Id);
         result.DonorId.Should().BeNull();
         result.DonationDropOffPoint.Should().BeNull();
         result.DonationType.Should().BeNull();
@@ -151,7 +148,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             .AsNoDonorAssigned()
             .WithCampaignId(campaign.Id)
             .Build();
-        
+
         var request = new Request
         {
             DonorId = 123,
@@ -171,7 +168,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(403);
-        var result = await _db.MochiParticipants.SingleAsync(t=> t.Id == participant.Id);
+        var result = await _db.MochiParticipants.SingleAsync(t => t.Id == participant.Id);
         result.DonorId.Should().BeNull();
         result.DonationDropOffPoint.Should().BeNull();
         result.DonationType.Should().BeNull();
@@ -187,7 +184,7 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             .AsNoDonorAssigned()
             .WithCampaignId(campaign.Id)
             .Build();
-        
+
         var request = new Request
         {
             DonorId = 123,

@@ -10,7 +10,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly IBus _bus;
-    private readonly CampaignsDbContext _db; 
+    private readonly CampaignsDbContext _db;
 
 
     public Endpoint(CampaignsDbContext dbContext, IBus bus)
@@ -44,7 +44,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
                 ),
                 ct
             );
-            
+
 
             await SendAsync(new Response(campaign.Id), 201, ct);
         }

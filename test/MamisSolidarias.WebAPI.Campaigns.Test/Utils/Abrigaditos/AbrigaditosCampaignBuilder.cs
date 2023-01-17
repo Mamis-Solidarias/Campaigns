@@ -4,8 +4,8 @@ using MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Utils.Abrigaditos;
 
-internal sealed class AbrigaditosCampaignBuilder 
-    : CampaignWithDonationsBuilder<AbrigaditosCampaign,AbrigaditosParticipant>
+internal sealed class AbrigaditosCampaignBuilder
+    : CampaignWithDonationsBuilder<AbrigaditosCampaign, AbrigaditosParticipant>
 {
     public AbrigaditosCampaignBuilder(CampaignsDbContext? db) : base(db)
     {

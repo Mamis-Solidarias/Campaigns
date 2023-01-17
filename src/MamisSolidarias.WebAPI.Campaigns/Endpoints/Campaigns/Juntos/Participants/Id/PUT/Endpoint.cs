@@ -12,10 +12,10 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     private readonly DbAccess _db;
     private readonly IGraphQlClient _graphQlClient;
 
-    public Endpoint(IGraphQlClient graphQlClient,CampaignsDbContext dbContext, DbAccess? db = null)
+    public Endpoint(IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? db = null)
     {
         _graphQlClient = graphQlClient;
-        _db = db ?? new(dbContext);
+        _db = db ?? new DbAccess(dbContext);
     }
 
     public override void Configure()
@@ -26,7 +26,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var participant = await _db.GetParticipant(req.Id,ct);
+        var participant = await _db.GetParticipant(req.Id, ct);
 
         if (participant is null)
         {
@@ -40,30 +40,27 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             async (errors, token) => await SendGraphQlErrors(errors, token),
             ct);
 
-        if (hasErrors)
-        {
-            return;
-        }
-        
+        if (hasErrors) return;
+
         if (executor.Data?.Donor is null)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         participant.DonorId = req.DonorId;
         participant.DonorName = executor.Data.Donor.Name;
         participant.State = ParticipantState.MissingDonation;
-        
+
         await _db.SaveChanges(ct);
-        await SendAsync(new Response(participant.State), cancellation:ct);
+        await SendAsync(new Response(participant.State), cancellation: ct);
     }
-    
+
     private async Task SendGraphQlErrors(IEnumerable<IClientError> errors, CancellationToken token)
     {
         foreach (var clientError in errors)
             AddError(clientError.Message);
-        
+
         await SendErrorsAsync(cancellation: token);
     }
 }

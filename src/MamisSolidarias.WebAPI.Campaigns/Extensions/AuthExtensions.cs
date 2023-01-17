@@ -5,7 +5,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
 internal static class AuthExtensions
 {
-    public static void AddAuth(this IServiceCollection services, IConfiguration configuration,ILoggerFactory loggerFactory)
+    public static void AddAuth(this IServiceCollection services, IConfiguration configuration,
+        ILoggerFactory loggerFactory)
     {
         var logger = loggerFactory.CreateLogger("Auth");
         var options = configuration.GetSection("JWT").Get<JwtOptions>();
@@ -15,10 +16,10 @@ internal static class AuthExtensions
             logger.LogError("JWT options not found");
             throw new ArgumentException("JWT options not found");
         }
-        
+
         services.AddJWTBearerAuth(options.Key, tokenValidation: parameters => parameters.ValidIssuer = options.Issuer);
-        services.AddAuthorization(t=> t.ConfigurePolicies(Services.Campaigns));
+        services.AddAuthorization(t => t.ConfigurePolicies(Services.Campaigns));
     }
-    
+
     private sealed record JwtOptions(string Key, string Issuer);
 }

@@ -11,11 +11,15 @@ public class AbrigaditosQueries
     [Authorize(Policy = "CanRead")]
     [UseFirstOrDefault]
     [UseProjection]
-    public IQueryable<AbrigaditosCampaign> GetAbrigaditosCampaign(CampaignsDbContext db, int id) =>
-        db.AbrigaditosCampaigns.Where(c => c.Id == id);
+    public IQueryable<AbrigaditosCampaign> GetAbrigaditosCampaign(CampaignsDbContext db, int id)
+    {
+        return db.AbrigaditosCampaigns.Where(c => c.Id == id);
+    }
 
     [Authorize(Policy = "CanRead")]
     [UseProjection]
-    public IQueryable<AbrigaditosCampaign> GetAbrigaditosCampaigns(CampaignsDbContext db) =>
-        db.AbrigaditosCampaigns;
+    public IQueryable<AbrigaditosCampaign> GetAbrigaditosCampaigns(CampaignsDbContext db)
+    {
+        return db.AbrigaditosCampaigns;
+    }
 }

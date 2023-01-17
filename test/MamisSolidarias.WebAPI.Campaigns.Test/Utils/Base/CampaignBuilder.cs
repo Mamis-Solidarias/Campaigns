@@ -6,23 +6,13 @@ using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
-internal abstract class CampaignBuilder<TCampaign, TParticipant> 
-    where TCampaign: Campaign<TParticipant>
+internal abstract class CampaignBuilder<TCampaign, TParticipant>
+    where TCampaign : Campaign<TParticipant>
     where TParticipant : Participant
 {
-    private readonly Faker<TCampaign> _generator = new();
-    protected readonly CampaignsDbContext? _db;
     protected readonly TCampaign _campaign;
-    protected virtual void SetUpGenerator(Faker<TCampaign> generator)
-    {
-        generator
-            .RuleFor(t => t.Id, f => f.IndexGlobal + 1)
-            .RuleFor(t => t.Edition, f => f.Date.Recent().Year.ToString())
-            .RuleFor(t => t.CommunityId, f => f.Name.FirstName()[..2].ToUpper())
-            .RuleFor(t => t.Description, f => f.Lorem.Sentence())
-            .RuleFor(t => t.Provider, f => f.Company.CompanyName())
-            ;
-    }
+    protected readonly CampaignsDbContext? _db;
+    private readonly Faker<TCampaign> _generator = new();
 
     public CampaignBuilder(CampaignsDbContext? db)
     {
@@ -37,6 +27,17 @@ internal abstract class CampaignBuilder<TCampaign, TParticipant>
         _campaign = obj;
     }
 
+    protected virtual void SetUpGenerator(Faker<TCampaign> generator)
+    {
+        generator
+            .RuleFor(t => t.Id, f => f.IndexGlobal + 1)
+            .RuleFor(t => t.Edition, f => f.Date.Recent().Year.ToString())
+            .RuleFor(t => t.CommunityId, f => f.Name.FirstName()[..2].ToUpper())
+            .RuleFor(t => t.Description, f => f.Lorem.Sentence())
+            .RuleFor(t => t.Provider, f => f.Company.CompanyName())
+            ;
+    }
+
     public TCampaign Build()
     {
         _db?.Add(_campaign);
@@ -44,61 +45,61 @@ internal abstract class CampaignBuilder<TCampaign, TParticipant>
         _db?.ChangeTracker.Clear();
         return _campaign;
     }
-    
-    public CampaignBuilder<TCampaign,TParticipant> WithId(int id)
+
+    public CampaignBuilder<TCampaign, TParticipant> WithId(int id)
     {
         _campaign.Id = id;
         return this;
     }
-    
-    public CampaignBuilder<TCampaign,TParticipant> WithEdition(string edition)
+
+    public CampaignBuilder<TCampaign, TParticipant> WithEdition(string edition)
     {
         _campaign.Edition = edition;
         return this;
     }
 
-    public CampaignBuilder<TCampaign,TParticipant> WithCommunityId(string id)
+    public CampaignBuilder<TCampaign, TParticipant> WithCommunityId(string id)
     {
         _campaign.CommunityId = id;
         return this;
     }
-    
-    public CampaignBuilder<TCampaign,TParticipant> WithDescription(string description)
+
+    public CampaignBuilder<TCampaign, TParticipant> WithDescription(string description)
     {
         _campaign.Description = description;
         return this;
     }
-    
-    public CampaignBuilder<TCampaign,TParticipant> WithProvider(string provider)
+
+    public CampaignBuilder<TCampaign, TParticipant> WithProvider(string provider)
     {
         _campaign.Provider = provider;
         return this;
     }
 
-    public CampaignBuilder<TCampaign,TParticipant> WithParticipants(List<TParticipant> participants)
+    public CampaignBuilder<TCampaign, TParticipant> WithParticipants(List<TParticipant> participants)
     {
-        participants.ForEach(t=> t.CampaignId = _campaign.Id);
+        participants.ForEach(t => t.CampaignId = _campaign.Id);
         _campaign.Participants = participants;
         return this;
     }
-    
-    public CampaignBuilder<TCampaign,TParticipant> WithoutParticipants()
+
+    public CampaignBuilder<TCampaign, TParticipant> WithoutParticipants()
     {
         _campaign.Participants = new List<TParticipant>();
         return this;
     }
 
-    public CampaignBuilder<TCampaign,TParticipant> WithParticipants(IEnumerable<ParticipantBuilder<TParticipant>> participants)
+    public CampaignBuilder<TCampaign, TParticipant> WithParticipants(
+        IEnumerable<ParticipantBuilder<TParticipant>> participants)
     {
         _campaign.Participants = participants
-            .Select(t=> t.WithCampaignId(_campaign.Id).Build())
+            .Select(t => t.WithCampaignId(_campaign.Id).Build())
             .ToList();
         return this;
     }
 
-    public static implicit operator TCampaign (CampaignBuilder<TCampaign,TParticipant> b)
+    public static implicit operator TCampaign(CampaignBuilder<TCampaign, TParticipant> b)
     {
         return b.Build();
     }
-    
 }

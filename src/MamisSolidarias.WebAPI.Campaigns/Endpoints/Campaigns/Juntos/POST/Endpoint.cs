@@ -12,8 +12,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
-    private readonly DbAccess _db;
     private readonly IBus _bus;
+    private readonly DbAccess _db;
     private readonly IGraphQlClient _graphQlClient;
 
     public Endpoint(IBus bus, IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
@@ -57,17 +57,15 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         try
         {
             await _db.AddCampaign(campaign, ct);
             foreach (var beneficiaryId in req.Beneficiaries.Distinct())
-            {
-                await _bus.Publish<ParticipantAddedToJuntosCampaign>(
-                    new(campaign.Id, beneficiaryId),
+                await _bus.Publish(
+                    new ParticipantAddedToJuntosCampaign(campaign.Id, beneficiaryId),
                     ct
                 );
-            }
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)

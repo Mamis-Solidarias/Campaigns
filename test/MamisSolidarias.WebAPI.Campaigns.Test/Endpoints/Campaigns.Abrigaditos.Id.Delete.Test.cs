@@ -16,7 +16,7 @@ public class Campaigns_Abrigaditos_Id_Delete_Test
     private DataFactory _dataFactory = null!;
     private CampaignsDbContext _dbContext = null!;
     private Endpoint _endpoint = null!;
-    
+
     [SetUp]
     public void SetUp()
     {
@@ -49,28 +49,28 @@ public class Campaigns_Abrigaditos_Id_Delete_Test
         // Arrange
         var campaign = _dataFactory.GenerateAbrigaditosCampaign()
             .Build();
-        
+
         var request = new Request { Id = campaign.Id };
-        
+
         // Act
         await _endpoint.HandleAsync(request, default);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
         _dbContext.AbrigaditosCampaigns.Should().BeEmpty();
     }
-    
+
     [Test]
     public async Task CampaignDoesNotExists_ShouldFail()
     {
         // Arrange
         const int campaignId = 123;
-        
+
         var request = new Request { Id = campaignId };
-        
+
         // Act
         await _endpoint.HandleAsync(request, default);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
     }

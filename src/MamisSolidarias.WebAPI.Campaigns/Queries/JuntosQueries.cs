@@ -17,7 +17,7 @@ public class JuntosQueries
     {
         return context.JuntosCampaigns.Where(t => t.CommunityId == community && t.Edition == edition);
     }
-    
+
     [Authorize(Policy = "CanRead")]
     [UseFirstOrDefault]
     [UseProjection]

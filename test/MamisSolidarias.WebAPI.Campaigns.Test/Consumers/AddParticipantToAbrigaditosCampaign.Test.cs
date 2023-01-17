@@ -66,10 +66,10 @@ public class AddParticipantToAbrigaditosCampaign_Test
                 It.IsAny<CancellationToken>()
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowExactlyAsync<ArgumentException>();
     }
@@ -91,10 +91,10 @@ public class AddParticipantToAbrigaditosCampaign_Test
                 It.IsAny<CancellationToken>()
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowExactlyAsync<GraphQLException>();
     }
@@ -115,19 +115,19 @@ public class AddParticipantToAbrigaditosCampaign_Test
                 campaign.Id, beneficiaryId
             )
         );
-        
-        _mockGraphQlClient.MockGetBeneficiaryWithShirt(t=> t == beneficiaryId,
-            firstName,lastName,beneficiaryGender,shirtSize);
-        
+
+        _mockGraphQlClient.MockGetBeneficiaryWithShirt(t => t == beneficiaryId,
+            firstName, lastName, beneficiaryGender, shirtSize);
+
         // Act
         await _consumer.Consume(context);
-        
+
         // Assert
         var participant = await _dbContext.AbrigaditosParticipants
             .Where(t => t.BeneficiaryId == beneficiaryId)
             .Where(t => t.CampaignId == campaign.Id)
             .SingleAsync();
-        
+
         participant.ShirtSize.Should().Be(shirtSize);
         participant.BeneficiaryName.Should().Be($"{firstName} {lastName}");
         participant.BeneficiaryGender.Should().Be(beneficiaryGender.Map());

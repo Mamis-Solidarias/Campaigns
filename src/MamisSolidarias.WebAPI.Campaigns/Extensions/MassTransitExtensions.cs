@@ -11,7 +11,7 @@ public static class MassTransitExtensions
         {
             x.SetKebabCaseEndpointNameFormatter();
             x.AddConsumers(Assembly.GetExecutingAssembly());
-            
+
             x.UsingRabbitMq((context, configurator) =>
             {
                 var configuration = context.GetRequiredService<IConfiguration>();
