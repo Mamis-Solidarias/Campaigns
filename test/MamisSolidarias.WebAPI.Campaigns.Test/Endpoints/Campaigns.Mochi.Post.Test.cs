@@ -16,37 +16,10 @@ using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
-internal sealed class CampaignsMochiPostTest
+internal sealed class CampaignsMochiPostTest : EndpointTest<Endpoint>
 {
-    private readonly Mock<IBus> _mockBus = new();
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _db = null!;
-    private Endpoint _endpoint = null!;
-
-    [SetUp]
-    public void Setup()
-    {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .UseExceptionProcessor()
-            .Options;
-
-        _db = new CampaignsDbContext(options);
-        _db.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_db);
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db, _mockBus.Object);
-    }
-
-    [TearDown]
-    public void Teardown()
-    {
-        _db.Database.EnsureDeleted();
-        _db.Dispose();
-        _mockBus.Reset();
-    }
+    protected override object?[] ConstructorArguments =>
+        new object?[] { _dbContext, _mockBus.Object };
 
     [Test]
     public async Task WithValidParameters_ManyParticipants_Successful()
@@ -68,7 +41,7 @@ internal sealed class CampaignsMochiPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
-        var result = await _db.MochiCampaigns.SingleOrDefaultAsync(
+        var result = await _dbContext.MochiCampaigns.SingleOrDefaultAsync(
             t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
 
         result.Should().NotBeNull();
@@ -99,7 +72,7 @@ internal sealed class CampaignsMochiPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
-        var result = await _db.MochiCampaigns.SingleOrDefaultAsync(
+        var result = await _dbContext.MochiCampaigns.SingleOrDefaultAsync(
             t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
 
         result.Should().NotBeNull();
