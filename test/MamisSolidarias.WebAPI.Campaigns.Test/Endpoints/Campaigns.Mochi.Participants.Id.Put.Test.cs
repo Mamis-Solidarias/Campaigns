@@ -2,8 +2,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.PUT;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -43,7 +43,10 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             DonationType = DonationType.Money.ToString(),
             Id = 999
         };
-        MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
+        
+        var participant = DataFactory.GetMochiParticipant()
+            .WithId(request.Id)
+            .Build();
 
         _mockDb.Setup(x => x.GetParticipantAsync(
                     It.Is<int>(t => t == participant.Id),
@@ -80,7 +83,9 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             DonationType = DonationType.Money.ToString(),
             Id = 999
         };
-        MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
+        var participant = DataFactory.GetMochiParticipant()
+            .WithId(request.Id)
+            .Build();
 
         _mockDb.Setup(x => x.GetParticipantAsync(
                     It.Is<int>(t => t == participant.Id),
@@ -108,7 +113,9 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             DonationType = DonationType.Money.ToString(),
             Id = 999
         };
-        MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
+        var participant = DataFactory.GetMochiParticipant()
+            .WithId(request.Id)
+            .Build();
 
         _mockDb.Setup(x => x.GetParticipantAsync(
                     It.Is<int>(t => t == participant.Id),
@@ -140,7 +147,9 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             DonationType = DonationType.Money.ToString(),
             Id = 999
         };
-        MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
+        var participant = DataFactory.GetMochiParticipant()
+            .WithId(request.Id)
+            .Build();
 
         _mockDb.Setup(x => x.GetParticipantAsync(
                     It.Is<int>(t => t == participant.Id),
@@ -173,7 +182,9 @@ internal sealed class CampaignsMochiParticipantsIdPutTest
             DonationType = DonationType.Money.ToString(),
             Id = 999
         };
-        MochiParticipant participant = DataFactory.GetMochiParticipant().WithId(request.Id);
+        MochiParticipant participant = DataFactory.GetMochiParticipant()
+            .WithId(request.Id)
+            .Build();
 
         _mockDb.Setup(x => x.GetParticipantAsync(
                     It.Is<int>(t => t == participant.Id),

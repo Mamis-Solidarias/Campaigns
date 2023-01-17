@@ -6,6 +6,7 @@ using EntityFramework.Exceptions.Common;
 using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -135,7 +136,7 @@ internal sealed class CampaignsJuntosPostTest
             Beneficiaries = campaign.Participants.Select(t => t.Id)
         };
 
-        _mockGraphQl.MockGetCommunity(t=> t == campaign.CommunityId,campaign.CommunityId);
+        _mockGraphQl.MockGetCommunity(t => t == campaign.CommunityId, campaign.CommunityId);
 
         _mockDb.Setup(r => r.AddCampaign(
                 It.Is<JuntosCampaign>(t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition),

@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -52,7 +51,7 @@ public class DonatedToMochiCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsNoDonationAssigned()
@@ -81,7 +80,7 @@ public class DonatedToMochiCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsNoDonationAssigned()
@@ -119,10 +118,10 @@ public class DonatedToMochiCampaign_Test
                 Messages.Campaigns.UnaMochiComoLaTuya
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -132,7 +131,7 @@ public class DonatedToMochiCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsNoDonorAssigned()
@@ -145,10 +144,10 @@ public class DonatedToMochiCampaign_Test
                 Messages.Campaigns.UnaMochiComoLaTuya
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -158,7 +157,7 @@ public class DonatedToMochiCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsDonationAssigned()
@@ -171,10 +170,10 @@ public class DonatedToMochiCampaign_Test
                 Messages.Campaigns.UnaMochiComoLaTuya
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
     }
@@ -184,7 +183,7 @@ public class DonatedToMochiCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsNoDonationAssigned()
@@ -198,20 +197,20 @@ public class DonatedToMochiCampaign_Test
                 Messages.Campaigns.UnaMochiComoLaTuya
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowAsync<ArgumentException>();
     }
-    
+
     [Test]
     public async Task CampaignsDoNotMatch_ShouldThrowArgumentException()
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsNoDonationAssigned()
@@ -225,10 +224,10 @@ public class DonatedToMochiCampaign_Test
                 Messages.Campaigns.UnaMochiComoLaTuya
             )
         );
-        
+
         // Act
         var action = async () => await _consumer.Consume(context);
-        
+
         // Assert
         await action.Should().ThrowAsync<ArgumentException>();
     }
@@ -238,9 +237,9 @@ public class DonatedToMochiCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateMochiCampaign()
-            .WithParticipants(Array.Empty<MochiParticipant>())
+            .WithoutParticipants()
             .Build();
-        
+
         var participant = _dataFactory.GenerateMochiParticipant()
             .AsNoDonationAssigned()
             .WithCampaignId(campaign.Id)
@@ -254,14 +253,13 @@ public class DonatedToMochiCampaign_Test
                 Messages.Campaigns.UnaMochiComoLaTuya
             )
         );
-        
+
         // Act
         await _consumer.Consume(context);
-        
+
         // Assert
         var result = await _dbContext.MochiParticipants.SingleAsync(t => t.Id == participant.Id);
         result.DonationId.Should().Be(donationId);
         result.State.Should().Be(ParticipantState.DonationReceived);
     }
-    
 }

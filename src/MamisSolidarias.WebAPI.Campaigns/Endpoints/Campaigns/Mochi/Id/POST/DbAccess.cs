@@ -1,4 +1,5 @@
 using MamisSolidarias.Infrastructure.Campaigns;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.POST;
@@ -16,7 +17,7 @@ internal class DbAccess
         _dbContext = dbContext;
     }
 
-    public virtual Task<Infrastructure.Campaigns.Models.MochiCampaign?> GetCampaignAsync(int id, CancellationToken ct)
+    public virtual Task<MochiCampaign?> GetCampaignAsync(int id, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         return _dbContext.MochiCampaigns
@@ -25,7 +26,7 @@ internal class DbAccess
             .FirstOrDefaultAsync(t=> t.Id == id, ct);
     }
 
-    public virtual async Task SaveCampaignAsync(Infrastructure.Campaigns.Models.MochiCampaign campaign, CancellationToken ct)
+    public virtual async Task SaveCampaignAsync(MochiCampaign campaign, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         await _dbContext.MochiCampaigns.AddAsync(campaign, ct);

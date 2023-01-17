@@ -1,11 +1,18 @@
 using Bogus;
+using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Utils;
+namespace MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
 internal class ParticipantWithDonorBuilder<TParticipant> : ParticipantBuilder<TParticipant> 
     where TParticipant : ParticipantWithDonor
 {
+    protected ParticipantWithDonorBuilder(CampaignsDbContext? db = null): base(db)
+    { }
+
+    protected ParticipantWithDonorBuilder(TParticipant participant) : base(participant)
+    { }
+
     protected override void SetUpGenerator(Faker<TParticipant> generator)
     {
         base.SetUpGenerator(generator);

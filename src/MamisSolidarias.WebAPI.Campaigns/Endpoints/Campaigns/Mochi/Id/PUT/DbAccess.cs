@@ -1,5 +1,5 @@
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.PUT;
@@ -16,7 +16,7 @@ internal class DbAccess
     {
         _dbContext = dbContext;
     }
-    
+
     public virtual Task<MochiCampaign?> GetMochiAsync(int id, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
@@ -32,7 +32,7 @@ internal class DbAccess
         var participants = await _dbContext.MochiParticipants
             .Where(t => reqRemovedBeneficiaries.Contains(t.BeneficiaryId))
             .ToListAsync(ct);
-        
+
         _dbContext.MochiParticipants.RemoveRange(participants);
     }
 

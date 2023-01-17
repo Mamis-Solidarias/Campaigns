@@ -1,5 +1,6 @@
 using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Abrigaditos;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.Infrastructure.Campaigns;
@@ -10,8 +11,8 @@ public class CampaignsDbContext : DbContext
     {
     }
 
-    public DbSet<MochiCampaign> MochiCampaigns { get; set; }
-    public DbSet<MochiParticipant> MochiParticipants { get; set; }
+    public DbSet<MochiCampaign> MochiCampaigns => Set<MochiCampaign>();
+    public DbSet<MochiParticipant> MochiParticipants => Set<MochiParticipant>();
 
     public DbSet<JuntosCampaign> JuntosCampaigns { get; set; }
     public DbSet<JuntosParticipant> JuntosParticipants { get; set; }

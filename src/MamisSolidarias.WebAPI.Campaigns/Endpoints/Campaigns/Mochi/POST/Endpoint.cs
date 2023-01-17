@@ -1,7 +1,7 @@
 using EntityFramework.Exceptions.Common;
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Messages;
 using MassTransit;
 
@@ -9,10 +9,9 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
-    private readonly DbAccess _db;
     private readonly IBus _bus;
-    
-    
+    private readonly DbAccess _db;
+
 
     public Endpoint(CampaignsDbContext dbContext, IBus bus, DbAccess? dbAccess = null)
     {
@@ -38,15 +37,13 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         try
         {
             await _db.AddMochiCampaign(campaign, ct);
-            
+
             foreach (var beneficiaryId in req.Beneficiaries)
-            {
-                await _bus.Publish<ParticipantAddedToMochiCampaign>(
-                    new(beneficiaryId, campaign.Id),
+                await _bus.Publish(
+                    new ParticipantAddedToMochiCampaign(beneficiaryId, campaign.Id),
                     ct
                 );
-            }
-            
+
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)

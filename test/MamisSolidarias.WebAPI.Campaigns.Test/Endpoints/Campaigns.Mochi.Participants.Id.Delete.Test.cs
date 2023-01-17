@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
+using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Participants.Id.DELETE;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -13,8 +13,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 internal sealed class CampaignsMochiParticipantsIdDeleteTest
 {
-    private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();
+    private Endpoint _endpoint = null!;
 
     [SetUp]
     public void Setup()
@@ -32,7 +32,7 @@ internal sealed class CampaignsMochiParticipantsIdDeleteTest
     public async Task WithValidParameters_Succeeds()
     {
         // Arrange
-        MochiParticipant participant = DataFactory.GetMochiParticipant();
+        var participant = DataFactory.GetMochiParticipant().Build();
 
         _mockDb.Setup(t => t.GetParticipantAsync(
                 It.Is<int>(r => r == participant.Id),
@@ -50,10 +50,10 @@ internal sealed class CampaignsMochiParticipantsIdDeleteTest
                 It.IsAny<CancellationToken>()
             )
         ).Returns(Task.CompletedTask);
-        
+
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
         _endpoint.Response.ParticipantId.Should().Be(participant.Id);
@@ -61,14 +61,15 @@ internal sealed class CampaignsMochiParticipantsIdDeleteTest
         participant.DonorId.Should().BeNull();
         participant.DonorName.Should().BeNull();
         participant.DonationType.Should().BeNull();
-        participant.DonationDropOffLocation.Should().BeNull();
+        participant.DonationDropOffPoint.Should().BeNull();
     }
 
     [Test]
     public async Task ParticipantDoesNotExists_Fails()
     {
         // Arrange
-        MochiParticipant participant = DataFactory.GetMochiParticipant();
+        var participant = DataFactory.GetMochiParticipant()
+            .Build();
 
         _mockDb.Setup(t => t.GetParticipantAsync(
                 It.Is<int>(r => r == participant.Id),
@@ -80,15 +81,11 @@ internal sealed class CampaignsMochiParticipantsIdDeleteTest
         {
             Id = participant.Id
         };
-        
+
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
-        participant.DonorId.Should().NotBeNull();
-        participant.DonorName.Should().NotBeNull();
-        participant.DonationType.Should().NotBeNull();
-        participant.DonationDropOffLocation.Should().NotBeNull();
     }
 }

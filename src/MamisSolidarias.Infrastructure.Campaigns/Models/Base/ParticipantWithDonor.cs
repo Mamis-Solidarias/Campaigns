@@ -30,6 +30,11 @@ public abstract class ParticipantWithDonor : Participant
     /// Name of the donor
     /// </summary>
     public string? DonorName { get; set; }
+
+    /// <summary>
+    /// Id of the donation
+    /// </summary>
+    public Guid? DonationId { get; set; }
 }
 
 internal abstract class ParticipantWithDonorConfigurator<TParticipant> : ParticipantConfigurator<TParticipant>
@@ -49,6 +54,15 @@ internal abstract class ParticipantWithDonorConfigurator<TParticipant> : Partici
             .IsRequired()
             .HasConversion(new EnumToStringConverter<ParticipantState>())
             .HasDefaultValue(ParticipantState.MissingDonor);
+        
+        builder.HasIndex(t => new {t.BeneficiaryId, t.DonorId, t.CampaignId})
+            .IsUnique();
+        
+        builder.Property(t=> t.DonationId)
+            .IsRequired(false);
+
+        builder.HasIndex(t => t.DonationId)
+            .IsUnique();
         
         base.Configure(builder);
     }

@@ -5,7 +5,7 @@ using Bogus;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 
-namespace MamisSolidarias.WebAPI.Campaigns.Utils;
+namespace MamisSolidarias.WebAPI.Campaigns.Utils.Base;
 
 internal abstract class CampaignWithDonationsBuilder<TCampaign,TParticipant> 
     : CampaignBuilder<TCampaign,TParticipant>
