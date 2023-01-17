@@ -10,12 +10,12 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly IBus _bus;
-    private readonly DbAccess _db;
+    private readonly CampaignsDbContext _db; 
 
 
-    public Endpoint(CampaignsDbContext dbContext, IBus bus, DbAccess? dbAccess = null)
+    public Endpoint(CampaignsDbContext dbContext, IBus bus)
     {
-        _db = dbAccess ?? new DbAccess(dbContext);
+        _db = dbContext;
         _bus = bus;
     }
 
@@ -36,13 +36,15 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         };
         try
         {
-            await _db.AddMochiCampaign(campaign, ct);
-
-            foreach (var beneficiaryId in req.Beneficiaries)
-                await _bus.Publish(
-                    new ParticipantAddedToMochiCampaign(beneficiaryId, campaign.Id),
-                    ct
-                );
+            await _db.MochiCampaigns.AddAsync(campaign, ct);
+            await _db.SaveChangesAsync(ct);
+            await _bus.PublishBatch(
+                req.Beneficiaries.Select(
+                    t => new ParticipantAddedToMochiCampaign(t, campaign.Id)
+                ),
+                ct
+            );
+            
 
             await SendAsync(new Response(campaign.Id), 201, ct);
         }

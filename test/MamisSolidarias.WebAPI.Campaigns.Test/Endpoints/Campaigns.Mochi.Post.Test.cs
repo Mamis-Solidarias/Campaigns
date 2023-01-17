@@ -1,14 +1,16 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EntityFramework.Exceptions.Common;
+using EntityFramework.Exceptions.Sqlite;
 using FluentAssertions;
+using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
 using MassTransit;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 
@@ -17,19 +19,32 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 internal sealed class CampaignsMochiPostTest
 {
     private readonly Mock<IBus> _mockBus = new();
-    private readonly Mock<DbAccess> _mockDb = new();
+    private CampaignsDbContext _db = null!;
     private Endpoint _endpoint = null!;
+    private DataFactory _dataFactory = null!;
 
     [SetUp]
     public void Setup()
     {
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(null, _mockBus.Object, _mockDb.Object);
+        var connection = new SqliteConnection("DataSource=:memory:");
+        connection.Open();
+        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
+            .UseSqlite(connection)
+            .UseExceptionProcessor()
+            .Options;
+
+        _db = new CampaignsDbContext(options);
+        _db.Database.EnsureCreated();
+
+        _dataFactory = new DataFactory(_db);
+        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_db,_mockBus.Object);
     }
 
     [TearDown]
     public void Teardown()
     {
-        _mockDb.Reset();
+        _db.Database.EnsureDeleted();
+        _db.Dispose();
         _mockBus.Reset();
     }
 
@@ -43,7 +58,9 @@ internal sealed class CampaignsMochiPostTest
         {
             Edition = campaign.Edition,
             CommunityId = campaign.CommunityId,
-            Beneficiaries = campaign.Participants.Select(t => t.BeneficiaryId)
+            Beneficiaries = campaign.Participants.Select(t => t.BeneficiaryId),
+            Description = campaign.Description,
+            Provider = campaign.Provider
         };
 
         // Act
@@ -51,19 +68,30 @@ internal sealed class CampaignsMochiPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
+        var result = await _db.MochiCampaigns.SingleOrDefaultAsync(
+            t=> t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
+
+        result.Should().NotBeNull();
+        result!.Edition.Should().Be(campaign.Edition);
+        result.CommunityId.Should().Be(campaign.CommunityId);
+        result.Description.Should().Be(campaign.Description);
+        result.Provider.Should().Be(campaign.Provider);
     }
 
     [Test]
     public async Task WithValidParameters_NoParticipants_Successful()
     {
         // Arrange
-        MochiCampaign campaign = DataFactory.GetMochiCampaign().WithParticipants(new List<MochiParticipant>());
+        MochiCampaign campaign = DataFactory.GetMochiCampaign()
+            .WithoutParticipants();
 
         var req = new Request
         {
             Edition = campaign.Edition,
             CommunityId = campaign.CommunityId,
-            Beneficiaries = campaign.Participants.Select(t => t.Id)
+            Beneficiaries = campaign.Participants.Select(t => t.Id),
+            Description = campaign.Description,
+            Provider = campaign.Provider
         };
 
         // Act
@@ -71,6 +99,14 @@ internal sealed class CampaignsMochiPostTest
 
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(201);
+        var result = await _db.MochiCampaigns.SingleOrDefaultAsync(
+            t=> t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition);
+
+        result.Should().NotBeNull();
+        result!.Edition.Should().Be(campaign.Edition);
+        result.CommunityId.Should().Be(campaign.CommunityId);
+        result.Description.Should().Be(campaign.Description);
+        result.Provider.Should().Be(campaign.Provider);
     }
 
 
@@ -78,20 +114,17 @@ internal sealed class CampaignsMochiPostTest
     public async Task WithInvalidParameters_RepeatedEditionAndCommunity_Fails()
     {
         // Arrange
-        MochiCampaign campaign = DataFactory.GetMochiCampaign().WithParticipants(new List<MochiParticipant>());
 
+        var campaign = _dataFactory
+            .GenerateMochiCampaign()
+            .WithoutParticipants()
+            .Build();
+        
         var req = new Request
         {
             Edition = campaign.Edition,
             CommunityId = campaign.CommunityId,
-            Beneficiaries = campaign.Participants.Select(t => t.Id)
         };
-
-        _mockDb.Setup(r => r.AddMochiCampaign(
-                It.Is<MochiCampaign>(t => t.CommunityId == campaign.CommunityId && t.Edition == campaign.Edition),
-                CancellationToken.None)
-            )
-            .ThrowsAsync(new UniqueConstraintException());
 
         // Act
         await _endpoint.HandleAsync(req, CancellationToken.None);
