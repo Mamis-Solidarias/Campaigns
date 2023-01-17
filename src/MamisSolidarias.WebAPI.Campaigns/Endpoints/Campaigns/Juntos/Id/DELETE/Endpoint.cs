@@ -17,6 +17,8 @@ internal sealed class Endpoint : Endpoint<Request>
     {
         Delete("campaigns/juntos/{id}");
         Policies(Utils.Security.Policies.CanWrite);
+        Description(t=> t.WithTags("Juntos a la Par"));
+
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)

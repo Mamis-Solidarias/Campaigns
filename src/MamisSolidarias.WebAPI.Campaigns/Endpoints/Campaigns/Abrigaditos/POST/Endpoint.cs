@@ -28,6 +28,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     {
         Post("campaigns/abrigaditos");
         Policies(Utils.Security.Policies.CanWrite);
+        Description(t=> t.WithTags("Abrigaditos"));
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)

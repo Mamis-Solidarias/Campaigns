@@ -20,6 +20,7 @@ internal sealed class Endpoint : Endpoint<Request, Response>
     {
         Post("campaigns/mochi/{PreviousCampaignId}");
         Policies(Utils.Security.Policies.All);
+        Description(t=> t.WithTags("Una Mochi como la Tuya"));
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
