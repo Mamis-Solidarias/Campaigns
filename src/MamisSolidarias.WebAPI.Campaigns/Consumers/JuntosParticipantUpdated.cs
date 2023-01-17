@@ -44,7 +44,7 @@ public class JuntosParticipantUpdated : IConsumer<BeneficiaryUpdated>
             .Where(t => t.BeneficiaryId == beneficiaryId)
             .ExecuteUpdateAsync(t =>
                     t.SetProperty(r => r.ShoeSize, r => shoeSize)
-                        .SetProperty(r => r.Gender, beneficiary.Gender.Map())
+                        .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
                 , token);
     }
 }

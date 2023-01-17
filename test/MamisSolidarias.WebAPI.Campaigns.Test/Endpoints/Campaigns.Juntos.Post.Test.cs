@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using EntityFramework.Exceptions.Common;
 using FluentAssertions;
 using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
@@ -95,9 +95,9 @@ internal sealed class CampaignsJuntosPostTest
     public async Task WithInvalidParameters_UserDoesNotHavePermission_Fails()
     {
         // Arrange
-        JuntosCampaign campaign = DataFactory.GetJuntosCampaign()
-            .WithParticipants(Enumerable.Range(0, 3).Select(_ => new JuntosParticipantBuilder().Build())
-            );
+        var campaign = DataFactory.GetJuntosCampaign()
+            .WithParticipants(DataFactory.GetJuntosParticipants(3))
+            .Build();
 
         _mockGraphQl.MockAuthenticationError(
             t => t.GetCommunity.ExecuteAsync(

@@ -6,7 +6,7 @@ using FluentAssertions;
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -82,9 +82,9 @@ public class JuntosParticipantUpdateTest
         var campaign = _dataFactory.GenerateJuntosCampaign()
             .WithParticipants(new List<JuntosParticipant>()).Build();
         var participant = _dataFactory.GenerateJuntosParticipant()
+            .WithShoeSize(null)
             .WithCampaignId(campaign.Id)
             .WithGender(BeneficiaryGender.Other)
-            .WithShoeSize(null)
             .Build();
 
         var beneficiaryId = participant.BeneficiaryId;
@@ -111,6 +111,6 @@ public class JuntosParticipantUpdateTest
             .ToList();
 
         participants.Should().Contain(t => t.ShoeSize == shoeSize);
-        participants.Should().Contain(t => t.Gender == gender.Map());
+        participants.Should().Contain(t => t.BeneficiaryGender == gender.Map());
     }
 }

@@ -24,13 +24,13 @@ internal sealed class Endpoint : Endpoint<Request>
         var deletedRows = await _db.MochiCampaigns
             .Where(x => x.Id == req.Id)
             .ExecuteDeleteAsync(ct);
-        
+
         if (deletedRows is 0)
         {
             await SendNotFoundAsync(ct);
             return;
         }
-        
+
         await SendOkAsync(ct);
     }
 }

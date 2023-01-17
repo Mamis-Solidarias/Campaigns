@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.DELETE;
 using MamisSolidarias.WebAPI.Campaigns.Utils;

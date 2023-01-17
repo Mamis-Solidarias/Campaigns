@@ -51,6 +51,7 @@ public class DonatedToJuntosCampaign_Test
     {
         // Arrange
         var campaign = _dataFactory.GenerateJuntosCampaign()
+            .WithoutDonations()
             .Build();
 
         var context = MockExtensions.MockConsumeContext(
@@ -114,6 +115,7 @@ public class DonatedToJuntosCampaign_Test
         // Arrange
         var donation = Guid.NewGuid();
         var campaign = _dataFactory.GenerateJuntosCampaign()
+            .WithoutDonations()
             .Build();
 
         var context = MockExtensions.MockConsumeContext(
