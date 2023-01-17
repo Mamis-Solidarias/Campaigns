@@ -17,57 +17,62 @@ internal class DataFactory
 
     public MochiBuilder GenerateMochiCampaign()
     {
-        return new(_dbContext);
+        return new MochiBuilder(_dbContext);
     }
 
     public static MochiBuilder GetMochiCampaign()
     {
-        return new(db: null);
+        return new MochiBuilder(db: null);
     }
 
     public MochiParticipantBuilder GenerateMochiParticipant()
     {
-        return new(_dbContext);
+        return new MochiParticipantBuilder(_dbContext);
     }
 
     public static MochiParticipantBuilder GetMochiParticipant()
     {
-        return new(db: null);
+        return new MochiParticipantBuilder(db: null);
+    }
+    
+    public static IEnumerable<MochiParticipantBuilder> GetMochiParticipants(int n)
+    {
+        return Enumerable.Range(0, n).Select(_ => new MochiParticipantBuilder());
     }
 
     public JuntosBuilder GenerateJuntosCampaign()
     {
-        return new(_dbContext);
+        return new JuntosBuilder(_dbContext);
     }
 
     public static JuntosBuilder GetJuntosCampaign()
     {
-        return new(db: null);
+        return new JuntosBuilder(db: null);
     }
 
     public JuntosParticipantBuilder GenerateJuntosParticipant()
     {
-        return new(_dbContext);
+        return new JuntosParticipantBuilder(_dbContext);
     }
 
     public static JuntosParticipantBuilder GetJuntosParticipant()
     {
-        return new(db: null);
+        return new JuntosParticipantBuilder(db: null);
     }
 
     public AbrigaditosCampaignBuilder GenerateAbrigaditosCampaign()
     {
-        return new(_dbContext);
+        return new AbrigaditosCampaignBuilder(_dbContext);
     }
 
     public static AbrigaditosCampaignBuilder GetAbrigaditosCampaign()
     {
-        return new(db: null);
+        return new AbrigaditosCampaignBuilder(db: null);
     }
-    
+
     public AbrigaditosParticipantBuilder GenerateAbrigaditosParticipant()
     {
-        return new(_dbContext);
+        return new AbrigaditosParticipantBuilder(_dbContext);
     }
 
     public static IEnumerable<AbrigaditosParticipantBuilder> GetAbrigaditosParticipants(int n)

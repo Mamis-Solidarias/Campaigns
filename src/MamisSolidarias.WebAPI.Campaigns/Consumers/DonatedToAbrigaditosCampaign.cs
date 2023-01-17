@@ -18,14 +18,14 @@ public class DonatedToAbrigaditosCampaign : IConsumer<DonationAddedToCampaign>
     {
         var token = context.CancellationToken;
         var message = context.Message;
-        
+
         if (message.Campaign is not Messages.Campaigns.Abrigaditos)
             return;
 
         var campaign = await _db.AbrigaditosCampaigns
             .AsTracking()
             .SingleAsync(t => t.Id == message.CampaignId, token);
-        
+
         campaign.Donations.Add(message.DonationId);
         await _db.SaveChangesAsync(token);
     }

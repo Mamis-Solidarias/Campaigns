@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Participants.Id.DELETE;
 
-internal  class DbAccess
+internal class DbAccess
 {
     private readonly CampaignsDbContext? _dbContext;
 
@@ -16,7 +16,7 @@ internal  class DbAccess
     {
         _dbContext = dbContext;
     }
-    
+
     public virtual Task<JuntosParticipant?> GetParticipant(int id, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);

@@ -13,8 +13,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 public class CampaignsJuntosIdDeleteTest
 {
-    private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();
+    private Endpoint _endpoint = null!;
 
     [SetUp]
     public void Setup()
@@ -34,7 +34,7 @@ public class CampaignsJuntosIdDeleteTest
         // Arrange
         JuntosCampaign campaign = DataFactory.GetJuntosCampaign();
         _mockDb.Setup(x => x.CampaignExists(
-                It.Is<int>(t=> t == campaign.Id),
+                It.Is<int>(t => t == campaign.Id),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(true);
@@ -45,11 +45,11 @@ public class CampaignsJuntosIdDeleteTest
             )
         ).Returns(Task.CompletedTask);
 
-        var req = new Request {Id = campaign.Id};
-        
+        var req = new Request { Id = campaign.Id };
+
         // Act
         await _endpoint.HandleAsync(req, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
     }
@@ -60,17 +60,17 @@ public class CampaignsJuntosIdDeleteTest
         // Arrange
         JuntosCampaign campaign = DataFactory.GetJuntosCampaign();
         _mockDb.Setup(x => x.CampaignExists(
-                It.Is<int>(t=> t == campaign.Id),
+                It.Is<int>(t => t == campaign.Id),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(false);
 
 
-        var req = new Request {Id = campaign.Id};
-        
+        var req = new Request { Id = campaign.Id };
+
         // Act
         await _endpoint.HandleAsync(req, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
     }
@@ -81,7 +81,7 @@ public class CampaignsJuntosIdDeleteTest
         // Arrange
         JuntosCampaign campaign = DataFactory.GetJuntosCampaign();
         _mockDb.Setup(x => x.CampaignExists(
-                It.Is<int>(t=> t == campaign.Id),
+                It.Is<int>(t => t == campaign.Id),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(true);
@@ -92,11 +92,11 @@ public class CampaignsJuntosIdDeleteTest
             )
         ).ThrowsAsync(new DbUpdateException());
 
-        var req = new Request {Id = campaign.Id};
-        
+        var req = new Request { Id = campaign.Id };
+
         // Act
         await _endpoint.HandleAsync(req, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(500);
     }

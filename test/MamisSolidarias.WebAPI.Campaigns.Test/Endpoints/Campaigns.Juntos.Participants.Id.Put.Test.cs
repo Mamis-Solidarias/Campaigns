@@ -15,14 +15,14 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 internal sealed class CampaignsJuntosParticipantsIdPutTest
 {
-    private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();
     private readonly Mock<IGraphQlClient> _mockGraphQl = new();
+    private Endpoint _endpoint = null!;
 
     [SetUp]
     public void Setup()
     {
-        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_mockGraphQl.Object,null, _mockDb.Object);
+        _endpoint = EndpointFactory.CreateEndpoint<Endpoint>(_mockGraphQl.Object, null, _mockDb.Object);
     }
 
     [TearDown]
@@ -49,7 +49,7 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
                 )
             )
             .ReturnsAsync(participant);
-        
+
         _mockGraphQl.MockGetDonor(t => t == request.DonorId, participant.DonorName!);
 
         _mockDb.Setup(t => t.SaveChanges(
@@ -59,11 +59,10 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
 
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
         _endpoint.Response.State.Should().Be(ParticipantState.MissingDonation);
-
     }
 
     [Test]
@@ -85,12 +84,11 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
 
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
-
     }
-    
+
 
     [Test]
     public async Task WithInvalidParameters_DonorNotFound_Fails()
@@ -111,16 +109,15 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
             .ReturnsAsync(participant);
 
         _mockGraphQl.MockEmptyResponse(t => t.GetDonor.ExecuteAsync(
-                It.Is<int>(r => r == request.DonorId),
-                It.IsAny<CancellationToken>())
+            It.Is<int>(r => r == request.DonorId),
+            It.IsAny<CancellationToken>())
         );
 
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
-
     }
 
     [Test]
@@ -145,13 +142,12 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
             It.Is<int>(r => r == request.DonorId),
             It.IsAny<CancellationToken>())
         );
-        
+
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(403);
-
     }
 
     [Test]
@@ -171,19 +167,17 @@ internal sealed class CampaignsJuntosParticipantsIdPutTest
                 )
             )
             .ReturnsAsync(participant);
-        
-        _mockGraphQl.MockErrors(t => t.GetDonor.ExecuteAsync( 
-            It.Is<int>(r => r == request.DonorId),
-            It.IsAny<CancellationToken>()),
-            new ClientError("","OTHER ERROR")
+
+        _mockGraphQl.MockErrors(t => t.GetDonor.ExecuteAsync(
+                It.Is<int>(r => r == request.DonorId),
+                It.IsAny<CancellationToken>()),
+            new ClientError("", "OTHER ERROR")
         );
 
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(400);
     }
-    
-    
 }

@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using StrawberryShake;
-using BeneficiaryGender = MamisSolidarias.GraphQlClient.BeneficiaryGender;
+using BeneficiaryGender = MamisSolidarias.Infrastructure.Campaigns.Models.Base.BeneficiaryGender;
 using MockExtensions = MamisSolidarias.WebAPI.Campaigns.Utils.MockExtensions;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
@@ -41,7 +41,7 @@ public class JuntosParticipantUpdateTest
 
         _dataFactory = new DataFactory(_dbContext);
 
-        _consumer = new(_dbContext,_mockGraphQlClient.Object);
+        _consumer = new JuntosParticipantUpdated(_dbContext, _mockGraphQlClient.Object);
     }
 
     [TearDown]
@@ -83,17 +83,17 @@ public class JuntosParticipantUpdateTest
             .WithParticipants(new List<JuntosParticipant>()).Build();
         var participant = _dataFactory.GenerateJuntosParticipant()
             .WithCampaignId(campaign.Id)
-            .WithGender(Infrastructure.Campaigns.Models.Base.BeneficiaryGender.Other)
+            .WithGender(BeneficiaryGender.Other)
             .WithShoeSize(null)
             .Build();
-        
+
         var beneficiaryId = participant.BeneficiaryId;
-        const BeneficiaryGender gender = BeneficiaryGender.Male;
+        const GraphQlClient.BeneficiaryGender gender = GraphQlClient.BeneficiaryGender.Male;
         const int shoeSize = 35;
 
         _mockGraphQlClient.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
-             gender, shoeSize
+            gender, shoeSize
         );
 
         var context = MockExtensions.MockConsumeContext(
@@ -105,12 +105,12 @@ public class JuntosParticipantUpdateTest
 
         // Assert
         await action.Should().NotThrowAsync<DbUpdateException>();
-        
+
         var participants = _dbContext.JuntosParticipants
-            .Where(t=> t.BeneficiaryId == beneficiaryId)
+            .Where(t => t.BeneficiaryId == beneficiaryId)
             .ToList();
-        
-        participants.Should().Contain(t=> t.ShoeSize == shoeSize);
+
+        participants.Should().Contain(t => t.ShoeSize == shoeSize);
         participants.Should().Contain(t => t.Gender == gender.Map());
     }
 }

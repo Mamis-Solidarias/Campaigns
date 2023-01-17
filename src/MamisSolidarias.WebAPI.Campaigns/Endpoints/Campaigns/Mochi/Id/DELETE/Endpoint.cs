@@ -1,16 +1,16 @@
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.DELETE;
 
 internal sealed class Endpoint : Endpoint<Request>
 {
-    private readonly DbAccess _db;
+    private readonly CampaignsDbContext _db;
 
-    public Endpoint(CampaignsDbContext dbContext, DbAccess? dbAccess = null)
+    public Endpoint(CampaignsDbContext dbContext)
     {
-        _db = dbAccess ?? new DbAccess(dbContext);
+        _db = dbContext;
     }
 
     public override void Configure()
@@ -21,16 +21,16 @@ internal sealed class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var mochi = await _db.GetMochiAsync(req.Id, ct);
-        if (mochi is null)
+        var deletedRows = await _db.MochiCampaigns
+            .Where(x => x.Id == req.Id)
+            .ExecuteDeleteAsync(ct);
+        
+        if (deletedRows is 0)
         {
             await SendNotFoundAsync(ct);
             return;
         }
         
-        await _db.DeleteMochiAsync(mochi, ct);
         await SendOkAsync(ct);
     }
-
-
 }

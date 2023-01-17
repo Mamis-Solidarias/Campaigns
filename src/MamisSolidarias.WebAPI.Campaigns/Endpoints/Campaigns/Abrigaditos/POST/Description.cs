@@ -9,7 +9,7 @@ internal sealed class Description : Summary<Endpoint>
         Summary = "It creates a new edition of the campaing 'Abrigaditos'";
         ExampleRequest = new Request
         {
-            Beneficiaries = new[] {1, 2, 3},
+            Beneficiaries = new[] { 1, 2, 3 },
             CommunityId = "TXT",
             Description = "Description of the edition",
             Edition = "2023",

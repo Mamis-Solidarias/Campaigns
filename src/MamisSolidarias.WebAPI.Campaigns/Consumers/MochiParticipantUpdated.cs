@@ -25,7 +25,7 @@ public class MochiParticipantUpdated : IConsumer<BeneficiaryUpdated>
         var token = context.CancellationToken;
         var beneficiaryId = context.Message.BeneficiaryId;
 
-        var operationResult = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(beneficiaryId,token);
+        var operationResult = await _graphQlClient.GetBeneficiaryWithEducation.ExecuteAsync(beneficiaryId, token);
 
         var hasErrors = await operationResult.HandleErrors(
             _ => Task.CompletedTask,
@@ -43,9 +43,9 @@ public class MochiParticipantUpdated : IConsumer<BeneficiaryUpdated>
         await _dbContext.MochiParticipants
             .Where(t => t.BeneficiaryId == beneficiaryId)
             .ExecuteUpdateAsync(t =>
-                t.SetProperty(r => r.SchoolCycle, r => newSchoolCycle)
-                    .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
-                    .SetProperty(r => r.BeneficiaryName, $"{beneficiary.FirstName} {beneficiary.LastName}")
-            ,token);
+                    t.SetProperty(r => r.SchoolCycle, r => newSchoolCycle)
+                        .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
+                        .SetProperty(r => r.BeneficiaryName, $"{beneficiary.FirstName} {beneficiary.LastName}")
+                , token);
     }
 }

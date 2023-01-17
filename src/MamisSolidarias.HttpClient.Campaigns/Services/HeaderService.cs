@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 namespace MamisSolidarias.HttpClient.Campaigns.Services;
 
 /// <summary>
-/// Service to obtain headers from the current HTTP Context
+///     Service to obtain headers from the current HTTP Context
 /// </summary>
 internal class HeaderService : IHeaderService
 {
@@ -15,7 +15,7 @@ internal class HeaderService : IHeaderService
     }
 
     /// <summary>
-    /// It retrieves the Authorization Header, if it exists
+    ///     It retrieves the Authorization Header, if it exists
     /// </summary>
     /// <returns>The Authorization header</returns>
     public string? GetAuthorization()
@@ -25,7 +25,7 @@ internal class HeaderService : IHeaderService
 }
 
 /// <summary>
-/// Service to obtain headers from the current HTTP Context
+///     Service to obtain headers from the current HTTP Context
 /// </summary>
 internal interface IHeaderService
 {

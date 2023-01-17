@@ -33,14 +33,14 @@ public class DonatedToAbrigaditosCampaign_Test
 
         _consumer = new DonatedToAbrigaditosCampaign(_dbContext);
     }
-    
+
     [TearDown]
     protected void TearDown()
     {
         _dbContext.Database.EnsureDeleted();
         _dbContext.Dispose();
     }
-    
+
     [TestCase(Messages.Campaigns.JuntosALaPar)]
     [TestCase(Messages.Campaigns.Misiones)]
     [TestCase(Messages.Campaigns.Navidemos)]
@@ -136,5 +136,4 @@ public class DonatedToAbrigaditosCampaign_Test
         result.Donations.Should().HaveCount(1);
         result.Donations.Should().ContainEquivalentOf((CampaignDonation)donation);
     }
-
 }

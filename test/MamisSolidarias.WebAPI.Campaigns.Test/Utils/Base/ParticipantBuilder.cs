@@ -42,7 +42,7 @@ internal abstract class ParticipantBuilder<T> where T : Participant
         _participant.BeneficiaryId = beneficiaryId;
         return this;
     }
-    
+
     public ParticipantBuilder<T> WithBeneficiaryName(string name)
     {
         _participant.BeneficiaryName = name;
@@ -77,6 +77,4 @@ internal abstract class ParticipantBuilder<T> where T : Participant
     {
         return b.Build();
     }
-
-
 }

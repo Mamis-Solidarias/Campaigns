@@ -32,7 +32,7 @@ internal sealed class Endpoint : Endpoint<Request>
                     .Where(t => req.RemovedBeneficiaries.Contains(t.BeneficiaryId))
                     .Where(t => t.CampaignId == req.Id)
                     .ExecuteDeleteAsync(ct);
-            
+
             var campaign = await _db.AbrigaditosCampaigns
                 .Include(t => t.Participants)
                 .SingleAsync(t => t.Id == req.Id, ct);

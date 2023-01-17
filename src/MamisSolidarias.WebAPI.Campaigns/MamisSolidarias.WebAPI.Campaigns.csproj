@@ -11,8 +11,8 @@
     <ItemGroup>
         <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="6.0.3" />
         <PackageReference Include="FastEndpoints.Generator" Version="5.6.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FastEndpoints.Swagger" Version="5.6.0" />
         <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.16.0" />
@@ -27,8 +27,8 @@
         <PackageReference Include="MamisSolidarias.Utils" Version="1.5.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.1" />
         <PackageReference Include="Npgsql.OpenTelemetry" Version="7.0.1" />
@@ -48,18 +48,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MamisSolidarias.Infrastructure.Campaigns\MamisSolidarias.Infrastructure.Campaigns.csproj" />
+        <ProjectReference Include="..\MamisSolidarias.Infrastructure.Campaigns\MamisSolidarias.Infrastructure.Campaigns.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations" />
+        <Folder Include="Migrations" />
     </ItemGroup>
 
     <ItemGroup>
-      <GraphQL Update="Stitching.graphql">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <Generator>MSBuild:Compile</Generator>
-      </GraphQL>
+        <GraphQL Update="Stitching.graphql">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Generator>MSBuild:Compile</Generator>
+        </GraphQL>
     </ItemGroup>
 
 </Project>

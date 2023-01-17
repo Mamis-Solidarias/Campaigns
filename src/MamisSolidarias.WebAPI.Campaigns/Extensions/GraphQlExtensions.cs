@@ -8,7 +8,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 
 internal static class GraphQlExtensions
 {
-    public static void AddGraphQl(this IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
+    public static void AddGraphQl(this IServiceCollection services, IConfiguration configuration,
+        ILoggerFactory loggerFactory)
     {
         var logger = loggerFactory.CreateLogger("GraphQL");
         var options = configuration.GetSection("GraphQL").Get<GraphQlOptions>();
@@ -18,7 +19,7 @@ internal static class GraphQlExtensions
             logger.LogError("GraphQL configuration is missing");
             throw new ArgumentException("GraphQL configuration is missing");
         }
-        
+
         services.AddGraphQlClient()
             .ConfigureHttpClient((s, t) =>
             {
@@ -32,11 +33,11 @@ internal static class GraphQlExtensions
 
                     var jwt = JWTBearer.CreateToken(
                         config["JWT:Key"] ?? throw new ArgumentException("Jwt:Key not found in configuration"),
-                        claims: new[] {("Id", "-1"), ("Name", "Campaigns")},
+                        claims: new[] { ("Id", "-1"), ("Name", "Campaigns") },
                         permissions: Enum.GetNames<Services>()
-                            .Select(r=> $"{r}/read")
+                            .Select(r => $"{r}/read")
                             .ToArray(),
-                        expireAt:DateTime.UtcNow.AddMinutes(1),
+                        expireAt: DateTime.UtcNow.AddMinutes(1),
                         issuer: config["JWT:Issuer"],
                         signingStyle: JWTBearer.TokenSigningStyle.Symmetric
                     );
@@ -48,11 +49,10 @@ internal static class GraphQlExtensions
                     t.DefaultRequestHeaders.Add("Cookie", cookie.First());
                 if (context.Request.Headers.TryGetValue("Authorization", out var auth) && auth.Any())
                     t.DefaultRequestHeaders.Add("Authorization", auth.First());
-               
             });
 
         services.AddGraphQLServer()
-            .AddQueryType(t=> t.Name("Query"))
+            .AddQueryType(t => t.Name("Query"))
             .AddCampaignsTypes()
             .AddInstrumentation(t =>
             {
@@ -75,5 +75,6 @@ internal static class GraphQlExtensions
                 )
             );
     }
+
     private sealed record GraphQlOptions(string Endpoint, string GlobalSchemaName);
 }

@@ -6,7 +6,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Abrigaditos.Id.De
 public sealed class Request
 {
     /// <summary>
-    /// Campaign's id
+    ///     Campaign's id
     /// </summary>
     public int Id { get; set; }
 }

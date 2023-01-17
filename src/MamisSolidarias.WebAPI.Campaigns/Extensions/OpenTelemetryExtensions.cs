@@ -10,6 +10,7 @@ namespace MamisSolidarias.WebAPI.Campaigns.Extensions;
 internal static class OpenTelemetryExtensions
 {
     private static ILogger? _logger;
+
     public static void AddOpenTelemetry(this IServiceCollection services, IConfiguration configuration,
         ILoggingBuilder logging, ILoggerFactory loggerFactory)
     {

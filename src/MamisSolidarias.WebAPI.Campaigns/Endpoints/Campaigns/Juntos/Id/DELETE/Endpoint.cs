@@ -32,7 +32,7 @@ internal sealed class Endpoint : Endpoint<Request>
             await _db.DeleteCampaign(req.Id, ct);
             await SendOkAsync(ct);
         }
-        catch 
+        catch
         {
             await SendErrorsAsync(500, ct);
         }

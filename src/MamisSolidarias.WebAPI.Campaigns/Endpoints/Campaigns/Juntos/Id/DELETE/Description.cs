@@ -11,7 +11,7 @@ internal sealed class Description : Summary<Endpoint>
         {
             Id = 123
         };
-        
+
         Response();
         Response(400, "Invalid request");
         Response(401, "Unauthorized");

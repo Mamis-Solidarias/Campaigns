@@ -42,9 +42,9 @@ public class AbrigaditosParticipantUpdated : IConsumer<BeneficiaryUpdated>
         await _dbContext.AbrigaditosParticipants
             .Where(t => t.BeneficiaryId == beneficiaryId)
             .ExecuteUpdateAsync(t => t
-                        .SetProperty(r => r.ShirtSize, r => shirtSize)
-                        .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
-                        .SetProperty(r=> r.BeneficiaryName, $"{beneficiary.FirstName} {beneficiary.LastName}")
+                    .SetProperty(r => r.ShirtSize, r => shirtSize)
+                    .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
+                    .SetProperty(r => r.BeneficiaryName, $"{beneficiary.FirstName} {beneficiary.LastName}")
                 , token
             );
     }

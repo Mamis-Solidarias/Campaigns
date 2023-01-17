@@ -12,11 +12,8 @@ internal static class EntityFrameworkExtensions
         var logger = loggerFactory.CreateLogger("EntityFramework");
         var connectionString = configuration.GetConnectionString("CampaignsDb");
 
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            logger.LogError("Connection string not found.");
-        }
-        
+        if (string.IsNullOrWhiteSpace(connectionString)) logger.LogError("Connection string not found.");
+
         services.AddDbContext<CampaignsDbContext>(
             t =>
                 t.UseNpgsql(connectionString, r => r.MigrationsAssembly("MamisSolidarias.WebAPI.Campaigns"))
@@ -24,7 +21,6 @@ internal static class EntityFrameworkExtensions
                     .EnableDetailedErrors(!environment.IsProduction())
                     .UseExceptionProcessor()
         );
-
     }
 
     public static void RunMigrations(this WebApplication app)

@@ -46,7 +46,7 @@ public class AddParticipantToAbrigaditosCampaign : IConsumer<ParticipantAddedToA
             ShirtSize = response.Data.Beneficiary.Clothes?.ShirtSize,
             BeneficiaryId = beneficiaryId,
             CampaignId = campaignId,
-            BeneficiaryName = $"{response.Data.Beneficiary.FirstName} {response.Data.Beneficiary.LastName}",
+            BeneficiaryName = $"{response.Data.Beneficiary.FirstName} {response.Data.Beneficiary.LastName}"
         };
 
         await _db.AbrigaditosParticipants.AddAsync(entry, context.CancellationToken);

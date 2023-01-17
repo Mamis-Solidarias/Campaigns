@@ -13,9 +13,11 @@ internal static class DataProtectionExtensions
         var dataProtectionKeysPath = configuration.GetValue<string>("DataProtectionKeysPath");
         if (string.IsNullOrWhiteSpace(dataProtectionKeysPath))
         {
-            logger.LogWarning("DataProtectionKeysPath is not set. Data protection keys will not be persisted to storage.");
+            logger.LogWarning(
+                "DataProtectionKeysPath is not set. Data protection keys will not be persisted to storage.");
             return;
         }
+
         services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
             .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration
             {

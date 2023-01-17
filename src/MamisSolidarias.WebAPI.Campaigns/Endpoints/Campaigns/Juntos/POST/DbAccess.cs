@@ -18,8 +18,8 @@ internal class DbAccess
 
     public virtual async Task AddCampaign(JuntosCampaign campaign, CancellationToken ct)
     {
-       ArgumentNullException.ThrowIfNull(_dbContext);
-       await _dbContext.JuntosCampaigns.AddAsync(campaign, ct);
-       await _dbContext.SaveChangesAsync(ct);
+        ArgumentNullException.ThrowIfNull(_dbContext);
+        await _dbContext.JuntosCampaigns.AddAsync(campaign, ct);
+        await _dbContext.SaveChangesAsync(ct);
     }
 }

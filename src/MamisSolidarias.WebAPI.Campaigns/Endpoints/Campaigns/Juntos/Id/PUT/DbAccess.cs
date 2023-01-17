@@ -16,7 +16,7 @@ internal class DbAccess
     {
         _dbContext = dbContext;
     }
-    
+
     public virtual async Task SaveParticipants(IEnumerable<JuntosParticipant> participants, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
@@ -29,14 +29,15 @@ internal class DbAccess
         await _dbContext.SaveChangesAsync(ct);
     }
 
-    public virtual async Task DeleteParticipants(int campaignId,IEnumerable<int> reqRemovedBeneficiaries, CancellationToken ct)
+    public virtual async Task DeleteParticipants(int campaignId, IEnumerable<int> reqRemovedBeneficiaries,
+        CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(_dbContext);
         var participants = await _dbContext.JuntosParticipants
             .AsNoTracking()
             .Where(t => t.CampaignId == campaignId && reqRemovedBeneficiaries.Contains(t.BeneficiaryId))
             .ToListAsync(ct);
-        
+
         _dbContext.JuntosParticipants.RemoveRange(participants);
     }
 
@@ -45,7 +46,7 @@ internal class DbAccess
         ArgumentNullException.ThrowIfNull(_dbContext);
         return _dbContext.JuntosCampaigns
             .AsTracking()
-            .Include(t=> t.Participants)
-            .FirstOrDefaultAsync(t=> t.Id == reqId, ct);
+            .Include(t => t.Participants)
+            .FirstOrDefaultAsync(t => t.Id == reqId, ct);
     }
 }

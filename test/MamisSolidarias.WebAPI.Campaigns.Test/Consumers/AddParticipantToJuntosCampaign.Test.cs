@@ -105,7 +105,7 @@ public class AddParticipantToJuntosCampaignTest
         const BeneficiaryGender beneficiaryGender = BeneficiaryGender.Male;
         const int beneficiariesShoeSize = 35;
         var campaign = _dataFactory.GenerateJuntosCampaign().Build();
-        
+
         _mockGraphQlClient.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
             beneficiaryGender, beneficiariesShoeSize

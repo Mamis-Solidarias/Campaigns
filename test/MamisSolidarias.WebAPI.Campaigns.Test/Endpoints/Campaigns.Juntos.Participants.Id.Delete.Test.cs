@@ -13,8 +13,8 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 internal sealed class CampaignsJuntosParticipantsIdDeleteTest
 {
-    private Endpoint _endpoint = null!;
     private readonly Mock<DbAccess> _mockDb = new();
+    private Endpoint _endpoint = null!;
 
     [SetUp]
     public void Setup()
@@ -49,10 +49,10 @@ internal sealed class CampaignsJuntosParticipantsIdDeleteTest
                 It.IsAny<CancellationToken>()
             )
         ).Returns(Task.CompletedTask);
-        
+
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
         _endpoint.Response.ParticipantId.Should().Be(participant.Id);
@@ -78,10 +78,10 @@ internal sealed class CampaignsJuntosParticipantsIdDeleteTest
         {
             Id = participant.Id
         };
-        
+
         // Act
         await _endpoint.HandleAsync(request, CancellationToken.None);
-        
+
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(404);
         participant.DonorId.Should().NotBeNull();

@@ -1,5 +1,4 @@
 using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.Id.PUT;
 using Moq;
 using NUnit.Framework;
 
@@ -8,7 +7,6 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 internal sealed class CampaignsMochiIdPutTest
 {
     // private Endpoint _endpoint = null!;
-    private readonly Mock<DbAccess> _mockDb = new();
     private readonly Mock<IGraphQlClient> _mockGraphQl = new();
 
     [SetUp]
@@ -21,7 +19,6 @@ internal sealed class CampaignsMochiIdPutTest
     public void Teardown()
     {
         _mockGraphQl.Reset();
-        _mockDb.Reset();
     }
 
     // [Test]

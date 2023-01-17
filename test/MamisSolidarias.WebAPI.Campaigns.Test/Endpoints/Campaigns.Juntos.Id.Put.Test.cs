@@ -15,9 +15,9 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;
 
 internal sealed class CampaignsJuntosIdPutTest
 {
+    private readonly Mock<IBus> _mockBus = new();
     private readonly Mock<DbAccess> _mockDb = new();
     private Endpoint _endpoint = null!;
-    private readonly Mock<IBus> _mockBus = new();
 
     [SetUp]
     public void Setup()
@@ -55,7 +55,7 @@ internal sealed class CampaignsJuntosIdPutTest
         // Assert
         _endpoint.HttpContext.Response.StatusCode.Should().Be(200);
     }
-    
+
     [Test]
     public async Task WithInvalidParameters_CampaignDoesNotExists_Fails()
     {

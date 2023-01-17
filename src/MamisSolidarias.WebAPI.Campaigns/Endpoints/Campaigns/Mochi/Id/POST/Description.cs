@@ -13,11 +13,11 @@ internal sealed class Description : Summary<Endpoint>
             Edition = "2023",
             PreviousCampaignId = 123
         };
-        
+
         Response<Response>(201);
         Response(400, "Invalid request");
         Response(401, "Unauthorized");
-        Response(403,"Forbidden");
+        Response(403, "Forbidden");
         Response(404, "Not found");
         Response(409, "Conflict");
     }

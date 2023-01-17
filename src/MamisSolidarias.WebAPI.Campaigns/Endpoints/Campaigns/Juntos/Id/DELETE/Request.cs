@@ -6,12 +6,12 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.DELETE;
 internal sealed class Request
 {
     /// <summary>
-    /// Campaigns Id
+    ///     Campaigns Id
     /// </summary>
     public int Id { get; init; }
 }
 
-internal sealed class RequestValidator: Validator<Request>
+internal sealed class RequestValidator : Validator<Request>
 {
     public RequestValidator()
     {

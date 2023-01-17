@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Participants.Id.PUT;
 
-internal  class DbAccess
+internal class DbAccess
 {
     private readonly CampaignsDbContext? _dbContext;
 

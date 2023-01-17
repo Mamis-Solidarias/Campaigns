@@ -11,8 +11,8 @@ internal sealed class Description : Summary<Endpoint>
         {
             Id = 123
         };
-        
-        Response(200, "The donor was removed successfully",example: new Response(99));
+
+        Response(200, "The donor was removed successfully", example: new Response(99));
         Response(400, "The participant id is invalid");
         Response(404, "The participant was not found");
         Response(401, "The user is not authorized to perform this action");
