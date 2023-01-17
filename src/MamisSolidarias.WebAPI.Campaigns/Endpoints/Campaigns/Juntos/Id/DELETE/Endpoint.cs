@@ -1,15 +1,16 @@
 using FastEndpoints;
 using MamisSolidarias.Infrastructure.Campaigns;
+using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.DELETE;
 
 internal sealed class Endpoint : Endpoint<Request>
 {
-    private readonly DbAccess _db;
+    private readonly CampaignsDbContext _db;
 
-    public Endpoint(CampaignsDbContext dbContext, DbAccess? dbAccess = null)
+    public Endpoint(CampaignsDbContext dbContext)
     {
-        _db = dbAccess ?? new DbAccess(dbContext);
+        _db = dbContext;
     }
 
     public override void Configure()
@@ -20,21 +21,16 @@ internal sealed class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        try
-        {
-            var campaignExists = await _db.CampaignExists(req.Id, ct);
-            if (!campaignExists)
-            {
-                await SendNotFoundAsync(ct);
-                return;
-            }
+        var deletedCampaigns = await _db.JuntosCampaigns
+            .Where(t => t.Id == req.Id)
+            .ExecuteDeleteAsync(ct);
 
-            await _db.DeleteCampaign(req.Id, ct);
-            await SendOkAsync(ct);
-        }
-        catch
+        if (deletedCampaigns is 0)
         {
-            await SendErrorsAsync(500, ct);
+            await SendNotFoundAsync(ct);
+            return;
         }
+
+        await SendOkAsync(ct);
     }
 }

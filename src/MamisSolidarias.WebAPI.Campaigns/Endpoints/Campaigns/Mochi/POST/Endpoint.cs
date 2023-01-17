@@ -27,15 +27,16 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var campaign = new MochiCampaign
-        {
-            CommunityId = req.CommunityId.Trim(),
-            Edition = req.Edition.Trim(),
-            Description = req.Description,
-            Provider = req.Provider
-        };
         try
         {
+            var campaign = new MochiCampaign
+            {
+                CommunityId = req.CommunityId.Trim(),
+                Edition = req.Edition.Trim(),
+                Description = req.Description,
+                Provider = req.Provider
+            };
+
             await _db.MochiCampaigns.AddAsync(campaign, ct);
             await _db.SaveChangesAsync(ct);
             await _bus.PublishBatch(

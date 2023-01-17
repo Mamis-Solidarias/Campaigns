@@ -13,14 +13,14 @@ namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.POST;
 internal sealed class Endpoint : Endpoint<Request, Response>
 {
     private readonly IBus _bus;
-    private readonly DbAccess _db;
+    private readonly CampaignsDbContext _db;
     private readonly IGraphQlClient _graphQlClient;
 
-    public Endpoint(IBus bus, IGraphQlClient graphQlClient, CampaignsDbContext dbContext, DbAccess? dbAccess = null)
+    public Endpoint(CampaignsDbContext dbContext, IBus bus, IGraphQlClient graphQlClient)
     {
         _graphQlClient = graphQlClient;
         _bus = bus;
-        _db = dbAccess ?? new DbAccess(dbContext);
+        _db = dbContext;
     }
 
     public override void Configure()
@@ -41,7 +41,9 @@ internal sealed class Endpoint : Endpoint<Request, Response>
             Provider = req.Provider?.Trim()
         };
 
-        var communityExecutor = await _graphQlClient.GetCommunity.ExecuteAsync(campaign.CommunityId, ct);
+        var communityExecutor = await _graphQlClient
+            .GetCommunity
+            .ExecuteAsync(campaign.CommunityId, ct);
 
         var hasErrors = await communityExecutor.HandleErrors(
             async t => await SendForbiddenAsync(t),
@@ -60,12 +62,16 @@ internal sealed class Endpoint : Endpoint<Request, Response>
 
         try
         {
-            await _db.AddCampaign(campaign, ct);
-            foreach (var beneficiaryId in req.Beneficiaries.Distinct())
-                await _bus.Publish(
-                    new ParticipantAddedToJuntosCampaign(campaign.Id, beneficiaryId),
-                    ct
-                );
+            await _db.JuntosCampaigns.AddAsync(campaign, ct);
+            await _db.SaveChangesAsync(ct);
+
+            await _bus.PublishBatch(
+                req.Beneficiaries.Distinct().Select(beneficiaryId =>
+                    new ParticipantAddedToJuntosCampaign(campaign.Id, beneficiaryId)
+                ),
+                ct
+            );
+            
             await SendAsync(new Response(campaign.Id), 201, ct);
         }
         catch (UniqueConstraintException)

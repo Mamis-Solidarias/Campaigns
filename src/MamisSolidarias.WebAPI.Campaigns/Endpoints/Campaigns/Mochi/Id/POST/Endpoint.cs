@@ -27,7 +27,6 @@ internal sealed class Endpoint : Endpoint<Request, Response>
         try
         {
             var previousEdition = await _db.MochiCampaigns
-                .AsTracking()
                 .Include(t => t.Participants)
                 .SingleAsync(t => t.Id == req.PreviousCampaignId, ct);
 
