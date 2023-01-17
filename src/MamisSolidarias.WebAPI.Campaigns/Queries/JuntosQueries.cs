@@ -2,8 +2,8 @@ using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Queries;
 
@@ -44,8 +44,8 @@ public class JuntosCampaignsExtensions
         return dbContext.JuntosCampaigns
             .Where(t => t.Id == campaign.Id)
             .SelectMany(t => t.Participants)
-            .GroupBy(t => new { t.ShoeSize, t.Gender })
-            .Select(t => new Shoe(t.Count(), t.Key.Gender, t.Key.ShoeSize))
+            .GroupBy(t => new { t.ShoeSize, t.BeneficiaryGender })
+            .Select(t => new Shoe(t.Count(), t.Key.BeneficiaryGender, t.Key.ShoeSize))
             .ToList();
     }
 

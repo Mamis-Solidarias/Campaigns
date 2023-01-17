@@ -1,5 +1,5 @@
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Juntos.Id.PUT;

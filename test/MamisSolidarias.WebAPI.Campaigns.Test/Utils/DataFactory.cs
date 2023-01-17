@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.WebAPI.Campaigns.Utils.Abrigaditos;
+using MamisSolidarias.WebAPI.Campaigns.Utils.JuntosALaPar;
 using MamisSolidarias.WebAPI.Campaigns.Utils.Mochi;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Utils;
@@ -34,7 +35,7 @@ internal class DataFactory
     {
         return new MochiParticipantBuilder(db: null);
     }
-    
+
     public static IEnumerable<MochiParticipantBuilder> GetMochiParticipants(int n)
     {
         return Enumerable.Range(0, n).Select(_ => new MochiParticipantBuilder());
@@ -58,6 +59,10 @@ internal class DataFactory
     public static JuntosParticipantBuilder GetJuntosParticipant()
     {
         return new JuntosParticipantBuilder(db: null);
+    }
+    public static IEnumerable<JuntosParticipantBuilder> GetJuntosParticipants(int n)
+    {
+        return Enumerable.Range(0, n).Select(_ => new JuntosParticipantBuilder());
     }
 
     public AbrigaditosCampaignBuilder GenerateAbrigaditosCampaign()

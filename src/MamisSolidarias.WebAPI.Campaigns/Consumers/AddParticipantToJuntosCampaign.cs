@@ -1,7 +1,7 @@
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using MassTransit;
@@ -42,7 +42,7 @@ public class AddParticipantToJuntosCampaign : IConsumer<ParticipantAddedToJuntos
 
         var entry = new JuntosParticipant
         {
-            Gender = response.Data.Beneficiary.Gender.Map(),
+            BeneficiaryGender = response.Data.Beneficiary.Gender.Map(),
             ShoeSize = response.Data.Beneficiary.Clothes?.ShoeSize,
             BeneficiaryId = beneficiaryId,
             CampaignId = campaignId

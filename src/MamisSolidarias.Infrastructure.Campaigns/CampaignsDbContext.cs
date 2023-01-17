@@ -1,10 +1,9 @@
-using MamisSolidarias.Infrastructure.Campaigns.Models;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Abrigaditos;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
 using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.Infrastructure.Campaigns;
-#pragma warning disable CS8618
 public class CampaignsDbContext : DbContext
 {
     public CampaignsDbContext(DbContextOptions<CampaignsDbContext> options) : base(options)
@@ -14,8 +13,8 @@ public class CampaignsDbContext : DbContext
     public DbSet<MochiCampaign> MochiCampaigns => Set<MochiCampaign>();
     public DbSet<MochiParticipant> MochiParticipants => Set<MochiParticipant>();
 
-    public DbSet<JuntosCampaign> JuntosCampaigns { get; set; }
-    public DbSet<JuntosParticipant> JuntosParticipants { get; set; }
+    public DbSet<JuntosCampaign> JuntosCampaigns  => Set<JuntosCampaign>();
+    public DbSet<JuntosParticipant> JuntosParticipants => Set<JuntosParticipant>();
 
     public DbSet<AbrigaditosCampaign> AbrigaditosCampaigns => Set<AbrigaditosCampaign>();
     public DbSet<AbrigaditosParticipant> AbrigaditosParticipants => Set<AbrigaditosParticipant>();

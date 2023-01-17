@@ -2,7 +2,7 @@ using EntityFramework.Exceptions.Common;
 using FastEndpoints;
 using MamisSolidarias.GraphQlClient;
 using MamisSolidarias.Infrastructure.Campaigns;
-using MamisSolidarias.Infrastructure.Campaigns.Models;
+using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Extensions;
 using MassTransit;

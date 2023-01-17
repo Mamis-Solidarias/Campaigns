@@ -32,7 +32,7 @@ internal sealed class Endpoint : Endpoint<Request>
                     .Where(t => req.RemovedBeneficiaries.Contains(t.BeneficiaryId))
                     .Where(t => t.CampaignId == req.Id)
                     .ExecuteDeleteAsync(ct);
-            
+
             var campaign = await _db.MochiCampaigns
                 .AsTracking()
                 .Include(t => t.Participants)
@@ -51,7 +51,7 @@ internal sealed class Endpoint : Endpoint<Request>
                     .Select(t => new ParticipantAddedToMochiCampaign(campaign.Id, t));
                 await _bus.PublishBatch(messages, ct);
             }
-            
+
             await SendOkAsync(ct);
         }
         catch (InvalidOperationException)
