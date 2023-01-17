@@ -1,44 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class DonatedToMochiCampaign_Test
+internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign>
 {
-    private DonatedToMochiCampaign _consumer = null!;
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-
-
-    [SetUp]
-    protected void SetUp()
+    protected override DonatedToMochiCampaign CreateConsumer()
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-
-        _consumer = new DonatedToMochiCampaign(_dbContext);
-    }
-
-    [TearDown]
-    protected void TearDown()
-    {
-        _dbContext.Dispose();
+        return new DonatedToMochiCampaign(_dbContext);
     }
 
     [TestCase(Messages.Campaigns.Abrigaditos)]
@@ -65,7 +40,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().NotThrowAsync();
@@ -94,7 +69,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().NotThrowAsync();
@@ -120,7 +95,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
@@ -146,7 +121,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
@@ -172,7 +147,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
@@ -199,7 +174,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<ArgumentException>();
@@ -226,7 +201,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<ArgumentException>();
@@ -255,7 +230,7 @@ public class DonatedToMochiCampaign_Test
         );
 
         // Act
-        await _consumer.Consume(context);
+        await Consumer.Consume(context);
 
         // Assert
         var result = await _dbContext.MochiParticipants.SingleAsync(t => t.Id == participant.Id);

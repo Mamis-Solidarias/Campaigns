@@ -1,44 +1,19 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class DonatedToJuntosCampaign_Test
+internal class DonatedToJuntosCampaign_Test : ConsumerTest<DonatedToJuntosCampaign>
 {
-    private DonatedToJuntosCampaign _consumer = null!;
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-
-    [SetUp]
-    protected void SetUp()
+    protected override DonatedToJuntosCampaign CreateConsumer()
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-
-        _consumer = new DonatedToJuntosCampaign(_dbContext);
-    }
-
-    [TearDown]
-    protected void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        return new DonatedToJuntosCampaign(_dbContext);
     }
 
     [TestCase(Messages.Campaigns.Abrigaditos)]
@@ -61,7 +36,7 @@ public class DonatedToJuntosCampaign_Test
         );
 
         // Act
-        await _consumer.Consume(context);
+        await Consumer.Consume(context);
 
         // Assert
         var result = await _dbContext.JuntosCampaigns.SingleAsync(t => t.Id == campaign.Id);
@@ -81,7 +56,7 @@ public class DonatedToJuntosCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
@@ -103,7 +78,7 @@ public class DonatedToJuntosCampaign_Test
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
@@ -125,7 +100,7 @@ public class DonatedToJuntosCampaign_Test
         );
 
         // Act
-        await _consumer.Consume(context);
+        await Consumer.Consume(context);
 
         // Assert
         var result = await _dbContext.JuntosCampaigns.SingleAsync(t => t.Id == campaign.Id);

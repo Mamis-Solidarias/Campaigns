@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -15,35 +13,11 @@ using MockExtensions = MamisSolidarias.WebAPI.Campaigns.Utils.MockExtensions;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class AddParticipantToJuntosCampaignTest
+internal class AddParticipantToJuntosCampaignTest : ConsumerTest<AddParticipantToJuntosCampaign>
 {
-    private readonly Mock<IGraphQlClient> _mockGraphQlClient = new();
-    private AddParticipantToJuntosCampaign _consumer = null!;
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-
-    [SetUp]
-    public void SetUp()
+    protected override AddParticipantToJuntosCampaign CreateConsumer()
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-
-        _consumer = new AddParticipantToJuntosCampaign(_mockGraphQlClient.Object, _dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        return new AddParticipantToJuntosCampaign(GraphQlClient, _dbContext);
     }
 
     [Test]
@@ -54,7 +28,7 @@ public class AddParticipantToJuntosCampaignTest
             new ParticipantAddedToJuntosCampaign(1, 1)
         );
 
-        _mockGraphQlClient.MockErrors
+        _mockGraphQl.MockErrors
         (
             t => t.GetBeneficiaryWithClothes.ExecuteAsync(
                 It.IsAny<int>(),
@@ -64,7 +38,7 @@ public class AddParticipantToJuntosCampaignTest
         );
 
         // Act
-        var action = () => _consumer.Consume(context);
+        var action = () => Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowExactlyAsync<GraphQLException>();
@@ -77,7 +51,7 @@ public class AddParticipantToJuntosCampaignTest
         const int beneficiaryId = 123;
         const int campaignId = 456;
 
-        _mockGraphQlClient.MockGetBeneficiaryWithClothes(
+        _mockGraphQl.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
             BeneficiaryGender.Male, 123
         );
@@ -87,7 +61,7 @@ public class AddParticipantToJuntosCampaignTest
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<DbUpdateException>();
@@ -106,7 +80,7 @@ public class AddParticipantToJuntosCampaignTest
         const int beneficiariesShoeSize = 35;
         var campaign = _dataFactory.GenerateJuntosCampaign().Build();
 
-        _mockGraphQlClient.MockGetBeneficiaryWithClothes(
+        _mockGraphQl.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
             beneficiaryGender, beneficiariesShoeSize
         );
@@ -116,7 +90,7 @@ public class AddParticipantToJuntosCampaignTest
         );
 
         // Act
-        await _consumer.Consume(context);
+        await Consumer.Consume(context);
 
         // Assert
 

@@ -1,17 +1,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EntityFramework.Exceptions.Sqlite;
 using FluentAssertions;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Mochi;
-using MamisSolidarias.Utils.Test;
 using MamisSolidarias.WebAPI.Campaigns.Endpoints.Campaigns.Mochi.POST;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using MassTransit;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using NUnit.Framework;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Endpoints;

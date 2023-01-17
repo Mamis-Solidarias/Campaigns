@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using HotChocolate;
 using MamisSolidarias.GraphQlClient;
-using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Messages;
 using MamisSolidarias.WebAPI.Campaigns.Utils;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -17,35 +15,11 @@ using MockExtensions = MamisSolidarias.WebAPI.Campaigns.Utils.MockExtensions;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Consumers;
 
-public class AddParticipantToMochiCampaignTest
+internal class AddParticipantToMochiCampaignTest : ConsumerTest<AddParticipantToMochiCampaign>
 {
-    private readonly Mock<IGraphQlClient> _mockGraphQlClient = new();
-    private AddParticipantToMochiCampaign _consumer = null!;
-    private DataFactory _dataFactory = null!;
-    private CampaignsDbContext _dbContext = null!;
-
-    [SetUp]
-    public void SetUp()
+    protected override AddParticipantToMochiCampaign CreateConsumer()
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        connection.Open();
-        var options = new DbContextOptionsBuilder<CampaignsDbContext>()
-            .UseSqlite(connection)
-            .Options;
-
-        _dbContext = new CampaignsDbContext(options);
-        _dbContext.Database.EnsureCreated();
-
-        _dataFactory = new DataFactory(_dbContext);
-
-        _consumer = new AddParticipantToMochiCampaign(_mockGraphQlClient.Object, _dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        return new AddParticipantToMochiCampaign(GraphQlClient, _dbContext);
     }
 
     [Test]
@@ -56,7 +30,7 @@ public class AddParticipantToMochiCampaignTest
             new ParticipantAddedToMochiCampaign(1, 1)
         );
 
-        _mockGraphQlClient.MockErrors
+        _mockGraphQl.MockErrors
         (
             t => t.GetBeneficiaryWithEducation.ExecuteAsync(
                 It.IsAny<int>(),
@@ -66,7 +40,7 @@ public class AddParticipantToMochiCampaignTest
         );
 
         // Act
-        var action = () => _consumer.Consume(context);
+        var action = () => Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowExactlyAsync<GraphQLException>();
@@ -84,7 +58,7 @@ public class AddParticipantToMochiCampaignTest
 
         const int campaignId = 456;
 
-        _mockGraphQlClient.MockGetBeneficiaryWithEducation(
+        _mockGraphQl.MockGetBeneficiaryWithEducation(
             i => i == beneficiaryId,
             firstName, lastName, gender, schoolCycle
         );
@@ -94,7 +68,7 @@ public class AddParticipantToMochiCampaignTest
         );
 
         // Act
-        var action = async () => await _consumer.Consume(context);
+        var action = async () => await Consumer.Consume(context);
 
         // Assert
         await action.Should().ThrowAsync<DbUpdateException>();
@@ -116,7 +90,7 @@ public class AddParticipantToMochiCampaignTest
 
         var campaign = _dataFactory.GenerateMochiCampaign().Build();
 
-        _mockGraphQlClient.MockGetBeneficiaryWithEducation(
+        _mockGraphQl.MockGetBeneficiaryWithEducation(
             i => i == beneficiaryId,
             firstName, lastName, gender, schoolCycle
         );
@@ -126,7 +100,7 @@ public class AddParticipantToMochiCampaignTest
         );
 
         // Act
-        await _consumer.Consume(context);
+        await Consumer.Consume(context);
 
         // Assert
 
