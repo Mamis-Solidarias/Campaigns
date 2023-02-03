@@ -4,6 +4,7 @@ using HotChocolate.Types;
 using MamisSolidarias.Infrastructure.Campaigns;
 using MamisSolidarias.Infrastructure.Campaigns.Models.Base;
 using MamisSolidarias.Infrastructure.Campaigns.Models.JuntosALaPar;
+using Microsoft.EntityFrameworkCore;
 
 namespace MamisSolidarias.WebAPI.Campaigns.Queries;
 
@@ -15,7 +16,9 @@ public class JuntosQueries
     [UseProjection]
     public IQueryable<JuntosCampaign> GetJuntosCampaign(CampaignsDbContext context, string community, string edition)
     {
-        return context.JuntosCampaigns.Where(t => t.CommunityId == community && t.Edition == edition);
+        return context.JuntosCampaigns
+	        .AsNoTracking()
+	        .Where(t => t.CommunityId == community && t.Edition == edition);
     }
 
     [Authorize(Policy = "CanRead")]
@@ -23,14 +26,18 @@ public class JuntosQueries
     [UseProjection]
     public IQueryable<JuntosCampaign> GetJuntosCampaignById(CampaignsDbContext context, int id)
     {
-        return context.JuntosCampaigns.Where(t => t.Id == id);
+        return context.JuntosCampaigns
+	        .AsNoTracking()
+	        .Where(t => t.Id == id);
     }
 
     [Authorize(Policy = "CanRead")]
     [UseProjection]
+    [UseFiltering]
+    [UseSorting]
     public IQueryable<JuntosCampaign> GetJuntosCampaigns(CampaignsDbContext context)
     {
-        return context.JuntosCampaigns;
+        return context.JuntosCampaigns.AsNoTracking();
     }
 }
 
