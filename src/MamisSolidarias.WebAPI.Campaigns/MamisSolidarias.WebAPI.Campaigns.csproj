@@ -24,7 +24,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MamisSolidarias.Messages" Version="1.0.5" />
-        <PackageReference Include="MamisSolidarias.Utils" Version="1.5.0" />
+        <PackageReference Include="MamisSolidarias.Utils" Version="1.5.1" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
             <PrivateAssets>all</PrivateAssets>
