@@ -18,6 +18,8 @@ public class AbrigaditosQueries
 
     [Authorize(Policy = "CanRead")]
     [UseProjection]
+    [UseFiltering]
+    [UseSorting]
     public IQueryable<AbrigaditosCampaign> GetAbrigaditosCampaigns(CampaignsDbContext db)
     {
         return db.AbrigaditosCampaigns;
