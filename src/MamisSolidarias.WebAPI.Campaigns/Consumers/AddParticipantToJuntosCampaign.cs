@@ -45,7 +45,8 @@ public class AddParticipantToJuntosCampaign : IConsumer<ParticipantAddedToJuntos
             BeneficiaryGender = response.Data.Beneficiary.Gender.Map(),
             ShoeSize = response.Data.Beneficiary.Clothes?.ShoeSize,
             BeneficiaryId = beneficiaryId,
-            CampaignId = campaignId
+            CampaignId = campaignId,
+            BeneficiaryName = $"{response.Data.Beneficiary.FirstName} {response.Data.Beneficiary.LastName}"
         };
 
         await _db.JuntosParticipants.AddAsync(entry, context.CancellationToken);
