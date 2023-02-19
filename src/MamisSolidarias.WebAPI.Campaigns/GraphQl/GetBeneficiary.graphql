@@ -11,6 +11,8 @@ query GetBeneficiaryWithEducation($id: Int!){
 
 query GetBeneficiaryWithClothes($id: Int!){
     beneficiary(id: $id){
+        firstName
+        lastName
         gender
         clothes {
             shoeSize

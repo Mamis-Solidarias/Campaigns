@@ -51,10 +51,12 @@ internal static class MockExtensions
     }
 
     public static void MockGetBeneficiaryWithClothes(this Mock<IGraphQlClient> client,
-        Expression<Func<int, bool>> idMatcher
-        , BeneficiaryGender gender, int? shoeSize)
+        Expression<Func<int, bool>> idMatcher,
+        string firstName, string lastName, BeneficiaryGender gender, int? shoeSize)
     {
         var result = new GetBeneficiaryWithClothes_Beneficiary_Beneficiary(
+            firstName,
+            lastName,
             gender,
             new GetBeneficiaryWithClothes_Beneficiary_Clothes_Clothes(shoeSize)
         );

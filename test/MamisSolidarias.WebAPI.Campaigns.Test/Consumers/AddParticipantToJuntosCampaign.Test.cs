@@ -50,10 +50,11 @@ internal class AddParticipantToJuntosCampaignTest : ConsumerTest<AddParticipantT
         // Arrange
         const int beneficiaryId = 123;
         const int campaignId = 456;
+        
 
         _mockGraphQl.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
-            BeneficiaryGender.Male, 123
+            "John","Snow",BeneficiaryGender.Male, 123
         );
 
         var context = MockExtensions.MockConsumeContext(
@@ -82,7 +83,7 @@ internal class AddParticipantToJuntosCampaignTest : ConsumerTest<AddParticipantT
 
         _mockGraphQl.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
-            beneficiaryGender, beneficiariesShoeSize
+            "John","Snow",beneficiaryGender, beneficiariesShoeSize
         );
 
         var context = MockExtensions.MockConsumeContext(

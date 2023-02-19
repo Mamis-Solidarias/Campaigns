@@ -37,14 +37,15 @@ public class JuntosParticipantUpdated : IConsumer<BeneficiaryUpdated>
             throw new GraphQLException("Error getting beneficiary");
 
         var beneficiary = operationResult.Data.Beneficiary;
-
         var shoeSize = beneficiary.Clothes?.ShoeSize;
+        var name = $"{beneficiary.FirstName} {beneficiary.LastName}";
 
         await _dbContext.JuntosParticipants
             .Where(t => t.BeneficiaryId == beneficiaryId)
-            .ExecuteUpdateAsync(t =>
-                    t.SetProperty(r => r.ShoeSize, r => shoeSize)
+            .ExecuteUpdateAsync(t => t
+                        .SetProperty(r => r.ShoeSize, r => shoeSize)
                         .SetProperty(r => r.BeneficiaryGender, beneficiary.Gender.Map())
+                        .SetProperty(r=> r.BeneficiaryName, name)
                 , token);
     }
 }

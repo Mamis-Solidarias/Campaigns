@@ -52,12 +52,15 @@ internal class JuntosParticipantUpdateTest : ConsumerTest<JuntosParticipantUpdat
     public async Task ValidParameters_UpdatesParticipants()
     {
         // Arrange
+        const string firstName = "John";
+        const string lastName = "Snow";
         var campaign = _dataFactory.GenerateJuntosCampaign()
             .WithParticipants(new List<JuntosParticipant>()).Build();
         var participant = _dataFactory.GenerateJuntosParticipant()
             .WithShoeSize(null)
             .WithCampaignId(campaign.Id)
             .WithGender(BeneficiaryGender.Other)
+            .WithBeneficiaryName($"{firstName} {lastName}")
             .Build();
 
         var beneficiaryId = participant.BeneficiaryId;
@@ -66,7 +69,7 @@ internal class JuntosParticipantUpdateTest : ConsumerTest<JuntosParticipantUpdat
 
         _mockGraphQl.MockGetBeneficiaryWithClothes(
             i => i == beneficiaryId,
-            gender, shoeSize
+            firstName,lastName,gender, shoeSize
         );
 
         var context = MockExtensions.MockConsumeContext(
@@ -85,5 +88,6 @@ internal class JuntosParticipantUpdateTest : ConsumerTest<JuntosParticipantUpdat
 
         participants.Should().Contain(t => t.ShoeSize == shoeSize);
         participants.Should().Contain(t => t.BeneficiaryGender == gender.Map());
+        participants.Should().Contain(t => t.BeneficiaryName == $"{firstName} {lastName}");
     }
 }
