@@ -16,7 +16,7 @@
         </PackageReference>
         <PackageReference Include="FastEndpoints.Swagger" Version="5.7.0" />
         <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.16.0" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.0.4" />
         <PackageReference Include="HotChocolate.Diagnostics" Version="12.16.0" />
         <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.16.0" />
         <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.16.0">
