@@ -15,6 +15,11 @@ public class CampaignWithDonations<TParticipant> : Campaign<TParticipant>
     ///     Monetary goal of the campaign
     /// </summary>
     public decimal FundraiserGoal { get; set; }
+
+    /// <summary>
+    ///     Current amount of money donated to the campaign
+    /// </summary>
+    public decimal TotalDonations { get; set; }
 }
 
 internal abstract class
@@ -44,5 +49,8 @@ internal abstract class
 
         builder.Property(t => t.FundraiserGoal)
             .IsRequired();
+
+        builder.Property(t => t.TotalDonations)
+            .HasDefaultValue(0);
     }
 }
