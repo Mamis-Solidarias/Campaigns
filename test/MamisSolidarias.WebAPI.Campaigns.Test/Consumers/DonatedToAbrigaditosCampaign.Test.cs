@@ -31,7 +31,8 @@ internal class DonatedToAbrigaditosCampaign_Test : ConsumerTest<DonatedToAbrigad
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                Guid.NewGuid(), null, null, campaign.Id, campaignName
+                Guid.NewGuid(), null, null, campaign.Id, campaignName,
+                100, Currency.ARS
             )
         );
 
@@ -53,7 +54,8 @@ internal class DonatedToAbrigaditosCampaign_Test : ConsumerTest<DonatedToAbrigad
         const int campaignId = 123;
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                Guid.NewGuid(), null, null, campaignId, Messages.Campaigns.Abrigaditos
+                Guid.NewGuid(), null, null, campaignId, Messages.Campaigns.Abrigaditos,
+                100, Currency.ARS
             )
         );
 
@@ -75,7 +77,8 @@ internal class DonatedToAbrigaditosCampaign_Test : ConsumerTest<DonatedToAbrigad
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                donation, null, null, campaign.Id, Messages.Campaigns.Abrigaditos
+                donation, null, null, campaign.Id, Messages.Campaigns.Abrigaditos,
+                100, Currency.ARS
             )
         );
 
@@ -84,6 +87,29 @@ internal class DonatedToAbrigaditosCampaign_Test : ConsumerTest<DonatedToAbrigad
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
+    }
+    
+    [Test]
+    public async Task CurrencyIsNotARS_ShouldThrowNotSupportedException()
+    {
+        // Arrange
+        var donation = Guid.NewGuid();
+        var campaign = _dataFactory.GenerateAbrigaditosCampaign()
+            .WithDonations(donation)
+            .Build();
+
+        var context = MockExtensions.MockConsumeContext(
+            new DonationAddedToCampaign(
+                donation, null, null, campaign.Id, Messages.Campaigns.Abrigaditos,
+                100, Currency.EUR
+            )
+        );
+
+        // Act
+        var action = async () => await Consumer.Consume(context);
+
+        // Assert
+        await action.Should().ThrowAsync<NotSupportedException>();
     }
 
     [Test]
@@ -97,7 +123,7 @@ internal class DonatedToAbrigaditosCampaign_Test : ConsumerTest<DonatedToAbrigad
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                donation, null, null, campaign.Id, Messages.Campaigns.Abrigaditos
+                donation, null, null, campaign.Id, Messages.Campaigns.Abrigaditos, 100, Currency.ARS
             )
         );
 

@@ -26,6 +26,10 @@ public class DonatedToJuntosCampaign : IConsumer<DonationAddedToCampaign>
             .AsTracking()
             .SingleAsync(t => t.Id == message.CampaignId, token);
 
+        if (message.Currency is not Currency.ARS)
+            throw new NotSupportedException("Only ARS currency is supported");
+        
+        campaign.TotalDonations += message.Amount;
         campaign.Donations.Add(message.DonationId);
         await _dbContext.SaveChangesAsync(token);
     }
