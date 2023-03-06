@@ -15,34 +15,34 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FastEndpoints.Swagger" Version="5.8.0" />
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Diagnostics" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.16.0">
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Diagnostics" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.18.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MamisSolidarias.Messages" Version="1.0.6" />
         <PackageReference Include="MamisSolidarias.Utils" Version="1.5.4" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.12" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2" />
-        <PackageReference Include="Npgsql.OpenTelemetry" Version="7.0.1" />
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0-rc.3" />
-        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.4.0-rc.3" />
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.4.0-rc.3" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0-rc.3" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.12" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.4" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.12" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.1.0-beta.4" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.12" />
-        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.16.0" />
-        <PackageReference Include="StrawberryShake.Transport.Http" Version="12.16.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.3" />
+        <PackageReference Include="Npgsql.OpenTelemetry" Version="7.0.2" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.4.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol.Logs" Version="1.4.0-rc.4" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.5" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.14" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.1.0-rc.2" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.14" />
+        <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.18.0" />
+        <PackageReference Include="StrawberryShake.Transport.Http" Version="12.18.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,5 +1,4 @@
 using Npgsql;
-using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -28,7 +27,7 @@ internal static class OpenTelemetryExtensions
             .AddService(options.Name, "MamisSolidarias", options.Version)
             .AddTelemetrySdk();
 
-        var builder = services.AddOpenTelemetry().StartWithHost();
+        var builder = services.AddOpenTelemetry();
 
         builder.WithTracing(tracerProviderBuilder =>
         {
