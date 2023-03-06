@@ -19,7 +19,7 @@
         <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.18.0" />
         <PackageReference Include="HotChocolate.Diagnostics" Version="12.18.0" />
         <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.18.0" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.18.0">
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="13.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
