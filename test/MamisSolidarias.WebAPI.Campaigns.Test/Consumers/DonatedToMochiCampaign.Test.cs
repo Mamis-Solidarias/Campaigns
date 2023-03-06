@@ -35,7 +35,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                Guid.NewGuid(), participant.DonorId, participant.Id, participant.CampaignId, campaignName
+                Guid.NewGuid(), participant.DonorId, participant.Id, participant.CampaignId, campaignName, 100, Currency.ARS
             )
         );
 
@@ -64,7 +64,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                Guid.NewGuid(), participant.DonorId, null, participant.CampaignId, Messages.Campaigns.UnaMochiComoLaTuya
+                Guid.NewGuid(), participant.DonorId, null, participant.CampaignId, Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 
@@ -90,7 +90,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 Guid.NewGuid(), participant.DonorId, participant.Id, participant.CampaignId,
-                Messages.Campaigns.UnaMochiComoLaTuya
+                Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 
@@ -116,7 +116,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 Guid.NewGuid(), participant.DonorId, participant.Id, participant.CampaignId,
-                Messages.Campaigns.UnaMochiComoLaTuya
+                Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 
@@ -142,7 +142,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 Guid.NewGuid(), participant.DonorId, participant.Id, participant.CampaignId,
-                Messages.Campaigns.UnaMochiComoLaTuya
+                Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 
@@ -169,7 +169,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 Guid.NewGuid(), otherDonorId, participant.Id, participant.CampaignId,
-                Messages.Campaigns.UnaMochiComoLaTuya
+                Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 
@@ -196,7 +196,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 Guid.NewGuid(), participant.DonorId, participant.Id, otherCampaignId,
-                Messages.Campaigns.UnaMochiComoLaTuya
+                Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 
@@ -225,7 +225,7 @@ internal class DonatedToMochiCampaign_Test : ConsumerTest<DonatedToMochiCampaign
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
                 donationId, participant.DonorId, participant.Id, participant.CampaignId,
-                Messages.Campaigns.UnaMochiComoLaTuya
+                Messages.Campaigns.UnaMochiComoLaTuya, 100, Currency.ARS
             )
         );
 

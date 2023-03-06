@@ -31,7 +31,7 @@ internal class DonatedToJuntosCampaign_Test : ConsumerTest<DonatedToJuntosCampai
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                Guid.NewGuid(), null, null, campaign.Id, campaignName
+                Guid.NewGuid(), null, null, campaign.Id, campaignName, 100, Currency.ARS
             )
         );
 
@@ -51,7 +51,7 @@ internal class DonatedToJuntosCampaign_Test : ConsumerTest<DonatedToJuntosCampai
         const int campaignId = 123;
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                Guid.NewGuid(), null, null, campaignId, Messages.Campaigns.JuntosALaPar
+                Guid.NewGuid(), null, null, campaignId, Messages.Campaigns.JuntosALaPar, 100, Currency.ARS
             )
         );
 
@@ -60,6 +60,26 @@ internal class DonatedToJuntosCampaign_Test : ConsumerTest<DonatedToJuntosCampai
 
         // Assert
         await action.Should().ThrowAsync<InvalidOperationException>();
+    }
+    
+    [Test]
+    public async Task CurrencyIsNotARS_ShouldThrowNotSupported()
+    {
+        // Arrange
+        var campaign = _dataFactory.GenerateJuntosCampaign()
+            .WithoutDonations()
+            .Build();
+        var context = MockExtensions.MockConsumeContext(
+            new DonationAddedToCampaign(
+                Guid.NewGuid(), null, null, campaign.Id, Messages.Campaigns.JuntosALaPar, 100, Currency.EUR
+            )
+        );
+
+        // Act
+        var action = async () => await Consumer.Consume(context);
+
+        // Assert
+        await action.Should().ThrowAsync<NotSupportedException>();
     }
 
     [Test]
@@ -73,7 +93,7 @@ internal class DonatedToJuntosCampaign_Test : ConsumerTest<DonatedToJuntosCampai
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                donation, null, null, campaign.Id, Messages.Campaigns.JuntosALaPar
+                donation, null, null, campaign.Id, Messages.Campaigns.JuntosALaPar, 100, Currency.ARS
             )
         );
 
@@ -95,7 +115,7 @@ internal class DonatedToJuntosCampaign_Test : ConsumerTest<DonatedToJuntosCampai
 
         var context = MockExtensions.MockConsumeContext(
             new DonationAddedToCampaign(
-                donation, null, null, campaign.Id, Messages.Campaigns.JuntosALaPar
+                donation, null, null, campaign.Id, Messages.Campaigns.JuntosALaPar, 100, Currency.ARS
             )
         );
 

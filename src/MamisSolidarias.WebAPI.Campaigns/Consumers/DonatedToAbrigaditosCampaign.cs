@@ -25,7 +25,11 @@ public class DonatedToAbrigaditosCampaign : IConsumer<DonationAddedToCampaign>
         var campaign = await _db.AbrigaditosCampaigns
             .AsTracking()
             .SingleAsync(t => t.Id == message.CampaignId, token);
+        
+        if (message.Currency is not Currency.ARS)
+            throw new NotSupportedException("Only ARS currency is supported for this campaign");
 
+        campaign.TotalDonations += message.Amount;
         campaign.Donations.Add(message.DonationId);
         await _db.SaveChangesAsync(token);
     }
