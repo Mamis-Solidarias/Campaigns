@@ -15,11 +15,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FastEndpoints.Swagger" Version="5.8.0" />
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Diagnostics" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.16.0" />
-        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.16.0">
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Diagnostics" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.18.0" />
+        <PackageReference Include="HotChocolate.Types.Analyzers" Version="12.18.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
