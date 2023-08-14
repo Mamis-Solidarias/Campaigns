@@ -37,7 +37,8 @@ public class JuntosQueries
     [UseSorting]
     public IQueryable<JuntosCampaign> GetJuntosCampaigns(CampaignsDbContext context)
     {
-        return context.JuntosCampaigns.AsNoTracking();
+        return context.JuntosCampaigns.AsNoTracking()
+            .OrderBy(t=> t.Id);
     }
 }
 
