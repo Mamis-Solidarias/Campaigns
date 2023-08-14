@@ -17,7 +17,7 @@ public class MochiQueries
     [UseSorting]
     public IQueryable<MochiCampaign> GetMochiEditions([FromServices] CampaignsDbContext dbContext)
     {
-        return dbContext.MochiCampaigns.AsNoTracking();
+        return dbContext.MochiCampaigns.AsNoTracking().OrderBy(t=> t.Id);
     }
 
     [Authorize(Policy = "CanRead")]
@@ -47,6 +47,7 @@ public class MochiQueries
     {
         var query = dbContext.MochiParticipants
             .AsNoTracking()
+            .OrderBy(t=> t.Id)
             .Where(t => t.CampaignId == campaignId)
             .AsQueryable();
 

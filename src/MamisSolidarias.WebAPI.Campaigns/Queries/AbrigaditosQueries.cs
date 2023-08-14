@@ -35,6 +35,7 @@ public class AbrigaditosQueries
     [UseSorting]
     public IQueryable<AbrigaditosCampaign> GetAbrigaditosCampaigns(CampaignsDbContext db)
     {
-        return db.AbrigaditosCampaigns;
+        return db.AbrigaditosCampaigns
+            .OrderBy(t=> t.Id);
     }
 }
